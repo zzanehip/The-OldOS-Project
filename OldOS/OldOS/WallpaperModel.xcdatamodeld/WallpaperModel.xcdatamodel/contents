@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20B29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Wallpaper" representedClassName="Wallpaper" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString="iOS6_Wallpaper_Droidviews_4"/>
+    </entity>
+    <elements>
+        <element name="Wallpaper" positionX="-63" positionY="-18" width="128" height="44"/>
+    </elements>
+</model>

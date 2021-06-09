@@ -1,0 +1,13 @@
+body { max-width : none }
+body.tv-season:not(.music-purchases-tv-season) table.tracklist-table td.name {
+    background-position: 97% 50%,0% 0 !important;
+}
+body .goto-url, body .taf-link-wrapper .taf-link {
+    background-position: 97% center,left top !important;
+}
+html {
+    background-color: #CBCCD0 !important;
+}
+body.tv-season div.description.goto-url p:first-of-type {
+    background-position: 100% center;
+}

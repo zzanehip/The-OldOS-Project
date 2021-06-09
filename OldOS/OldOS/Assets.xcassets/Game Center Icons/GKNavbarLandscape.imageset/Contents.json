@@ -1,0 +1,17 @@
+{
+  "images" : [
+    {
+      "filename" : "GKNavbarLandscape~ipad.png",
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
