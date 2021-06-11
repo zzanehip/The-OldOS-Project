@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let context = persistentContainer.viewContext
-            window.rootViewController = UIHostingController(rootView: contentView.environmentObject(MusicObserver()).environment(\.managedObjectContext, context))
+            window.rootViewController = HostingController(rootView: contentView.environmentObject(MusicObserver()).environment(\.managedObjectContext, context))
             self.window = window
             window.makeKeyAndVisible()
         }
@@ -85,3 +85,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+private class HostingController<Content>: UIHostingController<Content> where Content: View {
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
+}
