@@ -555,13 +555,6 @@ struct status_bar: View {
                 }
                 Image(systemName: "wifi").foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).opacity(wifi_connected ? 1 : 0)
                 Spacer()
-                if locked {
-                    Image(systemName: "lock.fill").resizable().foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).frame(width: 10, height: 14)
-                } else {
-                    Text(timeString(date: date)).foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).font(.custom("Helvetica Neue Medium", size: 15))
-                    
-                }
-                Spacer()
                 Text("\(Int(battery_level))%").isHidden(charging).foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).font(.custom("Helvetica Neue Medium", size: 15)).offset(x: 10)
                 battery(battery: Float(battery_level/100), charging: charging)
                     .onReceive(timer) { input in
@@ -587,6 +580,15 @@ struct status_bar: View {
                     }.offset(x: 5)
                 //Spacer()
             }.padding([.leading, .trailing], 4)
+            HStack {
+                Spacer()
+                if locked {
+                    Image(systemName: "lock.fill").resizable().foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).frame(width: 10, height: 14)
+                } else {
+                    Text(timeString(date: date).uppercased()).foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).font(.custom("Helvetica Neue Medium", size: 15))
+                }
+                Spacer()
+            }
         }.onAppear() {
             if carrier_id == "" {
             let networkInfo = CTTelephonyNetworkInfo()
@@ -607,10 +609,8 @@ struct status_bar: View {
         }
     }
     func timeString(date: Date) -> String {
-        let time = timeFormat.string(from: date)
-        return time
+        timeFormat.string(from: date)
     }
-    
 }
 
 struct dock2: View {
