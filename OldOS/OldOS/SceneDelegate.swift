@@ -85,7 +85,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
-class HostingController<Content>: UIHostingController<Content> where Content: View {
+private class HostingController<Content>: UIHostingController<Content> where Content: View {
     override var prefersHomeIndicatorAutoHidden: Bool {
         return true
     }
