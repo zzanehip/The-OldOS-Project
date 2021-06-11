@@ -560,7 +560,7 @@ struct status_bar_in_app: View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [Color.init(red: 237/255, green: 244/255, blue: 247/255), Color.init(red: 191/255, green: 199/255, blue: 203/255)]), startPoint: UnitPoint(x: 0.5, y: 0.07), endPoint: .bottom).innerShadowBottomView(color: Color.init(red: 142/255, green: 149/255, blue: 154/255), radius: 0.05).border_bottom(width: 0.45, edges:[.bottom], color: Color.init(red: 93/255, green: 100/255, blue: 105/255)).cornerRadiusSpecific(radius: 1.75, corners: [.topLeft, .topRight])
             HStack {
-                Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(carrier_id == "" ? .black : Color.init(red: 66/255, green: 66/255, blue: 66/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).onAppear() {
+                Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(carrier_id == "" ? .black : Color.init(red: 66/255, green: 66/255, blue: 66/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadowStyle().onAppear() {
                     let networkInfo = CTTelephonyNetworkInfo()
                     let carrier = networkInfo.serviceSubscriberCellularProviders?.first?.value
                     
@@ -569,13 +569,13 @@ struct status_bar_in_app: View {
                     carrier_id = carrierName ?? ""
                 }
                 ZStack {
-                    Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).mask( Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).innerShadow2(color: Color.black.opacity(0.8), radius: 1))//Is it messy, yes, does it work, yes
+                    Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadowStyle().mask( Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadowStyle().innerShadow2(color: Color.black.opacity(0.8), radius: 1))//Is it messy, yes, does it work, yes
                 }
                 Spacer()
-                Text(timeString(date: date)).foregroundColor(Color.black).font(.custom("Helvetica Neue Bold", size: 15)).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2)
+                Text(timeString(date: date)).foregroundColor(Color.black).font(.custom("Helvetica Neue Bold", size: 15)).shadowStyle()
                 
                 Spacer()
-                Text("\(Int(battery_level))%").foregroundColor(Color.init(red: 74/255, green: 74/255, blue: 74/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).offset(x: 10) //.isHidden(charging)
+                Text("\(Int(battery_level))%").foregroundColor(Color.init(red: 74/255, green: 74/255, blue: 74/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadowStyle().offset(x: 10) //.isHidden(charging)
                 battery_in_app(battery: Float(battery_level/100), charging: charging)
                     .onReceive(timer) { input in
                         if (UIDevice.current.batteryState != .unplugged) {
@@ -623,7 +623,19 @@ struct status_bar_in_app: View {
         let time = timeFormat.string(from: date)
         return time
     }
-    
+}
+
+extension View {
+    func shadowStyle() -> some View {
+        self.modifier(Shadow())
+    }
+}
+
+struct Shadow: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .shadow(color: Color.white.opacity(0.5), radius: 0, x: 0, y: 1)
+    }
 }
 
 //Yes, all this for a battery
@@ -634,7 +646,7 @@ struct battery_in_app: View {
     var body: some View {
         HStack {
             ZStack {
-                Rectangle().fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 77/255, green: 77/255, blue: 79/255), Color.init(red: 77/255, green: 77/255, blue: 79/255), Color.init(red: 198/255, green: 198/255, blue: 198/255)]), startPoint: .top, endPoint: .bottom)).innerShadow2(color:Color.init(red: 51/255, green: 53/255, blue: 58/255), radius: 0.2).overlay(RoundedRectangle(cornerRadius:0.25).stroke(LinearGradient(gradient: Gradient(colors: [Color.init(red: 39/255, green: 41/255, blue: 47/255), Color.init(red: 95/255, green: 101/255, blue: 116/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 1.25)).frame(width: 23.0, height: 12.25).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2)
+                Rectangle().fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 77/255, green: 77/255, blue: 79/255), Color.init(red: 77/255, green: 77/255, blue: 79/255), Color.init(red: 198/255, green: 198/255, blue: 198/255)]), startPoint: .top, endPoint: .bottom)).innerShadow2(color:Color.init(red: 51/255, green: 53/255, blue: 58/255), radius: 0.2).overlay(RoundedRectangle(cornerRadius:0.25).stroke(LinearGradient(gradient: Gradient(colors: [Color.init(red: 39/255, green: 41/255, blue: 47/255), Color.init(red: 95/255, green: 101/255, blue: 116/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 1.25)).frame(width: 23.0, height: 12.25).shadowStyle()
                 Rectangle().fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 107/255, green: 208/255, blue: 55/255), Color.init(red: 215/255, green: 252/255, blue: 180/255), Color.init(red: 134/255, green: 226/255, blue: 73/255), Color.init(red: 68/255, green: 163/255, blue: 29/255)]), startPoint: .top, endPoint: UnitPoint(x: 0.5, y: 0.73))).innerShadow2(color: Color.init(red: 220/255, green: 255/255, blue: 177/255), radius: 0.2).frame(width: 21.5*CGFloat(battery), height: 12.25-1.5).offset(x:(-21.5/2)+(21.5/2)*CGFloat(battery)) .applyModifier(charging) {  AnyView($0.overlay(ZStack {Image(systemName:"bolt.fill").resizable().frame(width: 8, height: 12.25-2.5)}.frame(width: 21.5*CGFloat(battery), height: 12.25-1.5).foregroundColor(.black)))
                 }
             }
