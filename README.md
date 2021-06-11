@@ -2,7 +2,7 @@
 <p align="center">
         <img src="https://img.shields.io/badge/Language-SwiftUI-orange" alt="alternatetext">
 	<img src="https://img.shields.io/badge/Sprinkles%20of-Swift%2C%20Objective--C-red" alt="alternatetext">
-	<img src="https://img.shields.io/badge/Version-1.0%20(7)-blue" alt="alternatetext">
+	<img src="https://img.shields.io/badge/Version-1.0%20(8)-blue" alt="alternatetext">
 	<img src="https://img.shields.io/badge/Who%3F-%40zzanehip%20(Zane)-yellowgreen" alt="alternatetext">
 </p>
 
@@ -25,7 +25,7 @@
 > 
 > With OldOS, you no longer need to worry about securing a legacy iPhone to experience nostalgia — it's available on your daily driver.
 > 
-> Part of the goal with OldOS is to enable anyone to understand how iOS works and demonstrate just how powerful SwiftUI truly is. For that reason, the entire app will soon be open-sourced — enabling developers to learn about, modify, and add to the app. I thought building this over my last six or so months in high school and sharing it with the world would be a fun and productive endeavor.
+> Part of the goal with OldOS is to enable anyone to understand how iOS works and demonstrate just how powerful SwiftUI truly is. For that reason, the entire app is open-sourced — enabling developers to learn about, modify, and add to the app. I thought building this over my last six or so months in high school and sharing it with the world would be a fun and productive endeavor.
 
 ## What's Special
 
@@ -39,6 +39,16 @@
 
 The project is logically structured in files by app. Inside each app file, you'll see code and commentary behind it. Aside from main apps, there is the Common file. My mindset was to build the app in the same way Apple built interface builder — you have a collection of UI elements at your disposal that are bases. You can then make a copy in whatever other file you'd like if you require custom abilities. If you just need the generic version, you can use the generic. Hence, common, containing all your common UI elements. Lastly, there is HomeScreen, and LockScreen — essentially making up the Springboard. Lastly, in Assets.xcassets, you'll find all the image assets structured by app.
 ![](Images/Files.png)
+
+## Imagery
+
+<p align="center">
+  <img src="Images/Market_1.jpg" width="19.5%" />
+  <img src="Images/Market_2.jpg" width="19.5%" /> 
+  <img src="Images/Market_3.jpg" width="19.5%" />
+  <img src="Images/Market_4.jpg" width="19.5%" />
+  <img src="Images/Market_5.jpg" width="19.5%" />
+</p>
 
 ## Thanks
 
