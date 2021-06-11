@@ -43,11 +43,11 @@ The project is logically structured in files by app. Inside each app file, you'l
 ## Imagery
 
 <p align="center">
-  <img src="Images/Market_1.jpg" width="125" />
-  <img src="Images/Market_2.jpg" width="125" /> 
-  <img src="Images/Market_3.jpg" width="125" />
-  <img src="Images/Market_4.jpg" width="125" />
-  <img src="Images/Market_5.jpg" width="125" />
+  <img src="Images/Market_1.jpg" width="19.5%" />
+  <img src="Images/Market_2.jpg" width="19.5%" /> 
+  <img src="Images/Market_3.jpg" width="19.5%" />
+  <img src="Images/Market_4.jpg" width="19.5%" />
+  <img src="Images/Market_5.jpg" width="19.5%" />
 </p>
 
 ## Thanks
