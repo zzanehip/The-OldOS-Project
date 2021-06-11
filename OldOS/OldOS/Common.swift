@@ -572,9 +572,6 @@ struct status_bar_in_app: View {
                     Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).mask( Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).innerShadow2(color: Color.black.opacity(0.8), radius: 1))//Is it messy, yes, does it work, yes
                 }
                 Spacer()
-                Text(timeString(date: date)).foregroundColor(Color.black).font(.custom("Helvetica Neue Bold", size: 15)).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2)
-                
-                Spacer()
                 Text("\(Int(battery_level))%").foregroundColor(Color.init(red: 74/255, green: 74/255, blue: 74/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).offset(x: 10) //.isHidden(charging)
                 battery_in_app(battery: Float(battery_level/100), charging: charging)
                     .onReceive(timer) { input in
@@ -600,6 +597,11 @@ struct status_bar_in_app: View {
                     }.offset(x: 5)
                 //Spacer()
             }.padding([.leading, .trailing], 4)
+            HStack {
+                Spacer()
+                Text(timeString(date: date).uppercased()).foregroundColor(Color.black).font(.custom("Helvetica Neue Bold", size: 15)).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2)
+                Spacer()
+            }
         }.onAppear() {
             if carrier_id == "" {
             let networkInfo = CTTelephonyNetworkInfo()
@@ -620,10 +622,8 @@ struct status_bar_in_app: View {
         }
     }
     func timeString(date: Date) -> String {
-        let time = timeFormat.string(from: date)
-        return time
+        timeFormat.string(from: date)
     }
-    
 }
 
 //Yes, all this for a battery
