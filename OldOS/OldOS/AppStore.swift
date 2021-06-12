@@ -187,8 +187,8 @@ struct search_applications: View {
                                                 Rectangle().foregroundColor(.gray)
                                             }.frame(width:60, height: 60).cornerRadius(60*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.55), radius: 0.85, x: 0, y: 1.75)
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(application.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
-                                                Text(application.trackName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.artistName).font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.trackName).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                                                 HStack(spacing: 2) {
                                                     ForEach(0..<Int(application.averageUserRating)) { _ in
                                                         ZStack {
@@ -390,8 +390,8 @@ struct category_destination: View {
                                                 Rectangle().foregroundColor(.gray)
                                             }.frame(width:60, height: 60).cornerRadius(60*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.55), radius: 0.85, x: 0, y: 1.75)
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(application.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
-                                                Text("\(Int((top_paid_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName ?? "---")").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.artistName).font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text("\(Int((top_paid_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName)").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                                                 HStack(spacing: 2) {
                                                     ForEach(0..<Int(application.averageUserRating)) { _ in
                                                         ZStack {
@@ -439,8 +439,8 @@ struct category_destination: View {
                                                 Rectangle().foregroundColor(.gray)
                                             }.frame(width:60, height: 60).cornerRadius(60*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.55), radius: 0.85, x: 0, y: 1.75)
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(application.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
-                                                Text("\(Int((top_free_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName ?? "---")").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.artistName).font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text("\(Int((top_free_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName)").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                                                 HStack(spacing: 2) {
                                                     ForEach(0..<Int(application.averageUserRating)) { _ in
                                                         ZStack {
@@ -488,8 +488,8 @@ struct category_destination: View {
                                                 Rectangle().foregroundColor(.gray)
                                             }.frame(width:60, height: 60).cornerRadius(60*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.55), radius: 0.85, x: 0, y: 1.75)
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(application.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
-                                                Text("\(Int((new_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName ?? "---")").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.artistName).font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text("\(Int((new_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName)").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                                                 HStack(spacing: 2) {
                                                     ForEach(0..<Int(application.averageUserRating)) { _ in
                                                         ZStack {
@@ -627,8 +627,8 @@ struct top_25_applications: View {
                                                 Rectangle().foregroundColor(.gray)
                                             }.frame(width:60, height: 60).cornerRadius(60*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.55), radius: 0.85, x: 0, y: 1.75)
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(application.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
-                                                Text("\(Int((top_paid_and_free_observer.top_paid_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName ?? "---")").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.artistName).font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text("\(Int((top_paid_and_free_observer.top_paid_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName)").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                                                 HStack(spacing: 2) {
                                                     ForEach(0..<Int(application.averageUserRating)) { _ in
                                                         ZStack {
@@ -676,8 +676,8 @@ struct top_25_applications: View {
                                                 Rectangle().foregroundColor(.gray)
                                             }.frame(width:60, height: 60).cornerRadius(60*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.55), radius: 0.85, x: 0, y: 1.75)
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(application.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
-                                                Text("\(Int((top_paid_and_free_observer.top_free_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName ?? "---")").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.artistName).font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text("\(Int((top_paid_and_free_observer.top_free_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName)").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                                                 HStack(spacing: 2) {
                                                     ForEach(0..<Int(application.averageUserRating)) { _ in
                                                         ZStack {
@@ -725,8 +725,8 @@ struct top_25_applications: View {
                                                 Rectangle().foregroundColor(.gray)
                                             }.frame(width:60, height: 60).cornerRadius(60*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.55), radius: 0.85, x: 0, y: 1.75)
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(application.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
-                                                Text("\(Int((top_paid_and_free_observer.top_grossing_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName ?? "---")").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.artistName).font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text("\(Int((top_paid_and_free_observer.top_grossing_applications.firstIndex(where: {$0.id == application.id}) ?? 0) + 1)). \(application.trackName)").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                                                 HStack(spacing: 2) {
                                                     ForEach(0..<Int(application.averageUserRating)) { _ in
                                                         ZStack {
@@ -911,7 +911,7 @@ struct app_destination: View {
                                 VStack(alignment: .leading) {
                                     Text((featured_selected_application?.advisories ?? [] == []) ? "\(featured_selected_application?.contentAdvisoryRating ?? "")" : "Rated \(featured_selected_application?.contentAdvisoryRating ?? "") for the following:").font(.custom("Helvetica Neue Regular", size: 12)).foregroundColor(.black)
                                     ForEach(featured_selected_application?.advisories ?? [], id: \.self) { advisory in
-                                        Text("\(advisory ?? "")").font(.custom("Helvetica Neue Regular", size: 12)).foregroundColor(.black).fixedSize(horizontal: false, vertical: true)
+                                        Text("\(advisory)").font(.custom("Helvetica Neue Regular", size: 12)).foregroundColor(.black).fixedSize(horizontal: false, vertical: true)
                                     }
                                 }
                                 Spacer()
@@ -951,8 +951,8 @@ struct featured_applications: View {
                                                 Rectangle().foregroundColor(.gray)
                                             }.frame(width:60, height: 60).cornerRadius(60*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.55), radius: 0.85, x: 0, y: 1.75)
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(application.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
-                                                Text(application.trackName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.artistName).font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 58/255, green: 58/255, blue: 58/255)).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                                                Text(application.trackName).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                                                 HStack(spacing: 2) {
                                                     ForEach(0..<Int(application.averageUserRating)) { _ in
                                                         ZStack {
@@ -1133,7 +1133,7 @@ func fetch_application_data(_ application: RSSFeedItem, completion: @escaping (A
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     var id = ""
     if let id_range = application.link?.range(of: "(?<=id)[^?]+", options: .regularExpression) {
-        id = (application.link?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+        id = (application.link?[id_range] ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
     let request = URLRequest(url: url)
@@ -1166,7 +1166,7 @@ func fetch_application_data_atom(_ application: AtomFeedEntry, completion: @esca
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     var id = ""
     if let id_range = application.id?.range(of: "(?<=id)[^?]+", options: .regularExpression) {
-        id = (application.id?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+        id = (application.id?[id_range] ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
     let request = URLRequest(url: url)

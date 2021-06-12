@@ -194,14 +194,9 @@ struct notes_destination_view: View {
                     VStack(spacing:0) {
                         Spacer().foregroundColor(.clear).zIndex(0)
                         delete_note_view(cancel_action: {withAnimation{show_delete.toggle()}}, delete_action: {withAnimation() {
-                            do {
-                                try managedObjectContext.delete(selected_note)
-                                forward_or_backward = true; withAnimation(.linear(duration: 0.28)) {
-                                    current_nav_view = "Main"
-                                }
-                                
-                            } catch {
-                                print("Error saving managed object context: \(error)")
+                            managedObjectContext.delete(selected_note)
+                            forward_or_backward = true; withAnimation(.linear(duration: 0.28)) {
+                                current_nav_view = "Main"
                             }
                         }}).frame(minHeight: geometry.size.height*(1/3.6), maxHeight: geometry.size.height*(1/3.6))
                     }.transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom)))
@@ -223,11 +218,7 @@ struct notes_destination_view: View {
                 saveContext()
             }
             } else {
-                do {
-                    try managedObjectContext.delete(selected_note)
-                } catch {
-                    print("Error saving managed object context: \(error)")
-                }
+                managedObjectContext.delete(selected_note)
             }
         }.onChange(of: keyboard.is_editing, perform: {_ in
             if content != "" {

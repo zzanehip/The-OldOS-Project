@@ -256,14 +256,10 @@ struct recents_view: View {
 class recents_observer: ObservableObject {
     @Published var recents: [recents_datatype] {
         didSet {
-            do {
-                let encoder = JSONEncoder()
-                if let encoded = try? encoder.encode(self.recents) {
-                    UserDefaults.standard.set(encoded, forKey: "recents")
-                    objectWillChange.send()
-                 }
-            } catch {
-            print("Couldn't write file")
+            let encoder = JSONEncoder()
+            if let encoded = try? encoder.encode(self.recents) {
+                UserDefaults.standard.set(encoded, forKey: "recents")
+                objectWillChange.send()
             }
         }
     }
@@ -364,7 +360,7 @@ struct add_favorites_view: View {
             }, show_cancel: true).frame(minHeight: 90, maxHeight: 90)
             SkeuomorphicList_Contacts_Add_To_Favorites(editing_state: $editing_state, indexes:  Array(Set(contacts_observer.contacts.compactMap({
             
-            String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+            String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
             
         }))).sorted(by: {
             if $0.first?.isLetter == false && $1.first?.isLetter == true {
@@ -383,7 +379,7 @@ struct add_favorites_view: View {
             
         }), contacts_observer: contacts_observer, favorites_obs: favorites_obs, show_add_favorite: $show_add_favorite).modifier(VerticalIndex(indexableList: alphabet, indexes: Array(Set(contacts_observer.contacts.compactMap({
             
-            String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+            String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
             
         }))), editing_state: $editing_state)).offset(y:-1.2).background(Color.white).clipped()
       
@@ -433,14 +429,10 @@ struct double_text_title_bar: View {
 class favorites_observer: ObservableObject {
     @Published var favorites: [favorite_datatype] {
         didSet {
-            do {
-                let encoder = JSONEncoder()
-                if let encoded = try? encoder.encode(self.favorites) {
-                    UserDefaults.standard.set(encoded, forKey: "favorites")
-                    objectWillChange.send()
-                 }
-            } catch {
-            print("Couldn't write file")
+            let encoder = JSONEncoder()
+            if let encoded = try? encoder.encode(self.favorites) {
+                UserDefaults.standard.set(encoded, forKey: "favorites")
+                objectWillChange.send()
             }
         }
     }
@@ -480,7 +472,7 @@ struct contacts_view: View {
             case "Contacts":
                 SkeuomorphicList_Contacts(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, editing_state: $editing_state, contacts_current_nav_view: $contacts_current_nav_view, current_contact: $current_contact, indexes:  Array(Set(contacts_observer.contacts.compactMap({
                 
-                String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+                String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
                 
             }))).sorted(by: {
                 if $0.first?.isLetter == false && $1.first?.isLetter == true {
@@ -499,7 +491,7 @@ struct contacts_view: View {
                 
             }), contacts_observer: contacts_observer).modifier(VerticalIndex(indexableList: alphabet, indexes: Array(Set(contacts_observer.contacts.compactMap({
                 
-                String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+                String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
                 
             }))), editing_state: $editing_state)).clipped().transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
             case "Contacts_Desination":
@@ -507,7 +499,7 @@ struct contacts_view: View {
             default:
                 SkeuomorphicList_Contacts(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, editing_state: $editing_state, contacts_current_nav_view: $contacts_current_nav_view, current_contact: $current_contact, indexes:  Array(Set(contacts_observer.contacts.compactMap({
                     
-                    String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+                    String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
                     
                 }))).sorted(by: {
                     if $0.first?.isLetter == false && $1.first?.isLetter == true {
@@ -526,7 +518,7 @@ struct contacts_view: View {
                     
                 }), contacts_observer: contacts_observer).modifier(VerticalIndex(indexableList: alphabet, indexes: Array(Set(contacts_observer.contacts.compactMap({
                     
-                    String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+                    String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
                     
                 }))), editing_state: $editing_state)).clipped().transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
             }
@@ -568,8 +560,7 @@ struct add_contact_view: View{
                                         ZStack {
                                             Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                                             HStack {
-                                                TextField("First", text: $first_name){
-                                                }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                TextField("First", text: $first_name).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if first_name.count != 0 {
                                                     Button(action:{first_name = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -580,8 +571,7 @@ struct add_contact_view: View{
                                         ZStack {
                                             Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                                             HStack {
-                                                TextField("Last", text: $last_name){
-                                                }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                TextField("Last", text: $last_name).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if last_name.count != 0 {
                                                     Button(action:{last_name = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -592,8 +582,7 @@ struct add_contact_view: View{
                                         ZStack {
                                             Rectangle().fill(Color.clear).frame(height:50)
                                             HStack {
-                                                TextField("Company", text: $company){
-                                                }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                TextField("Company", text: $company).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if company.count != 0 {
                                                     Button(action:{company = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -616,8 +605,7 @@ struct add_contact_view: View{
                                         HStack(spacing: 5) {
                                             Text("mobile").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
-                                            TextField("Phone", text: $phone){
-                                            }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
+                                            TextField("Phone", text: $phone).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
                                             if phone.count != 0 {
                                                 Button(action:{phone = ""}) {
                                                     Image("UITextFieldClearButton")
@@ -641,8 +629,7 @@ struct add_contact_view: View{
                                         HStack(spacing: 5) {
                                             Text("home").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
-                                            TextField("Email", text: $email){
-                                            }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
+                                            TextField("Email", text: $email).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
                                             if email.count != 0 {
                                                 Button(action:{email = ""}) {
                                                     Image("UITextFieldClearButton")
@@ -695,8 +682,7 @@ struct add_contact_view: View{
                                         HStack(spacing: 5) {
                                             Text("home page").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
-                                            TextField("URL", text: $url){
-                                            }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
+                                            TextField("URL", text: $url).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
                                             if url.count != 0 {
                                                 Button(action:{url = ""}) {
                                                     Image("UITextFieldClearButton")
@@ -781,10 +767,10 @@ struct contacts_destination: View {
             }
         }.onAppear() {
             for number in current_contact.phoneNumbers {
-                phone_content.append(list_row(title: "", content: AnyView(contacts_destination_content(type:  CNLabeledValue<NSString>.localizedString(forLabel: number.label ?? "other") ?? "other", number: number.value.stringValue ?? "", recents_obs: recents_obs))))
+                phone_content.append(list_row(title: "", content: AnyView(contacts_destination_content(type:  CNLabeledValue<NSString>.localizedString(forLabel: number.label ?? "other"), number: number.value.stringValue, recents_obs: recents_obs))))
             }
             for email in current_contact.emailAddresses {
-                email_content.append(list_row(title: "", content: AnyView(contacts_destination_content_email(type:  CNLabeledValue<NSString>.localizedString(forLabel: email.label ?? "other") ?? "other", number: email.value as String))))
+                email_content.append(list_row(title: "", content: AnyView(contacts_destination_content_email(type:  CNLabeledValue<NSString>.localizedString(forLabel: email.label ?? "other"), number: email.value as String))))
             }
         }
     }
@@ -871,7 +857,7 @@ struct SkeuomorphicList_Contacts: View {
                 ForEach(indexes, id: \.self) { letter in
                     Section(header: alpha_list_header(letter: letter).id(letter) .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
                         ForEach(contacts_observer.contacts.filter({(contact: CNContact) -> Bool in
-                            String(alphabet.contains(String((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "")) ? ((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "") : "#") == letter
+                            String(alphabet.contains(String((contact.familyName.prefix(1)) != "" ? (contact.familyName.prefix(1)) : contact.name.prefix(1))) ? ((contact.familyName.prefix(1)) != "" ? (contact.familyName.prefix(1)) : contact.name.prefix(1)) : "#") == letter
                             
                         }), id: \.self.name) { (contact: CNContact) in
                             Button(action:{
@@ -883,12 +869,12 @@ struct SkeuomorphicList_Contacts: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
                                     HStack() {
-                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
+                                        Group{Text(contact.givenName).font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName).font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
                                         Spacer()
                                     }
                                     Spacer()
                                     Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all).opacity(contact == contacts_observer.contacts.filter({(contact: CNContact) -> Bool in
-                                        String(alphabet.contains(String((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "")) ? ((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "") : "#") == letter
+                                        String(alphabet.contains(String((contact.familyName.prefix(1)) != "" ? (contact.familyName.prefix(1)) : contact.name.prefix(1))) ? ((contact.familyName.prefix(1)) != "" ? (contact.familyName.prefix(1)) : contact.name.prefix(1)) : "#") == letter
                                         
                                     }).last ? 1 : 1 )
                                 }
@@ -922,7 +908,7 @@ struct SkeuomorphicList_Contacts: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
                                     HStack() {
-                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
+                                        Group{Text(contact.givenName).font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName).font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
                                         Spacer()
                                         Image("UITableNext").padding(.trailing, 12)
                                     }
@@ -952,13 +938,13 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                 ForEach(indexes, id: \.self) { letter in
                     Section(header: alpha_list_header(letter: letter).id(letter) .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
                         ForEach(contacts_observer.contacts.filter({(contact: CNContact) -> Bool in
-                            String(alphabet.contains(String((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "")) ? ((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "") : "#") == letter
+                            String(alphabet.contains(String((contact.familyName.prefix(1)) != "" ? (contact.familyName.prefix(1)) : contact.name.prefix(1))) ? ((contact.familyName.prefix(1)) != "" ? (contact.familyName.prefix(1)) : contact.name.prefix(1)) : "#") == letter
                             
                         }), id: \.self.name) { (contact: CNContact) in
                             Button(action:{
                                 if !contact.phoneNumbers.isEmpty {
                                 withAnimation(.linear(duration:0.35)) {
-                                    favorites_obs.favorites.append(favorite_datatype(name: contact.name, number: contact.phoneNumbers[0].value.stringValue, type: CNLabeledValue<NSString>.localizedString(forLabel: contact.phoneNumbers[0].label ?? "other") ?? "other"))
+                                    favorites_obs.favorites.append(favorite_datatype(name: contact.name, number: contact.phoneNumbers[0].value.stringValue, type: CNLabeledValue<NSString>.localizedString(forLabel: contact.phoneNumbers[0].label ?? "other")))
                                     show_add_favorite.toggle()
                                 }
                                 }
@@ -966,12 +952,12 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
                                     HStack() {
-                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
+                                        Group{Text(contact.givenName).font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ).font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
                                         Spacer()
                                     }
                                     Spacer()
                                     Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all).opacity(contact == contacts_observer.contacts.filter({(contact: CNContact) -> Bool in
-                                        String(alphabet.contains(String((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "")) ? ((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "") : "#") == letter
+                                        String(alphabet.contains(String((contact.familyName.prefix(1)) != "" ? (contact.familyName.prefix(1)) : contact.name.prefix(1))) ? ((contact.familyName.prefix(1)) != "" ? (contact.familyName.prefix(1)) : contact.name.prefix(1)) : "#") == letter
                                         
                                     }).last ? 1 : 1 )
                                 }
@@ -999,7 +985,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                             Button(action:{
                                 if !contact.phoneNumbers.isEmpty {
                                 withAnimation(.linear(duration:0.35)) {
-                                    favorites_obs.favorites.append(favorite_datatype(name: contact.name, number: contact.phoneNumbers[0].value.stringValue, type: CNLabeledValue<NSString>.localizedString(forLabel: contact.phoneNumbers[0].label ?? "other") ?? "other"))
+                                    favorites_obs.favorites.append(favorite_datatype(name: contact.name, number: contact.phoneNumbers[0].value.stringValue, type: CNLabeledValue<NSString>.localizedString(forLabel: contact.phoneNumbers[0].label ?? "other")))
                                     show_add_favorite.toggle()
                                 }
                                 }
@@ -1007,7 +993,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
                                     HStack() {
-                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
+                                        Group{Text(contact.givenName).font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName).font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
                                         Spacer()
                                         Image("UITableNext").padding(.trailing, 12)
                                     }
@@ -1031,39 +1017,35 @@ class ContactStore: ObservableObject {
         fetch()
     }
     func fetch() {
-        do {
-            let store = CNContactStore()
-            let keysToFetch = [CNContactGivenNameKey as CNKeyDescriptor,
-                               CNContactMiddleNameKey as CNKeyDescriptor,
-                               CNContactFamilyNameKey as CNKeyDescriptor,
-                               CNContactImageDataAvailableKey as CNKeyDescriptor,
-                               CNContactImageDataKey as CNKeyDescriptor,
-                               CNContactPhoneNumbersKey as CNKeyDescriptor,
-                               CNContactEmailAddressesKey as CNKeyDescriptor]
-            
-            var allContainers: [CNContainer] = []
+        let store = CNContactStore()
+        let keysToFetch = [CNContactGivenNameKey as CNKeyDescriptor,
+                           CNContactMiddleNameKey as CNKeyDescriptor,
+                           CNContactFamilyNameKey as CNKeyDescriptor,
+                           CNContactImageDataAvailableKey as CNKeyDescriptor,
+                           CNContactImageDataKey as CNKeyDescriptor,
+                           CNContactPhoneNumbersKey as CNKeyDescriptor,
+                           CNContactEmailAddressesKey as CNKeyDescriptor]
+        
+        var allContainers: [CNContainer] = []
+           do {
+            allContainers = try store.containers(matching: nil)
+           } catch {
+               print("Error fetching containers")
+           }
+
+           var results: [CNContact] = []
+           for container in allContainers {
+            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
+
                do {
-                allContainers = try store.containers(matching: nil)
+                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch)
+                results.append(contentsOf: containerResults)
                } catch {
-                   print("Error fetching containers")
+                   print("Error fetching results for container")
                }
-
-               var results: [CNContact] = []
-               for container in allContainers {
-                let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
-
-                   do {
-                    let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch)
-                    results.append(contentsOf: containerResults)
-                   } catch {
-                       print("Error fetching results for container")
-                   }
-               }
-            
-            self.contacts = results
-        } catch {
-            self.error = error
-        }
+           }
+        
+        self.contacts = results
     }
 }
 

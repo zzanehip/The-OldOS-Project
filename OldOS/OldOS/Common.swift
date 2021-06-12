@@ -1362,7 +1362,7 @@ struct CustomSlider<Component: View>: View {
         }
         if type == "Song" {
             should_update_from_timer = false
-            let translation = drag.translation.x
+//            let translation = drag.translation.x
 //            for n in 0...50 { //a for loop is a descent solution, maybe switch to more efficient if statements. Maybe we use this, idk yet.
 //            if Int(abs(drag.translation.x)) == Int(frame.size.width/50)*n {
                 let music_player = MPMusicPlayerController.systemMusicPlayer
@@ -1427,8 +1427,6 @@ struct top_gloss: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let midPoint: CGFloat = (startX + length) / 2
-        let apex1: CGFloat = (startX + midPoint) / 2
-        let apex2: CGFloat = (midPoint + length) / 2
 
         path.move(to:CGPoint(midPoint, 0))
 
@@ -1645,17 +1643,12 @@ final class BrightnessObserver: ObservableObject {
     private var progressObserver: NSKeyValueObservation!
 
     func subscribe() {
-        do {
-            print("reg")
+        print("reg")
         let noteCenter = NotificationCenter.default
         noteCenter.addObserver(self,
                                selector: #selector(brightnessDidChange),
                                name: UIScreen.brightnessDidChangeNotification,
                                object: nil)
-        } catch {
-            print("cannot activate session")
-        }
-
     }
 
     func unsubscribe() {

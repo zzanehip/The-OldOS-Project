@@ -534,7 +534,7 @@ func getHoursMinutesSecondsFrom(seconds: Double) -> (hours: Int, minutes: Int, s
 func formatTimeFor(seconds: Double) -> String {
     let result = getHoursMinutesSecondsFrom(seconds: seconds)
     let hoursString = "\(result.hours)"
-    var minutesString = "\(result.minutes)"
+    let minutesString = "\(result.minutes)"
     var secondsString = "\(result.seconds)"
     if secondsString.count == 1 {
         secondsString = "0\(result.seconds)"
@@ -552,7 +552,7 @@ func formatTimeFor(seconds: Double) -> String {
 func formatTimeForMinutes(seconds: Double) -> String {
     let result = getHoursMinutesSecondsFrom(seconds: seconds)
     let hoursString = "\(result.hours)"
-    var minutesString = "\(result.minutes)"
+    let minutesString = "\(result.minutes)"
     var secondsString = "\(result.seconds)"
     if secondsString.count == 1 {
         secondsString = "0\(result.seconds)"
@@ -883,7 +883,7 @@ struct SkeuomorphicList_Playlists_Destination: View {
                     Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
                 }
             }.frame(minHeight: 44, maxHeight:44).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).hideRowSeparator()
-            ForEach(playlist.items ?? [], id: \.persistentID) { song in
+            ForEach(playlist.items, id: \.persistentID) { song in
                 Button(action:{
                     let musicPlayer = MPMusicPlayerController.systemMusicPlayer
                     SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
@@ -931,7 +931,7 @@ struct SkeuomorphicList_Playlists_Destination: View {
                         Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
                     }
                     
-                }.padding(.top, song == (playlist.items ?? []).first ? 2.5 : 0)
+                }.padding(.top, song == (playlist.items).first ? 2.5 : 0)
             }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
         }
             if editing_state == "Active_Empty" {
@@ -1056,14 +1056,12 @@ extension Array where Element : Equatable {
         return newArray
     }
     func shuffled() -> [Iterator.Element] {
-        let shuffledArray = (self as? NSArray)?.shuffled()
+        let shuffledArray = (self as NSArray).shuffled()
         let outputArray = shuffledArray as? [Iterator.Element]
         return outputArray ?? []
     }
     mutating func shuffle() {
-        if let selfShuffled = self.shuffled() as? Self {
-            self = selfShuffled
-        }
+        self = self.shuffled()
     }
 }
 
@@ -1435,13 +1433,13 @@ struct albums_destination: View {
                             Text(album.representativeItem?.artist ?? "").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
                             Text(album.representativeItem?.albumTitle ?? "").font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
                             Text("Released \((album.representativeItem?.value(forProperty: "year") as? NSNumber)?.stringValue ?? "")").font(.custom("Helvetica Neue Bold", size: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
-                            Text("\(removeDuplicates(album.items ?? []).count) Songs, \(formatTimeForMinutes(seconds: album.representativeItem?.playbackDuration ?? 0)) Mins.").font(.custom("Helvetica Neue Bold", size: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
+                            Text("\(removeDuplicates(album.items).count) Songs, \(formatTimeForMinutes(seconds: album.representativeItem?.playbackDuration ?? 0)) Mins.").font(.custom("Helvetica Neue Bold", size: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
                             Spacer()
                         }.padding(.top, 10)
                         Spacer()
                     }.background(LinearGradient(gradient: Gradient(colors: [Color(red: 248/255, green: 248/255, blue: 248/255), Color(red: 236/255, green: 236/255, blue: 236/255)]), startPoint: .top, endPoint: .bottom)).frame(height:120).padding(.bottom, 0)
                     
-                    ForEach(removeDuplicates(album.items ?? []), id: \.persistentID) { track in
+                    ForEach(removeDuplicates(album.items), id: \.persistentID) { track in
                         Button(action:{
                             let musicPlayer = MPMusicPlayerController.systemMusicPlayer
                             SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
@@ -1471,7 +1469,7 @@ struct albums_destination: View {
                             }
                         }) {
                             VStack {
-                                if track == removeDuplicates(album.items ?? [])[0] {
+                                if track == removeDuplicates(album.items)[0] {
                                     Rectangle().fill(Color(red: 228/255, green: 228/255, blue: 228/255)).frame(height:2)
                                 }
                                 Spacer()
@@ -1504,11 +1502,11 @@ struct albums_destination: View {
                                     }
                                 }
                                 
-                            ).background((removeDuplicates(album.items ?? []).firstIndex(of: track) ?? 0) % 2  == 0 ? Color.white : Color(red: 243/255, green: 243/255, blue: 243/255))
+                            ).background((removeDuplicates(album.items).firstIndex(of: track) ?? 0) % 2  == 0 ? Color.white : Color(red: 243/255, green: 243/255, blue: 243/255))
                         }.frame(height: 44)
                     }
                 }.drawingGroup()
-            }.background((removeDuplicates(album.items ?? []).count) % 2  == 0 ? Color.white : Color(red: 240/255, green: 240/255, blue: 240/255))
+            }.background((removeDuplicates(album.items).count) % 2  == 0 ? Color.white : Color(red: 240/255, green: 240/255, blue: 240/255))
         }
     }
     func get_release_date(_ date: Date) -> String{

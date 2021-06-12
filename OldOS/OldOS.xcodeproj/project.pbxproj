@@ -819,7 +819,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"OldOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 5YJG9SCLDH;
+				DEVELOPMENT_TEAM = 6DRH5697SN;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -832,7 +832,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zurac.OldOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.atrinh.OldOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "OldOS/TextView/OldOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -851,7 +851,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"OldOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 5YJG9SCLDH;
+				DEVELOPMENT_TEAM = 6DRH5697SN;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "GLES_SILENCE_DEPRECATION=1";
 				INFOPLIST_FILE = OldOS/Info.plist;
@@ -860,7 +860,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zurac.OldOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.atrinh.OldOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "OldOS/TextView/OldOS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

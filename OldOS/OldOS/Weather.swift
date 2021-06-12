@@ -26,8 +26,8 @@ struct Weather: View {
     init() {
         // Because of how our observable array works, empty values will result in breaking the application. With this approach, we never have an empty array. I'd say it would be wildy inefficent if we we're initialising our array with data from the web, but because we are pulling from userdefaults its almost instant and unnoticable. It appears this is how Apple actually does it in the Weather app.
         let userDefaults = UserDefaults.standard
-        var weather = (userDefaults.object(forKey: "weather_cities") as? [String:String] ?? ["0":""]).sorted(by: <)
-        var mode = userDefaults.object(forKey: "weather_mode") as? String ?? "imperial"
+        let weather = (userDefaults.object(forKey: "weather_cities") as? [String:String] ?? ["0":""]).sorted(by: <)
+        let mode = userDefaults.object(forKey: "weather_mode") as? String ?? "imperial"
         if weather.count >= 1 {
             for (key, value) in weather {
                 weather_data.array.append(WeatherObserver(location: value, mode: mode))
@@ -178,10 +178,10 @@ struct weather_settings: View {
                                                     var weather_dict = [String:String]()
                                                         var i = 0
                                                         for item in weather_data.array {
-                                                            weather_dict["\(i)"] = (item.full_location != nil ? item.full_location : "")
+                                                            weather_dict["\(i)"] = item.full_location
                                                             i += 1
                                                         }
-                                                        var defaults_weather = (userDefaults.object(forKey: "weather_cities") as? [String:String] ?? ["0":""]).sorted(by: >)
+                                                    let defaults_weather = (userDefaults.object(forKey: "weather_cities") as? [String:String] ?? ["0":""]).sorted(by: >)
                                                         if defaults_weather != weather_dict.sorted(by: >) {
                                                         userDefaults.setValue(weather_dict, forKey: "weather_cities")
                                                     }
@@ -248,10 +248,10 @@ struct new_location_search: View {
                                 var weather_dict = [String:String]()
                                     var i = 0
                                     for item in weather_data.array {
-                                        weather_dict["\(i)"] = (item.full_location != nil ? item.full_location : "")
+                                        weather_dict["\(i)"] = item.full_location
                                         i += 1
                                     }
-                                    var defaults_weather = (userDefaults.object(forKey: "weather_cities") as? [String:String] ?? ["0":""]).sorted(by: >)
+                                    let defaults_weather = (userDefaults.object(forKey: "weather_cities") as? [String:String] ?? ["0":""]).sorted(by: >)
                                     if defaults_weather != weather_dict.sorted(by: >) {
                                     userDefaults.setValue(weather_dict, forKey: "weather_cities")
                                 }
@@ -709,11 +709,11 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
                 print("Here2, ZSK")
                 do {
                     let loanDataStore = try decoder.decode(CurrentWeather.self, from: data)
-                    print(loanDataStore.weather?[0].icon, "ZSK")
+                    print(loanDataStore.weather?[0].icon ?? "", "ZSK")
                     DispatchQueue.main.async {
                         self.objectWillChange.send()
                         self.current_data = loanDataStore
-                        print(self.current_data?.weather?[0].icon, "ZSK")
+                        print(self.current_data?.weather?[0].icon ?? "", "ZSK")
                     }
                     
                 } catch {

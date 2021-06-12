@@ -130,7 +130,7 @@ struct contacts_view_app: View {
             case "Contacts":
                 SkeuomorphicList_Contacts(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, editing_state: $editing_state, contacts_current_nav_view: $contacts_current_nav_view, current_contact: $current_contact, indexes:  Array(Set(contacts_observer.contacts.compactMap({
                 
-                String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+                    String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
                 
             }))).sorted(by: {
                 if $0.first?.isLetter == false && $1.first?.isLetter == true {
@@ -149,7 +149,7 @@ struct contacts_view_app: View {
                 
             }), contacts_observer: contacts_observer).modifier(VerticalIndex(indexableList: alphabet, indexes: Array(Set(contacts_observer.contacts.compactMap({
                 
-                String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+                String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
                 
             }))), editing_state: $editing_state)).clipped().transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
             case "Contacts_Desination":
@@ -157,7 +157,7 @@ struct contacts_view_app: View {
             default:
                 SkeuomorphicList_Contacts(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, editing_state: $editing_state, contacts_current_nav_view: $contacts_current_nav_view, current_contact: $current_contact, indexes:  Array(Set(contacts_observer.contacts.compactMap({
                     
-                    String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+                    String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
                     
                 }))).sorted(by: {
                     if $0.first?.isLetter == false && $1.first?.isLetter == true {
@@ -176,7 +176,7 @@ struct contacts_view_app: View {
                     
                 }), contacts_observer: contacts_observer).modifier(VerticalIndex(indexableList: alphabet, indexes: Array(Set(contacts_observer.contacts.compactMap({
                     
-                    String(alphabet.contains(String(($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "")) ? (($0.familyName.prefix(1) ?? "") != "" ? ($0.familyName.prefix(1) ?? "") : $0.name.prefix(1) ?? "") : "#")
+                    String(alphabet.contains(String(($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1))) ? (($0.familyName.prefix(1)) != "" ? ($0.familyName.prefix(1)) : $0.name.prefix(1)) : "#")
                     
                 }))), editing_state: $editing_state)).clipped().transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
             }

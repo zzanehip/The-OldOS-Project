@@ -83,9 +83,9 @@ struct Maps: View {
                             generic_title_bar_clear_cancel(title: "Directions", done_action: {hideKeyboard()}, clear_action: {search = ""}, show_done: true, show_clear: true).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).transition(.asymmetric(insertion: .move(edge:.top), removal: .move(edge:.top)))
                         }
                         maps_directions_bar(title: "", selected_segment: $selected_segment, forward_or_backward: $forward_or_backward, search: $destination_search, editing_state: $editing_state, show_edit: false, show_plus: false, search_action: {
-                            var localSearchRequest = MKLocalSearch.Request()
+                            let localSearchRequest = MKLocalSearch.Request()
                             localSearchRequest.naturalLanguageQuery = destination_search
-                            var localSearch = MKLocalSearch(request: localSearchRequest)
+                            let localSearch = MKLocalSearch(request: localSearchRequest)
                             localSearch.start { (localSearchResponse, error) -> Void in
                                 if localSearchResponse == nil{
                                     return
@@ -123,7 +123,7 @@ struct Maps: View {
             mapView.update_map()
         }).onChange(of: selected_segment, perform: {_ in
             if selected_segment == 0 {
-                if let polyline = mapView.mapView.overlays.filter({$0 is MKPolyline}).first as? MKOverlay {
+                if let polyline = mapView.mapView.overlays.filter({$0 is MKPolyline}).first {
                     poly_overlay = polyline
                     directions_annotations = mapView.mapView.annotations
                     mapView.mapView.removeOverlay(polyline)
@@ -141,9 +141,9 @@ struct Maps: View {
                 }
             }
         }).onChange(of: directions_mode, perform: {_ in
-            var localSearchRequest = MKLocalSearch.Request()
+            let localSearchRequest = MKLocalSearch.Request()
             localSearchRequest.naturalLanguageQuery = destination_search
-            var localSearch = MKLocalSearch(request: localSearchRequest)
+            let localSearch = MKLocalSearch(request: localSearchRequest)
             localSearch.start { (localSearchResponse, error) -> Void in
                 if localSearchResponse == nil{
                     return
@@ -183,12 +183,12 @@ struct Maps: View {
     
     func search_for_location() {
         if mapView.mapView.annotations.count != 0 {
-            var annotation = mapView.mapView.annotations[0]
+            let annotation = mapView.mapView.annotations[0]
             mapView.mapView.removeAnnotation(annotation)
         }
-        var localSearchRequest = MKLocalSearch.Request()
+        let localSearchRequest = MKLocalSearch.Request()
         localSearchRequest.naturalLanguageQuery = search
-        var localSearch = MKLocalSearch(request: localSearchRequest)
+        let localSearch = MKLocalSearch(request: localSearchRequest)
         localSearch.start { (localSearchResponse, error) -> Void in
             mapView.mapView.removeAnnotations(mapView.mapView.annotations)
             if localSearchResponse == nil{
@@ -490,8 +490,8 @@ struct MapView: UIViewControllerRepresentable {
     
     func updateUIViewController(_ viewController: UIViewController, context: Context) {
         mapView.frame = CGRect(geometry?.size.width ?? 0, (geometry?.size.height ?? 0) - 129)
-        let google_view = UIHostingController(rootView: google_logo_view())
-        var google_image = UIImageView(image: UIImage(named: "GoogleBadge"))
+        _ = UIHostingController(rootView: google_logo_view())
+        let google_image = UIImageView(image: UIImage(named: "GoogleBadge"))
         google_image.isUserInteractionEnabled = false
         google_image.frame = CGRect(10, mapView.frame.size.height - google_image.frame.size.height - 10 , google_image.frame.size.width, google_image.frame.size.height)
         google_image.autoresizingMask = [.flexibleLeftMargin, .flexibleTopMargin]
@@ -626,7 +626,7 @@ struct MapView: UIViewControllerRepresentable {
                 renderer.lineWidth = 8
                 return renderer
             
-            case let tile as MKTileOverlay:
+            case is MKTileOverlay:
                 return parent.tileRenderer ?? MKOverlayRenderer()
             // you can add more `case`s for other overlay types as needed
 
@@ -1022,7 +1022,7 @@ extension MKMapView {
     self.addOverlay((route.polyline), level: MKOverlayLevel.aboveLabels)
         let rect = route.polyline.boundingMapRect
         destinationAnnotation.coordinate = route.polyline.points()[route.polyline.pointCount - 1].coordinate
-        let adjusted_rect = self.regionThatFits(MKCoordinateRegion(rect))
+        _ = self.regionThatFits(MKCoordinateRegion(rect))
         completion(ti_format(duration: time), df.string(fromDistance: distance))
     }
         

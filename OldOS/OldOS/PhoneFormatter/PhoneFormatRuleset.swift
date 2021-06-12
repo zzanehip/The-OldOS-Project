@@ -20,7 +20,7 @@ public extension PhoneFormatRuleset {
     ///
     /// - Parameter index: The index (0 based) for a phone number where formatting is to be applied using the rules for this ruleset.
     /// - Returns: If found returns an array of rules sorted in ascending order of priority. Else nil.
-    public func rules(for index: Int) -> [PhoneNumberFormatRule]? {
+    func rules(for index: Int) -> [PhoneNumberFormatRule]? {
         return rules.filter({ $0.index == index }).sorted(by: ({ $0.priority < $1.priority }))
     }
     
@@ -28,7 +28,7 @@ public extension PhoneFormatRuleset {
     ///
     /// - Parameter index: The index of a phone number string in which to add a separator character(s).
     /// - Returns: If rules are found that apply to the requested index, the separator values will be returned, else nil.
-    public func separator(for index: Int) -> String? {
+    func separator(for index: Int) -> String? {
         
         // check for rules
         guard let rules = rules(for: index) else {

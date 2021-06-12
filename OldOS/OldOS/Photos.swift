@@ -116,8 +116,8 @@ struct PlacesMapView: UIViewControllerRepresentable {
     
     func updateUIViewController(_ viewController: UIViewController, context: Context) {
         mapView.frame = CGRect(geometry?.size.width ?? 0, (geometry?.size.height ?? 0) - 72)
-        let google_view = UIHostingController(rootView: google_logo_view())
-        var google_image = UIImageView(image: UIImage(named: "GoogleBadge"))
+        _ = UIHostingController(rootView: google_logo_view())
+        let google_image = UIImageView(image: UIImage(named: "GoogleBadge"))
         google_image.isUserInteractionEnabled = false
         google_image.frame = CGRect(10, mapView.frame.size.height - google_image.frame.size.height - 10 , google_image.frame.size.width, google_image.frame.size.height)
         google_image.autoresizingMask = [.flexibleLeftMargin, .flexibleTopMargin]
@@ -214,7 +214,7 @@ struct PlacesMapView: UIViewControllerRepresentable {
                 renderer.lineWidth = 8
                 return renderer
             
-            case let tile as MKTileOverlay:
+            case is MKTileOverlay:
                 return parent.tileRenderer ?? MKOverlayRenderer()
 
             default:
@@ -735,8 +735,8 @@ struct PhotosTabView : View {
                             Rectangle().fill(Color.black).frame(width: geometry.size.width, height: 24)
                         mapView.onAppear() {
                             mapView.geometry = geometry
-                            var place_assets = photos_obsever.assets
-                            for asset in place_assets.unique{($0 as PHAsset).location} {
+                            let place_assets = photos_obsever.assets
+                            for asset in place_assets.unique(map: {($0 as PHAsset).location}) {
                                 
                                 let annotation = MKPointAnnotation()
                                 annotation.coordinate = asset.location?.coordinate ?? CLLocationCoordinate2D()

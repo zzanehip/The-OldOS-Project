@@ -39,9 +39,9 @@ struct Safari: View {
     init() {
         let userDefaults = UserDefaults.standard
 
-        var webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+        let webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
         if webpages.count > 1 {
-        for i in 0..<(webpages.count-1) {
+        for _ in 0..<(webpages.count-1) {
             views.array.append(WebViewStore())
         }
         }
@@ -113,7 +113,7 @@ struct Safari: View {
                                                                     webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
                                                                     i += 1
                                                                 }
-                                                                var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+                                                                let defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
                                                                 if defaults_webpages != webpage_dict.sorted(by: >) {
                                                                 userDefaults.setValue(webpage_dict, forKey: "webpages")
                                                                 }
@@ -130,7 +130,7 @@ struct Safari: View {
                                                                     webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
                                                                     i += 1
                                                                 }
-                                                                var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+                                                                let defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
                                                                 if defaults_webpages != webpage_dict.sorted(by: >) {
                                                                 userDefaults.setValue(webpage_dict, forKey: "webpages")
                                                                 }
@@ -293,7 +293,7 @@ struct Safari: View {
                 webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
                 i += 1
             }
-            var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+            let defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
             if defaults_webpages != webpage_dict.sorted(by: >) {
             userDefaults.setValue(webpage_dict, forKey: "webpages")
             }
@@ -308,7 +308,7 @@ struct Safari: View {
                 webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
                 i += 1
             }
-            var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+            let defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
             if defaults_webpages != webpage_dict.sorted(by: >) {
             userDefaults.setValue(webpage_dict, forKey: "webpages")
             }
@@ -373,7 +373,7 @@ struct bookmarks_view: View {
                     Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
                     
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 44)
-                ForEach((bm_observer.bookmarks ?? [:]).sorted(by: <), id: \.key) { key, value in
+                ForEach((bm_observer.bookmarks).sorted(by: <), id: \.key) { key, value in
                     Button(action:{
                         if let url = URL(string: key) {
                         webViewStore.webView.load(URLRequest(url: url))
@@ -407,7 +407,7 @@ struct bookmarks_view: View {
                             if to_delete == key {
                                 Spacer()
                                 tool_bar_rectangle_button(action: {withAnimation() {
-                                    bm_observer.bookmarks.removeValue(forKey: key)
+                                    _ = bm_observer.bookmarks.removeValue(forKey: key)
                                 }}, button_type: .red, content: "Delete").padding(.trailing, 12).transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge:.trailing)).combined(with: .opacity))
                             }
                         }.padding(.leading, 15)
@@ -522,9 +522,9 @@ struct add_bookmark_view: View {
                             ZStack {
                                 Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                                 HStack {
-                                    TextField("Title", text: $bookmark_name){
+                                    TextField("Title", text: $bookmark_name, onCommit: {
                                         save_action?()
-                                    }.font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
+                                    }).font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
                                     if bookmark_name.count != 0 {
                                         Button(action:{bookmark_name = ""}) {
                                             Image("UITextFieldClearButton")
@@ -627,7 +627,7 @@ struct Webview : UIViewRepresentable {
         }
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
             if parent.selecting_tab == false {
-                var offset = scrollView.contentOffset
+                let offset = scrollView.contentOffset
                 parent.offset = offset
                 
                 if offset.y < 76 {
@@ -665,14 +665,11 @@ struct Webview : UIViewRepresentable {
 
 //Thanks to https://stackoverflow.com/questions/57459727/why-an-observedobject-array-is-not-updated-in-my-swiftui-application for this genius solution to a problem I've encountered on various projects. This let's us be notified of changes to published vars inside an array, which itself is a published var.
 class ObservableArray<T>: ObservableObject {
-    
-    
     @Published var array:[T] = []
     var cancellables = [AnyCancellable]()
     
     init(array: [T]) {
         self.array = array
-        
     }
     
     func observeChildrenChanges<T: ObservableObject>() -> ObservableArray<T> {
@@ -686,8 +683,6 @@ class ObservableArray<T>: ObservableObject {
         })
         return self as! ObservableArray<T>
     }
-    
-    
 }
 
 public class WebViewStore: ObservableObject, Identifiable, Equatable {
@@ -734,8 +729,6 @@ public class WebViewStore: ObservableObject, Identifiable, Equatable {
         webView[keyPath: keyPath]
     }
 }
-
-
 
 struct tool_bar: View {
     var webViewStore: WebViewStore
@@ -814,8 +807,6 @@ struct tool_bar: View {
         }
     }
 }
-
-
 
 struct safari_title_bar : View {
     @Binding var forward_or_backward: Bool
@@ -948,6 +939,7 @@ struct url_search_bar: View {
         }
     }
 }
+
 extension View {
     public func introspectTextField2(customize: @escaping (UITextField) -> ()) -> some View {
         return inject(UIKitIntrospectionView(
@@ -1012,7 +1004,6 @@ struct google_search_bar: View {
         } .ps_innerShadow(.capsule(gradient), radius:1.8, offset: CGPoint(0, 1), intensity: 0.6).strokeCapsule(Color(red: 84/255, green: 108/255, blue: 138/255), lineWidth: 0.65).padding(.leading, 1).padding(.trailing, 2.5)
     }
 }
-
 
 struct Safari_Previews: PreviewProvider {
     static var previews: some View {

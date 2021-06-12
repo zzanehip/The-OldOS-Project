@@ -194,7 +194,7 @@ struct itunes_music_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.frame(width:89, height: 89).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(music.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(music.artistName).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                         Text(music.collectionName ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
                                                         Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
@@ -304,7 +304,7 @@ struct itunes_category_destination_view: View {
                                                     }.frame(width:59, height: 59).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 2) {
                                                         Text("\(Int(top_songs.firstIndex(of: track) ?? 0) + 1). \(track.trackName ?? "")").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
-                                                        Text(track.artistName ?? "").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(track.artistName).font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
                                                     Spacer()
                                                     tool_bar_rectangle_button_custom_radius(action: {
@@ -337,7 +337,7 @@ struct itunes_category_destination_view: View {
                                                     Rectangle().foregroundColor(.gray)
                                                 }.frame(width:89, height: 89).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                 VStack(alignment: .leading, spacing: 4) {
-                                                    Text(music.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                    Text(music.artistName).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     Text("\(Int((top_albums.firstIndex(of: music) ?? 0) + 1)). \(music.collectionName ?? "---")").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
                                                     Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                 }
@@ -564,7 +564,7 @@ struct itunes_videos_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.frame(width:89*67/100, height: 89).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.primaryGenreName).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                         Text(video.trackName ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
                                                         Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
@@ -611,7 +611,7 @@ struct itunes_videos_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.frame(width:89, height: 89).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.primaryGenreName).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                         Text(video.collectionName ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
                                                         Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
@@ -658,7 +658,7 @@ struct itunes_videos_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.aspectRatio(contentMode: .fit).frame(width:89, height: 89).background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.primaryGenreName).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                         Text(video.trackName ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
                                                         Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
@@ -810,7 +810,6 @@ struct MovieWebview: UIViewRepresentable {
                 urlRequest.addValue("143441-1,2", forHTTPHeaderField: "X-Apple-Store-Front")
                 webView.load(urlRequest)
             } else {
-                let response = navigationResponse.response as? HTTPURLResponse
                 decisionHandler(.allow)
             }
         }
@@ -1171,7 +1170,7 @@ func fetch_movie_data(_ video: RSSFeedItem, completion: @escaping (Music_Data.Re
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     var id = ""
     if let id_range = video.link?.range(of: "(?<=id)[^?]+", options: .regularExpression) {
-        id = (video.link?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+        id = (video.link?[id_range] ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
     let request = URLRequest(url: url)
@@ -1204,7 +1203,7 @@ func fetch_tv_data(_ video: RSSFeedItem, completion: @escaping (Music_Data.Resul
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     var id = ""
     if let id_range = video.link?.range(of: "(?<=id)[^?]+", options: .regularExpression) {
-        id = (video.link?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+        id = (video.link?[id_range] ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
     print(url, id, "ZSK")
@@ -1238,7 +1237,7 @@ func fetch_musicvideo_data(_ video: RSSFeedItem, completion: @escaping (Music_Da
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     var id = ""
     if let id_range = video.link?.range(of: "(?<=\\/)[0-9]+", options: .regularExpression) {
-        id = (video.link?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+        id = (video.link?[id_range] ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
     print(url, id, "ZSK")
@@ -1290,10 +1289,9 @@ func fetch_first_image_for_top_songs_category(id: String, completion: @escaping 
 func fetch_music_data(_ music: RSSFeedItem, completion: @escaping (Music_Data.Results) -> Void) {
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     var id = ""
-    print(music.link)
-    let start_range = music.link?.range(of: "")
+    print(music.link ?? "")
     if let id_range = music.link?.range(of: "(?<=\\/)[0-9](.*)(?=\\?)", options: .regularExpression) {
-        id = (music.link?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+        id = (music.link?[id_range] ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     print(id)
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
@@ -1321,7 +1319,7 @@ func fetch_music_data(_ music: RSSFeedItem, completion: @escaping (Music_Data.Re
 
 func fetch_music_data_tracks(_ music: Int, completion: @escaping ([Music_Data.Results]) -> Void) {
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
-    var id = "\(music)"
+    let id = "\(music)"
     print(id)
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)&entity=song")!
     let request = URLRequest(url: url)
@@ -1354,7 +1352,7 @@ func fetch_music_data_atom(_ music: AtomFeedEntry, completion: @escaping (Music_
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     var id = ""
     if let id_range = music.id?.range(of: "(?<=\\/)[0-9](.*)(?=\\?)", options: .regularExpression) {
-        id = (music.id?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+        id = (music.id?[id_range] ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
     let request = URLRequest(url: url)
@@ -1387,7 +1385,7 @@ func fetch_music_data_atom_song(_ music: AtomFeedEntry, completion: @escaping (M
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     var id = ""
     if let id_range = music.id?.range(of: "(?<=\\=)(.*)(?=\\&)", options: .regularExpression) {
-        id = (music.id?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+        id = (music.id?[id_range] ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     print(id, "ZSK")
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
@@ -1617,7 +1615,7 @@ struct itunes_title_bar : View {
                                                                         }
                                                                         
                                                                         for i in search_results {
-                                                                            print("ZSK", i.section_item.title, i.contents.count)
+                                                                            print("ZSK", i.section_item.title ?? "", i.contents.count)
                                                                         }
                                                                     } catch {
                                                                         print(error)

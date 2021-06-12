@@ -16,8 +16,7 @@ struct Stocks: View {
     @State var hide_stocks: Bool = false
     init() {
         for item in items ?? [] {
-            stocks_observer.fetch_stocks(ticker: item, completion: {[self] in
-            })
+            stocks_observer.fetch_stocks(ticker: item, completion: { })
         }
         stocks_observer.stocks.sort(by: {$0.current_stock_data.symbol ?? "" < $1.current_stock_data.symbol ?? ""})
         
@@ -33,7 +32,7 @@ struct Stocks: View {
                     Spacer().frame(height: 2)
                     stocks_header(stocks_observer: stocks_observer, items: $items, selected_stock: $selected_stock).frame(width: geometry.size.width - 12, height: geometry.size.height*2/3 - 7).cornerRadius(12)
                     Spacer().frame(height: 10)
-                    stocks_footer(show_settings: $show_settings, switch_to_settings: $switch_to_settings, hide_stocks: $hide_stocks, company_name: "\(selected_stock?.current_stock_data.companyName ?? "")", open: "\(selected_stock?.current_stock_data.iexOpen ?? Double(0))", mkt_cap: suffixNumber(number: Double(selected_stock?.current_stock_data.marketCap ?? Int(0)) ?? Double(0)), high: "\(selected_stock?.current_stock_data.high ?? Double(0))", f_high: "\(selected_stock?.current_stock_data.week52High ?? Double(0))", low: "\(selected_stock?.current_stock_data.low ?? Double(0))", f_low: "\(selected_stock?.current_stock_data.week52Low ?? Double(0))", vol: suffixNumber(number: Double(selected_stock?.current_stock_data.volume ?? Int(0)) ?? Double(0)), avg_vol: suffixNumber(number: Double(selected_stock?.current_stock_data.volume ?? Int(0)) ?? Double(0)), pe: "\(selected_stock?.current_stock_data.peRatio ?? Double(0))", yield: "—").frame(width: geometry.size.width - 12, height: geometry.size.height*1/3 - 7).cornerRadius(12)
+                    stocks_footer(show_settings: $show_settings, switch_to_settings: $switch_to_settings, hide_stocks: $hide_stocks, company_name: "\(selected_stock?.current_stock_data.companyName ?? "")", open: "\(selected_stock?.current_stock_data.iexOpen ?? Double(0))", mkt_cap: suffixNumber(number: Double(selected_stock?.current_stock_data.marketCap ?? Int(0))), high: "\(selected_stock?.current_stock_data.high ?? Double(0))", f_high: "\(selected_stock?.current_stock_data.week52High ?? Double(0))", low: "\(selected_stock?.current_stock_data.low ?? Double(0))", f_low: "\(selected_stock?.current_stock_data.week52Low ?? Double(0))", vol: suffixNumber(number: Double(selected_stock?.current_stock_data.volume ?? Int(0))), avg_vol: suffixNumber(number: Double(selected_stock?.current_stock_data.volume ?? Int(0))), pe: "\(selected_stock?.current_stock_data.peRatio ?? Double(0))", yield: "—").frame(width: geometry.size.width - 12, height: geometry.size.height*1/3 - 7).cornerRadius(12)
                     Spacer().frame(height: 2)
                 }.rotation3DEffect(.degrees(switch_to_settings == true ? -90 : 0), axis: (x: 0, y:1, z: 0), anchor: UnitPoint(1, 0.5)).offset(x:switch_to_settings == true ? -geometry.size.width/2 : 0).opacity(switch_to_settings == true ? 0 : 1).isHidden(hide_stocks)
             }
@@ -290,7 +289,7 @@ struct stocks_header: View {
                                     Spacer()
                                     Text("\(String(format: "%.2f", stock.current_stock_data.latestPrice ?? Double(0)))").font(.custom("Helvetica Neue Bold", size: 20)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0.25, x: 0, y: -2/3).padding(.trailing, 8)
                                     
-                                    stock_delta_capsule(content: "\(String((stock_mode ?? "Price") == "Price" ? String(format: "%.2f", stock.current_stock_data.change ?? Double(0)) : (stock_mode ?? "Price") == "%" ?                      "\(String(format: "%.2f", (stock.current_stock_data.changePercent ?? Double(0))*100))%" : suffixNumber(number: Double(selected_stock?.current_stock_data.marketCap ?? Int(0)) ?? Double(0))).replacingOccurrences(of: "-", with: ""))", color_indicator: String(format: "%.2f", stock.current_stock_data.change ?? Double(0)).contains("-") ? "red" : "green").frame(width: 87, height: 35).padding(.trailing, 8)
+                                    stock_delta_capsule(content: "\(String((stock_mode ?? "Price") == "Price" ? String(format: "%.2f", stock.current_stock_data.change ?? Double(0)) : (stock_mode ?? "Price") == "%" ?                      "\(String(format: "%.2f", (stock.current_stock_data.changePercent ?? Double(0))*100))%" : suffixNumber(number: Double(selected_stock?.current_stock_data.marketCap ?? Int(0)))).replacingOccurrences(of: "-", with: ""))", color_indicator: String(format: "%.2f", stock.current_stock_data.change ?? Double(0)).contains("-") ? "red" : "green").frame(width: 87, height: 35).padding(.trailing, 8)
                                 }
                             }.frame(height: 50)
                         }
