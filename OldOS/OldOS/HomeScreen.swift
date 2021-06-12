@@ -111,7 +111,13 @@ struct home_bar: View {
                         }
                     } else {
                     withAnimation() {
-                        selectedPage = 1
+                        // when on the first page, pressing the home button shows the spotlight search
+                        // https://www.youtube.com/watch?v=hMZXnyk2SJA
+                        if selectedPage == 1 {
+                            selectedPage = 0
+                        } else {
+                            selectedPage = 1
+                        }
                     }
                     }
                 }) {
@@ -161,13 +167,11 @@ struct HomeScreen: View {
                     LinearGradient(gradient:Gradient(colors: [Color(red: 34/255, green: 34/255, blue: 34/255).opacity(0.0), Color(red: 24/255, green: 24/255, blue: 24/255).opacity(0.85)]), startPoint: .top, endPoint: .bottom).frame(minWidth: geometry.size.width, maxWidth:geometry.size.width, minHeight: geometry.size.height/4.25, maxHeight: geometry.size.height/4.25, alignment: .center).clipped()
                     }
                 }
-                if selectedPage == 0 {
-                    Color.black.opacity(0.65)
-                }
+                Color.black.opacity(selectedPage == 0 ? 0.65 : 0).padding(.top, 24)
                 VStack {
-                    status_bar(selected_page:selectedPage).frame(minHeight: 24, maxHeight:24).zIndex(1)
+                    status_bar().frame(minHeight: 24, maxHeight:24).zIndex(1)
                     Spacer().frame(height: 30)
-                    TabView(selection: $selectedPage) {
+                    TabView(selection: $selectedPage.animation()) {
                         search(width: $search_width, height: $search_height, show_searchField: $show_searchField, apps_scale: $apps_scale, current_view: $current_view, dock_offset: $dock_offset).frame(maxWidth: geometry.size.width, maxHeight:geometry.size.height).zIndex(0).clipped().tag(0)
                         apps(apps_scale:$apps_scale, apps_scale_height: $apps_scale_height, show_searchField: $show_searchField, icon_scaler: $icon_scaler, current_view: $current_view, dock_offset: $dock_offset, width: geometry.size.width, height: geometry.size.height).scaleEffect(apps_scale)   .animation(.easeIn).frame(maxWidth: geometry.size.width, maxHeight:geometry.size.height).zIndex(0).clipped().tag(1)    .overlay(
                             GeometryReader { proxy in
@@ -187,14 +191,49 @@ struct HomeScreen: View {
                 VStack {
                     Spacer()
                     HStack() {
-                        Spacer().frame(width: geometry.size.width/2.3)
-                        Image(systemName: "magnifyingglass").resizable().font(Font.title.weight(.heavy)).foregroundColor(selectedPage == 0 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(width: 7.9, height:7.9).padding(0)
-                        Circle().fill(selectedPage == 1 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(height:7.9).padding(0)
-                        Circle().fill(selectedPage == 2 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(height:7.9).padding(0)
-                        Spacer().frame(width: geometry.size.width/2.3)
+                        Button {
+                            withAnimation {
+                                selectedPage = max(selectedPage - 1, 0)
+                            }
+                        } label: {
+                            Color.clear.frame(width: geometry.size.width/2.4, height:7.9)
+                        }
+                        Button {
+                            withAnimation {
+                                selectedPage = 0
+                            }
+                        } label: {
+                            Image(systemName: "magnifyingglass").resizable().font(Font.title.weight(.heavy)).foregroundColor(selectedPage == 0 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(width: 7.9, height:7.9).padding(0)
+                        }
+                        Button {
+                            withAnimation {
+                                selectedPage = 1
+                            }
+                        } label: {
+                            Circle().fill(selectedPage == 1 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(height:7.9).padding(0)
+                        }
+                        Button {
+                            withAnimation {
+                                selectedPage = 2
+                            }
+                        } label: {
+                            Circle().fill(selectedPage == 2 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(height:7.9).padding(0)
+                        }
+                        Button {
+                            withAnimation {
+                                selectedPage = min(selectedPage + 1, 2)
+                            }
+                        } label: {
+                            Color.clear.frame(width: geometry.size.width/2.4, height:7.9)
+                        }
                     }.padding(.bottom, 110).offset(y:dock_offset).offset(y:bottom_indicator_offset)
                 }
             }.onAppear() {
+                //MARK — iPhone 8
+                if UIScreen.main.bounds.width == 375 && UIScreen.main.bounds.height == 667 {
+                    bottom_indicator_offset = 17.5
+                    icon_scaler = 0.55
+                }
                 //MARK — iPhone 8 Plus
                 if UIScreen.main.bounds.width == 414 && UIScreen.main.bounds.height == 736 {
                     bottom_indicator_offset = 10
@@ -283,7 +322,7 @@ struct search_results_view: View {
                 }.frame(height: geometry.size.height).background(Color(red: 228/255, green: 229/255, blue: 230/255)).cornerRadius(12)
             }
         }.onAppear() {
-            UIScrollView.appearance().bounces = true
+       //UIScrollView.appearance().bounces = true -> There's something weird going on where we can't readily modify the bounce value of our scrollviews in the TabView. Therefore, our app pages bounce, when they shouldn't. For now, we'll compromise and have the search not bounce, instead of the apps bouncing. 
         }.onDisappear() {
             UIScrollView.appearance().bounces = false
         }
@@ -537,13 +576,10 @@ struct status_bar: View {
     @State var battery_level = UIDevice.current.batteryLevel * 100
     @State var carrier_id: String = CTTelephonyNetworkInfo().serviceSubscriberCellularProviders?.first?.value.carrierName ?? ""
     @State var charging: Bool = false
-    var selected_page = 1
     @State var wifi_connected : Bool = true
     var body: some View {
         ZStack {
-            if selected_page != 0 {
-                Color.black.opacity(0.65)
-            }
+            Color.black.opacity(0.65)
             HStack {
                 Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(Color.init(red: 200/255, green: 200/255, blue: 200/255)).font(.custom("Helvetica Neue Medium", size: 15)).onAppear() {
                     let networkInfo = CTTelephonyNetworkInfo()

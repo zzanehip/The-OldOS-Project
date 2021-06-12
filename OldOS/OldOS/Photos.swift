@@ -554,6 +554,7 @@ class PhotosObserver: ObservableObject {
         fetchOptions.predicate = NSPredicate(format: "mediaType == %d || mediaType == %d",
                                              PHAssetMediaType.image.rawValue,
                                              PHAssetMediaType.video.rawValue)
+            fetchOptions.fetchLimit = 50000 //Let's try limiting to 50k to avoid crashing...some people have libraries over 100k and that is just somthing we can't handle.
         let assets = PHAsset.fetchAssets(with: fetchOptions)
         assets.enumerateObjects({ (object, count, stop) in
              DispatchQueue.main.async() {

@@ -657,7 +657,7 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
     }()
     func parse_forcast_data(location: String, mode: String) {
         guard let location_string = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
-        let developed_string = "http://api.openweathermap.org/data/2.5/forecast/daily?q=\(location_string),us&appid=a0bf715940b65a3c9874e2127ec00ed4&units=\(mode)&cnt=6"
+        let developed_string = "https://api.openweathermap.org/data/2.5/forecast/daily?q=\(location_string),us&appid=a0bf715940b65a3c9874e2127ec00ed4&units=\(mode)&cnt=6"
         let forcast_url = URL(string: developed_string)!
         let request = URLRequest(url: forcast_url)
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
@@ -691,7 +691,7 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
     func parse_current_data(location: String, mode: String) {
         guard let location_string = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
         //There's a very odd SwiftUI bug where if we properly format the url, it will fail to update our image header. This url will essentially be (location),(country),(country), instead of (location),(country). Why this happens is beyond me.
-        let developed_string = "http://api.openweathermap.org/data/2.5/weather?q=\(location_string),us&appid=a0bf715940b65a3c9874e2127ec00ed4&units=\(mode)"
+        let developed_string = "https://api.openweathermap.org/data/2.5/weather?q=\(location_string),us&appid=a0bf715940b65a3c9874e2127ec00ed4&units=\(mode)"
         let current_url = URL(string: developed_string)!
         print(current_url)
         let request = URLRequest(url: current_url)

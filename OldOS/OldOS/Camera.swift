@@ -31,6 +31,8 @@ struct Camera: View {
                 }
                 
             }
+        }.onDisappear() {
+            model.end_session()
         }
     }
 }
@@ -319,5 +321,8 @@ final class CameraModel: ObservableObject {
     }
     func record() {
         service.record()
+    }
+    func end_session() {
+        service.session.stopRunning()
     }
 }

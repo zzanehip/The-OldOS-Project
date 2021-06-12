@@ -1724,7 +1724,7 @@ struct photos_view: View {
                         }
                         Spacer().frame(height:15)
                         HStack {
-                            Text("HDR blens the best parts of three\nseparate exposures into a single photo.").multilineTextAlignment(.leading).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                            Text("HDR blends the best parts of three\nseparate exposures into a single photo.").multilineTextAlignment(.leading).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                             Spacer()
                         }
                         Spacer().frame(height: 15)
