@@ -168,12 +168,12 @@ struct HomeScreen: View {
                     }
                 }
                 if selectedPage == 0 {
-                    Color.black.opacity(0.65)
+                    Color.black.opacity(0.65).padding(.top, 24)
                 }
                 VStack {
-                    status_bar(selected_page:selectedPage).frame(minHeight: 24, maxHeight:24).zIndex(1)
+                    status_bar().frame(minHeight: 24, maxHeight:24).zIndex(1)
                     Spacer().frame(height: 30)
-                    TabView(selection: $selectedPage) {
+                    TabView(selection: $selectedPage.animation()) {
                         search(width: $search_width, height: $search_height, show_searchField: $show_searchField, apps_scale: $apps_scale, current_view: $current_view, dock_offset: $dock_offset).frame(maxWidth: geometry.size.width, maxHeight:geometry.size.height).zIndex(0).clipped().tag(0)
                         apps(apps_scale:$apps_scale, apps_scale_height: $apps_scale_height, show_searchField: $show_searchField, icon_scaler: $icon_scaler, current_view: $current_view, dock_offset: $dock_offset, width: geometry.size.width, height: geometry.size.height).scaleEffect(apps_scale)   .animation(.easeIn).frame(maxWidth: geometry.size.width, maxHeight:geometry.size.height).zIndex(0).clipped().tag(1)    .overlay(
                             GeometryReader { proxy in
@@ -573,13 +573,10 @@ struct status_bar: View {
     @State var battery_level = UIDevice.current.batteryLevel * 100
     @State var carrier_id: String = CTTelephonyNetworkInfo().serviceSubscriberCellularProviders?.first?.value.carrierName ?? ""
     @State var charging: Bool = false
-    var selected_page = 1
     @State var wifi_connected : Bool = true
     var body: some View {
         ZStack {
-            if selected_page != 0 {
-                Color.black.opacity(0.65)
-            }
+            Color.black.opacity(0.65)
             HStack {
                 Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(Color.init(red: 200/255, green: 200/255, blue: 200/255)).font(.custom("Helvetica Neue Medium", size: 15)).onAppear() {
                     let networkInfo = CTTelephonyNetworkInfo()
