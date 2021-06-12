@@ -21,8 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults: [
                 "Lock_Wallpaper": "Wallpaper_1",
                 "Home_Wallpaper": "Wallpaper_1",
-                "bookmarks": ["http://apple.com":"Apple", "http://yahoo.com":"Yahoo!", "http://google.com":"Google", "https://manuals.info.apple.com/MANUALS/1000/MA1539/en_US/iPhone_iOS4_User_Guide.pdf":"iPhone User Guide", "https://web.archive.org/web/20100814131917/http://www.apple.com/webapps/":"iPhone Web Applications",  "http://zsk.dev":"Zane K — My place on the internet"],
-                "webpages": ["0":"http://google.com", "1":"http://zsk.dev"], //Saving like this let's us get around NSKeyedArchiver
+                "bookmarks": ["https://apple.com":"Apple", "https://yahoo.com":"Yahoo!", "https://google.com":"Google", "https://manuals.info.apple.com/MANUALS/1000/MA1539/en_US/iPhone_iOS4_User_Guide.pdf":"iPhone User Guide", "https://web.archive.org/web/20100814131917/https://www.apple.com/webapps/":"iPhone Web Applications",  "https://zsk.dev":"Zane K — My place on the internet"],
+                "webpages": ["0":"https://google.com", "1":"https://zsk.dev"], //Saving like this let's us get around NSKeyedArchiver
                 "weather_cities": ["0":"Cupertino,us", "1": "New York,us"],
                 "weather_mode": "imperial",
                 "stock_mode": "Price",

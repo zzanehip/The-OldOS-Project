@@ -364,7 +364,7 @@ struct itunes_category_destination_view: View {
                     }.padding([.top, .bottom], 12).onAppear() {
                         //Top Songs
                         let id = selected_category.genre_id
-                        let songs_url = URL(string: "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/sf=143441/genre=\(id)/xml")!
+                        let songs_url = URL(string: "https://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/sf=143441/genre=\(id)/xml")!
                         let songs_parser = FeedParser(URL: songs_url)
                         songs_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
                             DispatchQueue.main.async {
@@ -385,7 +385,7 @@ struct itunes_category_destination_view: View {
                         }
                         
                         //Top Albums
-                        let albums_url = URL(string: "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topalbums/sf=143441/genre=\(id)/xml")!
+                        let albums_url = URL(string: "https://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topalbums/sf=143441/genre=\(id)/xml")!
                         let albums_parser = FeedParser(URL: albums_url)
                         albums_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
                             DispatchQueue.main.async {
@@ -1267,7 +1267,7 @@ func fetch_musicvideo_data(_ video: RSSFeedItem, completion: @escaping (Music_Da
 
 
 func fetch_first_image_for_top_songs_category(id: String, completion: @escaping (URL) -> Void) {
-    let paid_url = URL(string: "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topalbums/sf=143441/genre=\(id)/xml")!
+    let paid_url = URL(string: "https://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topalbums/sf=143441/genre=\(id)/xml")!
     let paid_parser = FeedParser(URL: paid_url)
     paid_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
         DispatchQueue.main.async {
