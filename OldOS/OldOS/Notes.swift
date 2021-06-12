@@ -428,8 +428,8 @@ struct notes_title_bar : View {
     @Binding var forward_or_backward: Bool
     var body :some View {
         ZStack {
-            Image("NotesTopBar").resizable().scaledToFill().clipped()
-
+            Image("NotesTopBar")
+                .resizable()
             VStack {
                 Spacer()
                 HStack {
@@ -449,7 +449,7 @@ struct notes_title_bar : View {
                         HStack(alignment: .center) {
                             Text("Notes").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                         }
-                    }.padding(.leading, 45)
+                    }.padding(.leading, 5)
                     }
                     Spacer()
                 }
@@ -483,7 +483,7 @@ struct tool_bar_rectangle_button_background_image_notes: View {
                 Image(content).resizable().scaledToFit().frame(width: 13).padding([.leading, .trailing], 11)
                 
             }
-        }.frame(width: 32, height: 32).padding(.trailing, 40)
+        }.frame(width: 32, height: 32)
     }
 }
 
@@ -501,7 +501,7 @@ struct tool_bar_rectangle_button_background_image_notes_text: View {
                 Text(content).font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
                 
             }
-        }.frame(width: 60, height: 32).padding(.trailing, 40)
+        }.frame(width: 60, height: 32)
     }
 }
 
