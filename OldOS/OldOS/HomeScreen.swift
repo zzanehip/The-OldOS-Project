@@ -187,11 +187,41 @@ struct HomeScreen: View {
                 VStack {
                     Spacer()
                     HStack() {
-                        Spacer().frame(width: geometry.size.width/2.3)
-                        Image(systemName: "magnifyingglass").resizable().font(Font.title.weight(.heavy)).foregroundColor(selectedPage == 0 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(width: 7.9, height:7.9).padding(0)
-                        Circle().fill(selectedPage == 1 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(height:7.9).padding(0)
-                        Circle().fill(selectedPage == 2 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(height:7.9).padding(0)
-                        Spacer().frame(width: geometry.size.width/2.3)
+                        Button {
+                            withAnimation {
+                                selectedPage = max(selectedPage - 1, 0)
+                            }
+                        } label: {
+                            Color.clear.frame(width: geometry.size.width/2.4, height:7.9)
+                        }
+                        Button {
+                            withAnimation {
+                                selectedPage = 0
+                            }
+                        } label: {
+                            Image(systemName: "magnifyingglass").resizable().font(Font.title.weight(.heavy)).foregroundColor(selectedPage == 0 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(width: 7.9, height:7.9).padding(0)
+                        }
+                        Button {
+                            withAnimation {
+                                selectedPage = 1
+                            }
+                        } label: {
+                            Circle().fill(selectedPage == 1 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(height:7.9).padding(0)
+                        }
+                        Button {
+                            withAnimation {
+                                selectedPage = 2
+                            }
+                        } label: {
+                            Circle().fill(selectedPage == 2 ? Color.white : Color.init(red: 146/255, green: 146/255, blue: 146/255)).frame(height:7.9).padding(0)
+                        }
+                        Button {
+                            withAnimation {
+                                selectedPage = min(selectedPage + 1, 2)
+                            }
+                        } label: {
+                            Color.clear.frame(width: geometry.size.width/2.4, height:7.9)
+                        }
                     }.padding(.bottom, 110).offset(y:dock_offset).offset(y:bottom_indicator_offset)
                 }
             }.onAppear() {
