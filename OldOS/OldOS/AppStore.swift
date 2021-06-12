@@ -338,7 +338,7 @@ struct app_store_categories: View {
 }
 
 func fetch_first_image_for_category(id: String, completion: @escaping (URL) -> Void) {
-    let paid_url = URL(string: "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/sf=143441/genre=\(id)/xml")!
+    let paid_url = URL(string: "https://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/sf=143441/genre=\(id)/xml")!
     let paid_parser = FeedParser(URL: paid_url)
     paid_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
         DispatchQueue.main.async {
@@ -531,7 +531,7 @@ struct category_destination: View {
             DispatchQueue.main.async {
                 //Top Free
                 let id = selected_category.genre_id
-                let free_url = URL(string: "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/sf=143441/limit=25/genre=\(id)/xml")!
+                let free_url = URL(string: "https://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/sf=143441/limit=25/genre=\(id)/xml")!
                 let free_parser = FeedParser(URL: free_url)
                 free_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
                     DispatchQueue.main.async {
@@ -552,7 +552,7 @@ struct category_destination: View {
                     }
                 }
                 //Top Paid
-                let paid_url = URL(string: "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/sf=143441/limit=25/genre=\(id)/xml")!
+                let paid_url = URL(string: "https://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/sf=143441/limit=25/genre=\(id)/xml")!
                 let paid_parser = FeedParser(URL: paid_url)
                 paid_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
                     DispatchQueue.main.async {
@@ -574,7 +574,7 @@ struct category_destination: View {
                     }
                 }
                 //Most Recent
-                let new_url = URL(string: "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/newapplications/sf=143441/limit=25/genre=\(id)/xml")!
+                let new_url = URL(string: "https://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/newapplications/sf=143441/limit=25/genre=\(id)/xml")!
                 let new_parser = FeedParser(URL: new_url)
                 new_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
                     DispatchQueue.main.async {

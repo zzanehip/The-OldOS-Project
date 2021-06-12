@@ -39,7 +39,7 @@ struct Safari: View {
     init() {
         let userDefaults = UserDefaults.standard
 
-        var webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+        var webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
         if webpages.count > 1 {
         for i in 0..<(webpages.count-1) {
             views.array.append(WebViewStore())
@@ -113,7 +113,7 @@ struct Safari: View {
                                                                     webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
                                                                     i += 1
                                                                 }
-                                                                var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+                                                                var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
                                                                 if defaults_webpages != webpage_dict.sorted(by: >) {
                                                                 userDefaults.setValue(webpage_dict, forKey: "webpages")
                                                                 }
@@ -130,7 +130,7 @@ struct Safari: View {
                                                                     webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
                                                                     i += 1
                                                                 }
-                                                                var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+                                                                var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
                                                                 if defaults_webpages != webpage_dict.sorted(by: >) {
                                                                 userDefaults.setValue(webpage_dict, forKey: "webpages")
                                                                 }
@@ -293,7 +293,7 @@ struct Safari: View {
                 webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
                 i += 1
             }
-            var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+            var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
             if defaults_webpages != webpage_dict.sorted(by: >) {
             userDefaults.setValue(webpage_dict, forKey: "webpages")
             }
@@ -308,7 +308,7 @@ struct Safari: View {
                 webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
                 i += 1
             }
-            var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"http://"]).sorted(by: >)
+            var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
             if defaults_webpages != webpage_dict.sorted(by: >) {
             userDefaults.setValue(webpage_dict, forKey: "webpages")
             }
@@ -909,16 +909,16 @@ struct url_search_bar: View {
                         }
                     }
                 }) {
-                    if url_search.starts(with: "http://") || url_search.starts(with: "https://") {
+                    if url_search.starts(with: "https://") || url_search.starts(with: "https://") {
                         guard let url = URL(string: "\(url_search)") else { return }
                         self.webViewStore.webView.load(URLRequest(url: url))
                         url_search = self.webViewStore.webView.url?.relativeString ?? ""
                     } else if url_search.contains("www") {
-                        guard let url = URL(string: "http://\(url_search)") else { return }
+                        guard let url = URL(string: "https://\(url_search)") else { return }
                         self.webViewStore.webView.load(URLRequest(url: url))
                         url_search = self.webViewStore.webView.url?.relativeString ?? ""
                     } else {
-                        guard let url = URL(string: "http://\(url_search)") else { return }
+                        guard let url = URL(string: "https://\(url_search)") else { return }
                         self.webViewStore.webView.load(URLRequest(url: url))
                         url_search =  self.webViewStore.webView.url?.relativeString ?? ""
                         //searchTextOnGoogle(urlString)
