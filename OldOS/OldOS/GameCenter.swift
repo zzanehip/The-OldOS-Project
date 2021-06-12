@@ -137,16 +137,16 @@ struct game_center_me_view: View {
                         HStack {
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonRed", text: "\(gc_observer.friends.count)")
-                                Text("FRIENDS") .font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                Text("FRIENDS").font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                             }.frame(width:geometry.size.width/3-20)
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonYellow", text: "1")
-                                Text("GAME") .font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                Text("GAME").font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                             }.frame(width:geometry.size.width/3-20)
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonBlue", text: "\(gc_observer.achievements.count)")
-                                Text("ACHIEVEMENTS") .font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
-                            }.frame(width:geometry.size.width/3-20)
+                                Text("ACHIEVEMENTS").font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1).lineLimit(1)
+                            }.frame(width:geometry.size.width/3-15)
                         }.clipped()
                         Spacer().frame(height: 30)
                         ZStack {
