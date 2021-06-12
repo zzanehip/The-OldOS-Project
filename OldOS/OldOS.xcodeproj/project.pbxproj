@@ -82,6 +82,7 @@
 		0D818C802600500B00824F8E /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D818C7F2600500B00824F8E /* AppStore.swift */; };
 		0D818C862603FCDA00824F8E /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0D818C852603FCDA00824F8E /* FeedKit */; };
 		0D818C8C26059B4500824F8E /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0D818C8B26059B4500824F8E /* SDWebImageSwiftUI */; };
+		0DD19EEF2675418600A3EEF8 /* unlock.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 0DD19EEE2675418600A3EEF8 /* unlock.aiff */; };
 		0DDBD2142624FF6600106345 /* cities.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DDBD2132624FF6600106345 /* cities.json */; };
 		0DEF66F6260CFBF800341037 /* iTunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66F5260CFBF800341037 /* iTunes.swift */; };
 		0DEF66FB2610240F00341037 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 0DEF66FA2610240F00341037 /* style.css */; };
@@ -191,6 +192,7 @@
 		0D818C2D25F7308300824F8E /* Hackensack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hackensack.ttf; sourceTree = "<group>"; };
 		0D818C3525F92A9200824F8E /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		0D818C7F2600500B00824F8E /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
+		0DD19EEE2675418600A3EEF8 /* unlock.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = unlock.aiff; sourceTree = "<group>"; };
 		0DDBD2132624FF6600106345 /* cities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cities.json; sourceTree = "<group>"; };
 		0DE37D4B267058C9001196E3 /* Camera-SwiftUI-main */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Camera-SwiftUI-main"; sourceTree = "<group>"; };
 		0DEF66F5260CFBF800341037 /* iTunes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunes.swift; sourceTree = "<group>"; };
@@ -385,6 +387,7 @@
 		0D818BD225EDF89100824F8E /* Tones */ = {
 			isa = PBXGroup;
 			children = (
+				0DD19EEE2675418600A3EEF8 /* unlock.aiff */,
 				0D80447B26628BF000000171 /* begin_video_record.caf */,
 				0D80447C26628BF100000171 /* end_video_record.caf */,
 				0D818BCA25EDDF0700824F8E /* dtmf-0.caf */,
@@ -575,6 +578,7 @@
 				0D818C2925F7307F00824F8E /* Superclarendon Bold.ttf in Resources */,
 				0D39B3F625AA9EB700B42A84 /* Assets.xcassets in Resources */,
 				0D0FB50B262A75F4008AE4C5 /* NextPageNoTextureFragmentShader.glsl in Resources */,
+				0DD19EEF2675418600A3EEF8 /* unlock.aiff in Resources */,
 				0DDBD2142624FF6600106345 /* cities.json in Resources */,
 				0D818BE725EDF98300824F8E /* dtmf-4.caf in Resources */,
 				0D818BE325EDF98300824F8E /* dtmf-star.caf in Resources */,

@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreTelephony
 import PureSwiftUITools
+import AVKit
 
 struct LockScreen: View {
     @Binding var current_view: String
@@ -208,6 +209,7 @@ extension View {
   }
 }
 struct DraggableView: ViewModifier {
+    @State   var audioPlayer: AVAudioPlayer!
     @Binding var offset: CGPoint
     @Binding var current_view: String
     @Binding var out_slides: CGFloat
@@ -232,6 +234,7 @@ struct DraggableView: ViewModifier {
         }.onEnded { value in
             if self.offset.x >= width - (50+81) {
                 //unlock
+                playSounds("unlock.aiff")
                 self.offset.x = width - (50+81)
                 withAnimation(.easeIn(duration: 0.15)) {
                     out_slides = 120
@@ -255,4 +258,20 @@ struct DraggableView: ViewModifier {
         })
         .offset(x: offset.x > 0 ? offset.x : 0, y: 0)
   }
+    
+    func playSounds(_ soundFileName : String) {
+        DispatchQueue.global(qos: .background).async {
+        guard let soundURL = Bundle.main.url(forResource: soundFileName, withExtension: nil) else {
+            return
+        }
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+        } catch {
+            print(error.localizedDescription)
+        }
+            audioPlayer.setVolume(0.05, fadeDuration: 1.0)
+        audioPlayer.play()
+        }
+    }
 }

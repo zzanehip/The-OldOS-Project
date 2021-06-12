@@ -167,9 +167,7 @@ struct HomeScreen: View {
                     LinearGradient(gradient:Gradient(colors: [Color(red: 34/255, green: 34/255, blue: 34/255).opacity(0.0), Color(red: 24/255, green: 24/255, blue: 24/255).opacity(0.85)]), startPoint: .top, endPoint: .bottom).frame(minWidth: geometry.size.width, maxWidth:geometry.size.width, minHeight: geometry.size.height/4.25, maxHeight: geometry.size.height/4.25, alignment: .center).clipped()
                     }
                 }
-                if selectedPage == 0 {
-                    Color.black.opacity(0.65).padding(.top, 24)
-                }
+                Color.black.opacity(selectedPage == 0 ? 0.65 : 0).padding(.top, 24)
                 VStack {
                     status_bar().frame(minHeight: 24, maxHeight:24).zIndex(1)
                     Spacer().frame(height: 30)
@@ -231,6 +229,11 @@ struct HomeScreen: View {
                     }.padding(.bottom, 110).offset(y:dock_offset).offset(y:bottom_indicator_offset)
                 }
             }.onAppear() {
+                //MARK — iPhone 8
+                if UIScreen.main.bounds.width == 375 && UIScreen.main.bounds.height == 667 {
+                    bottom_indicator_offset = 17.5
+                    icon_scaler = 0.55
+                }
                 //MARK — iPhone 8 Plus
                 if UIScreen.main.bounds.width == 414 && UIScreen.main.bounds.height == 736 {
                     bottom_indicator_offset = 10
@@ -319,7 +322,7 @@ struct search_results_view: View {
                 }.frame(height: geometry.size.height).background(Color(red: 228/255, green: 229/255, blue: 230/255)).cornerRadius(12)
             }
         }.onAppear() {
-            UIScrollView.appearance().bounces = true
+       //UIScrollView.appearance().bounces = true -> There's something weird going on where we can't readily modify the bounce value of our scrollviews in the TabView. Therefore, our app pages bounce, when they shouldn't. For now, we'll compromise and have the search not bounce, instead of the apps bouncing. 
         }.onDisappear() {
             UIScrollView.appearance().bounces = false
         }
