@@ -111,7 +111,13 @@ struct home_bar: View {
                         }
                     } else {
                     withAnimation() {
-                        selectedPage = 1
+                        // when on the first page, pressing the home button shows the spotlight search
+                        // https://www.youtube.com/watch?v=hMZXnyk2SJA
+                        if selectedPage == 1 {
+                            selectedPage = 0
+                        } else {
+                            selectedPage = 1
+                        }
                     }
                     }
                 }) {
