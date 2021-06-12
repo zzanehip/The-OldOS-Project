@@ -657,7 +657,7 @@ struct game_center_title_bar : View {
                         HStack(alignment: .center) {
                             Text("Friends").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                         }
-                    }.padding(.leading, 45)
+                    }.padding(.leading, 50)
                     }
                     Spacer()
                 }
@@ -688,7 +688,7 @@ struct tool_bar_rectangle_button_background_image: View {
                 Image(content).resizable().scaledToFit().frame(width: 13).padding([.leading, .trailing], 11)
                 
             }
-        }.frame(width: 32, height: 32).padding(.trailing, 40)
+        }.frame(width: 32, height: 32).padding(.trailing, 45)
     }
 }
 
