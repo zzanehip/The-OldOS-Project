@@ -13,14 +13,22 @@ import AVKit
 struct LockScreen: View {
     @Binding var current_view: String
     @State var out_slides: CGFloat = 0.0
+    @State var charging: Bool = false
+    @State var battery_level = UIDevice.current.batteryLevel * 100
     @Binding var apps_scale: CGFloat
     @Binding var dock_offset: CGFloat
     @Binding var apps_scale_height: CGFloat
+    let battery_observer = NotificationCenter.default.publisher(for: UIDevice.batteryStateDidChangeNotification)
+    let battery_level_observer = NotificationCenter.default.publisher(for: UIDevice.batteryLevelDidChangeNotification)
     var userDefaults = UserDefaults.standard
     var body: some View {
         GeometryReader { geometry in
             ZStack {
+                if userDefaults.bool(forKey: "Camera_Wallpaper_Lock") == false {
                 Image(userDefaults.string(forKey: "Lock_Wallpaper") ?? "Wallpaper_1").resizable().aspectRatio(contentMode: .fill).frame(height:geometry.size.height).cornerRadius(0).frame(width: geometry.size.width, height: geometry.size.height, alignment: .center).clipped()
+                } else {
+                    Image(uiImage: (UIImage(data: userDefaults.object(forKey: "Lock_Wallpaper") as? Data ?? Data()) ?? UIImage(named: "Wallpaper_1"))!).resizable().aspectRatio(contentMode: .fill).frame(height:geometry.size.height).cornerRadius(0).frame(width: geometry.size.width, height: geometry.size.height, alignment: .center).clipped()
+                }
                 VStack {
                     Spacer()
                     if userDefaults.string(forKey: "Home_Wallpaper") == "Wallpaper_1" {
@@ -29,6 +37,9 @@ struct LockScreen: View {
                     LinearGradient(gradient:Gradient(colors: [Color(red: 34/255, green: 34/255, blue: 34/255).opacity(0.0), Color(red: 24/255, green: 24/255, blue: 24/255).opacity(0.85)]), startPoint: .top, endPoint: .bottom).frame(minWidth: geometry.size.width, maxWidth:geometry.size.width, minHeight: geometry.size.height/4.25, maxHeight: geometry.size.height/4.25, alignment: .center).clipped()
                     }
                 }
+                if charging {
+                  lock_battery_view(moded_battery_level: abs(Int(battery_level/(100/17))))
+                }
                 VStack(spacing:0) {
                     status_bar(locked: true).frame(minHeight: 24, maxHeight:24).zIndex(1)
                     lock_header().frame(minHeight: 110, maxHeight:110).transition(.move(edge: .top)).offset(y:-out_slides*1.1).zIndex(0).clipped()
@@ -36,6 +47,35 @@ struct LockScreen: View {
                     lock_footer(current_view: $current_view, out_slides: $out_slides, apps_scale: $apps_scale, dock_offset: $dock_offset, apps_scale_height: $apps_scale_height).frame(minHeight: 110, maxHeight:110).offset(y:out_slides).clipped()
                 }
             }
+        } .onReceive(battery_observer) { _ in
+            if (UIDevice.current.batteryState != .unplugged) {
+                charging = true
+            } else {
+                charging = false
+            }
+        } .onReceive(battery_level_observer) { _ in
+            battery_level = UIDevice.current.batteryLevel * 100
+        }.onAppear() {
+            battery_level = UIDevice.current.batteryLevel * 100
+            if (UIDevice.current.batteryState != .unplugged) {
+                charging = true
+            } else {
+                charging = false
+            }
+            print(charging, battery_level, Int(battery_level/(100/17)), "ZK1")
+        }
+    }
+}
+
+struct lock_battery_view: View {
+    var moded_battery_level: Int
+    var body: some View {
+        GeometryReader { geometry in
+        ZStack {
+            Color.black.edgesIgnoringSafeArea(.all)
+            Image("BatteryBG_\(moded_battery_level)").clipped().mask(LinearGradient([(color: Color.clear, location: 0), (color: Color.clear, location: 0.60), (color: Color.white.opacity(0.4), location: 1)], from: .top, to: .bottom)).rotationEffect(.degrees(-180)).offset(y:129).rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+           Image("BatteryBG_\(moded_battery_level)")
+        }
         }
     }
 }

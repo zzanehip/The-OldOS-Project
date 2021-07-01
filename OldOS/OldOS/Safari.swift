@@ -909,16 +909,20 @@ struct url_search_bar: View {
                         }
                     }
                 }) {
-                    if url_search.starts(with: "https://") || url_search.starts(with: "https://") {
+                    //print(url_search, "here 0")
+                    if url_search.hasPrefix("https://") || url_search.hasPrefix("http://") {
                         guard let url = URL(string: "\(url_search)") else { return }
+                     //   print("here 1")
                         self.webViewStore.webView.load(URLRequest(url: url))
                         url_search = self.webViewStore.webView.url?.relativeString ?? ""
                     } else if url_search.contains("www") {
                         guard let url = URL(string: "https://\(url_search)") else { return }
+                       // print("here 2")
                         self.webViewStore.webView.load(URLRequest(url: url))
                         url_search = self.webViewStore.webView.url?.relativeString ?? ""
                     } else {
                         guard let url = URL(string: "https://\(url_search)") else { return }
+                      //  print("here 3")
                         self.webViewStore.webView.load(URLRequest(url: url))
                         url_search =  self.webViewStore.webView.url?.relativeString ?? ""
                         //searchTextOnGoogle(urlString)

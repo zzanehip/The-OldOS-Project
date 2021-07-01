@@ -82,6 +82,8 @@
 		0D818C802600500B00824F8E /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D818C7F2600500B00824F8E /* AppStore.swift */; };
 		0D818C862603FCDA00824F8E /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0D818C852603FCDA00824F8E /* FeedKit */; };
 		0D818C8C26059B4500824F8E /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0D818C8B26059B4500824F8E /* SDWebImageSwiftUI */; };
+		0DB3F0A92683D0E300FBFAD8 /* ImageMoveAndScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB3F0A72683D0E200FBFAD8 /* ImageMoveAndScale.swift */; };
+		0DB3F0AA2683D0E300FBFAD8 /* ImageMoveAndScale+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB3F0A82683D0E300FBFAD8 /* ImageMoveAndScale+Extensions.swift */; };
 		0DD19EEF2675418600A3EEF8 /* unlock.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 0DD19EEE2675418600A3EEF8 /* unlock.aiff */; };
 		0DDBD2142624FF6600106345 /* cities.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DDBD2132624FF6600106345 /* cities.json */; };
 		0DEF66F6260CFBF800341037 /* iTunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66F5260CFBF800341037 /* iTunes.swift */; };
@@ -192,6 +194,8 @@
 		0D818C2D25F7308300824F8E /* Hackensack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hackensack.ttf; sourceTree = "<group>"; };
 		0D818C3525F92A9200824F8E /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		0D818C7F2600500B00824F8E /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
+		0DB3F0A72683D0E200FBFAD8 /* ImageMoveAndScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMoveAndScale.swift; sourceTree = "<group>"; };
+		0DB3F0A82683D0E300FBFAD8 /* ImageMoveAndScale+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ImageMoveAndScale+Extensions.swift"; sourceTree = "<group>"; };
 		0DD19EEE2675418600A3EEF8 /* unlock.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = unlock.aiff; sourceTree = "<group>"; };
 		0DDBD2132624FF6600106345 /* cities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cities.json; sourceTree = "<group>"; };
 		0DE37D4B267058C9001196E3 /* Camera-SwiftUI-main */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Camera-SwiftUI-main"; sourceTree = "<group>"; };
@@ -350,6 +354,7 @@
 				0D818C2525F7307100824F8E /* Fonts */,
 				0D818BD225EDF89100824F8E /* Tones */,
 				0D11D88F25EDD2B100AB2F2B /* PhoneFormatter */,
+				0DB3F0A62683D0C300FBFAD8 /* PhotoCropper */,
 				0D39B3F525AA9EB700B42A84 /* Assets.xcassets */,
 				0D39B3FA25AA9EB700B42A84 /* LaunchScreen.storyboard */,
 				0D39B3FD25AA9EB700B42A84 /* Info.plist */,
@@ -414,6 +419,15 @@
 				0D818C2725F7307F00824F8E /* Superclarendon Bold.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		0DB3F0A62683D0C300FBFAD8 /* PhotoCropper */ = {
+			isa = PBXGroup;
+			children = (
+				0DB3F0A72683D0E200FBFAD8 /* ImageMoveAndScale.swift */,
+				0DB3F0A82683D0E300FBFAD8 /* ImageMoveAndScale+Extensions.swift */,
+			);
+			path = PhotoCropper;
 			sourceTree = "<group>";
 		};
 		0DEF671D2613CBC100341037 /* TextView */ = {
@@ -614,6 +628,7 @@
 				0D0FB4F0262A75EB008AE4C5 /* XBPageCurlView.m in Sources */,
 				0D11D88325EC009B00AB2F2B /* Mail.swift in Sources */,
 				0D371FD625AB7B6D00E4D723 /* LockScreen.swift in Sources */,
+				0DB3F0A92683D0E300FBFAD8 /* ImageMoveAndScale.swift in Sources */,
 				0D4BBF5325B2105000FCFB2E /* Settings.swift in Sources */,
 				0D0FB4F6262A75EB008AE4C5 /* XBCurlView.m in Sources */,
 				0D39B3F025AA9EB600B42A84 /* AppDelegate.swift in Sources */,
@@ -625,6 +640,7 @@
 				0D2D5CBF25C9C48500286707 /* iPod.swift in Sources */,
 				0D804456265C78C500000171 /* Messages.swift in Sources */,
 				0D39B3F225AA9EB600B42A84 /* SceneDelegate.swift in Sources */,
+				0DB3F0AA2683D0E300FBFAD8 /* ImageMoveAndScale+Extensions.swift in Sources */,
 				0D11D89B25EDD2BC00AB2F2B /* PhoneFormatRuleset.swift in Sources */,
 				0D80450A266A924B00000171 /* Calendar.swift in Sources */,
 				0D0FB4F1262A75EB008AE4C5 /* XBAnimationManager.m in Sources */,
@@ -821,7 +837,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = OldOS/OldOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"OldOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 5YJG9SCLDH;
 				ENABLE_PREVIEWS = YES;
@@ -836,7 +852,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zurac.OldOS;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zurac.oldos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "OldOS/TextView/OldOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -853,7 +870,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = OldOS/OldOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"OldOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 5YJG9SCLDH;
 				ENABLE_PREVIEWS = YES;
@@ -864,7 +881,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zurac.OldOS;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zurac.oldos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "OldOS/TextView/OldOS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

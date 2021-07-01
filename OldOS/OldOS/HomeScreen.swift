@@ -158,7 +158,11 @@ struct HomeScreen: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
+                if userDefaults.bool(forKey: "Camera_Wallpaper_Home") == false {
                 Image(userDefaults.string(forKey: "Home_Wallpaper") ?? "Wallpaper_1").resizable().aspectRatio(contentMode: .fill).frame(height:geometry.size.height).cornerRadius(0).frame(minWidth: geometry.size.width, maxWidth:geometry.size.width, minHeight: geometry.size.height, maxHeight: geometry.size.height, alignment: .center).clipped()
+                } else {
+                    Image(uiImage: (UIImage(data: userDefaults.object(forKey: "Home_Wallpaper") as? Data ?? Data()) ?? UIImage(named: "Wallpaper_1"))!).resizable().aspectRatio(contentMode: .fill).frame(height:geometry.size.height).cornerRadius(0).frame(minWidth: geometry.size.width, maxWidth:geometry.size.width, minHeight: geometry.size.height, maxHeight: geometry.size.height, alignment: .center).clipped()
+                }
                 VStack {
                     Spacer()
                     if userDefaults.string(forKey: "Home_Wallpaper") == "Wallpaper_1" {
@@ -322,7 +326,7 @@ struct search_results_view: View {
                 }.frame(height: geometry.size.height).background(Color(red: 228/255, green: 229/255, blue: 230/255)).cornerRadius(12)
             }
         }.onAppear() {
-       //UIScrollView.appearance().bounces = true -> There's something weird going on where we can't readily modify the bounce value of our scrollviews in the TabView. Therefore, our app pages bounce, when they shouldn't. For now, we'll compromise and have the search not bounce, instead of the apps bouncing. 
+       //UIScrollView.appearance().bounces = true -> There's something weird going on where we can't readily modify the bounce value of our scrollviews in the TabView. Therefore, our app pages bounce, when they shouldn't. For now, we'll compromise and have the search not bounce, instead of the apps bouncing.
         }.onDisappear() {
             UIScrollView.appearance().bounces = false
         }

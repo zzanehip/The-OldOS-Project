@@ -489,11 +489,11 @@ struct title_bar : View {
             VStack {
                 Spacer()
                 HStack {
-                    Button(action:{forward_or_backward = true; withAnimation(.linear(duration: 0.28)){current_nav_view = (current_nav_view == "Wallpaper_Grid" ? "Wallpaper_Select" : "Settings")}}) {
+                    Button(action:{forward_or_backward = true; withAnimation(.linear(duration: 0.28)){current_nav_view = ((current_nav_view == "Wallpaper_Grid" || current_nav_view == "Wallpaper_Grid_Camera_Roll") ? "Wallpaper_Select" : "Settings")}}) {
                     ZStack {
                         Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                         HStack(alignment: .center) {
-                            Text(current_nav_view == "Wallpaper_Grid" ? "Back" : "Settings").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                            Text((current_nav_view == "Wallpaper_Grid" || current_nav_view == "Wallpaper_Grid_Camera_Roll") ? "Back" : "Settings").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                         }
                     }.padding(.leading, 6)
                     }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: AnyTransition.opacity))

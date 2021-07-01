@@ -12,11 +12,16 @@ import SystemConfiguration.CaptiveNetwork
 import LocationProvider
 import AVKit
 import MediaPlayer
+import Photos
 struct Settings: View {
     @State var selectedPage = 1
     @ObservedObject var locationProvider : LocationProvider
+    @ObservedObject var photos_obsever = SettingsPhotosObserver()
     @State var show_wallpaper_select: Bool = false
+    @State var show_wallpaper_select_camera_roll: Bool = false
     @State var wallpaper: String = ""
+    @State var wallpaper_camera_roll: UIImage?
+    @State var last_photo: UIImage = UIImage()
     init() {
         locationProvider = LocationProvider()
         do {try locationProvider.start()}
@@ -36,7 +41,7 @@ struct Settings: View {
             ZStack {
                 VStack(spacing:0) {
                     status_bar_in_app(selected_page:selectedPage).frame(minHeight: 24, maxHeight:24).zIndex(1)
-                    title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, title: current_nav_view == "Location Services" ? "  \(current_nav_view)" : current_nav_view == "Wallpaper_Select" ? "" : current_nav_view == "Wallpaper_Grid" ? "Wallpaper" : current_nav_view.contains("General_") ? current_nav_view.replacingOccurrences(of: "General_", with: "") : current_nav_view == "Mail, Contacts, Calendars" ? "           Mail, Contacts, Calen..." : current_nav_view).frame(height: 60) //For lo
+                    title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, title: current_nav_view == "Location Services" ? "  \(current_nav_view)" : current_nav_view == "Wallpaper_Select" ? "" : current_nav_view == "Wallpaper_Grid" ? "Wallpaper" : current_nav_view == "Wallpaper_Grid_Camera_Roll" ? "Camera Roll" : current_nav_view.contains("General_") ? current_nav_view.replacingOccurrences(of: "General_", with: "") : current_nav_view == "Mail, Contacts, Calendars" ? "           Mail, Contacts, Calen..." : current_nav_view).frame(height: 60) //For lo
                     switch current_nav_view {
                     case "Settings":
                         settings_home(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, usage_section: usage_section, display_section: display_section, apps_section: apps_section).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
@@ -53,11 +58,13 @@ struct Settings: View {
                     case "Brightness":
                         brightness_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "Wallpaper":
-                        wallpaper_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                        wallpaper_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, photos_obsever: photos_obsever).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "Wallpaper_Select":
-                        wallpaper_select_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                        wallpaper_select_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, last_photo: $last_photo).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "Wallpaper_Grid":
                         wallpaper_grid_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, wallpaper:$wallpaper, show_wallpaper_select: $show_wallpaper_select).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                    case "Wallpaper_Grid_Camera_Roll":
+                        wallpaper_grid_view_camera_roll(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, wallpaper_camera_roll: $wallpaper_camera_roll, show_wallpaper_select_camera_roll: $show_wallpaper_select_camera_roll, photos_obsever: photos_obsever).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "General":
                         general_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "General_About":
@@ -103,11 +110,22 @@ struct Settings: View {
                         wallpaper_set_view(wallpaper:$wallpaper, show_wallpaper_select: $show_wallpaper_select)
                     }.clipped().transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1)
                 }
+                if show_wallpaper_select_camera_roll {
+                    VStack(spacing:0) {
+                wallpaper_set_view_camera_roll(wallpaper_camera_roll:$wallpaper_camera_roll, show_wallpaper_select_camera_roll: $show_wallpaper_select_camera_roll)
+                    }.clipped().transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1)
+                }
             }.onAppear() {
                 UIScrollView.appearance().bounces = true
                 UITableView.appearance().backgroundColor = .clear
             }.onDisappear() {
                 UIScrollView.appearance().bounces = false
+            }
+        }.onAppear() {
+            DispatchQueue.global(qos: .background).async {
+                LastPhotoRetriever().queryLastPhoto(resizeTo: nil) {photo in
+                    last_photo = photo ?? UIImage()
+                }
             }
         }
     }
@@ -567,6 +585,7 @@ struct wallpaper_content: View {
 struct wallpaper_view: View {
     @Binding var current_nav_view: String
     @Binding var forward_or_backward: Bool
+    @ObservedObject var photos_obsever: SettingsPhotosObserver
     var userDefaults = UserDefaults.standard
     var body: some View {
         VStack(spacing: 0) {
@@ -583,12 +602,20 @@ struct wallpaper_view: View {
                                     ZStack {
                                         HStack {
                                             ZStack {
+                                                if userDefaults.bool(forKey: "Camera_Wallpaper_Lock") == false {
                                                 Image(userDefaults.string(forKey: "Lock_Wallpaper") ?? "Wallpaper_1").resizable().aspectRatio(contentMode: .fill).frame(width: 113, height: 164).clipped()
+                                                } else {
+                                                    Image(uiImage: (UIImage(data: userDefaults.object(forKey: "Lock_Wallpaper") as? Data ?? Data()) ?? UIImage(named: "Wallpaper_1"))!).resizable().aspectRatio(contentMode: .fill).frame(width: 113, height: 164).clipped()
+                                                }
                                                 Image("lockScreenOverlay")
                                             }.padding(.leading, 32)
                                             Spacer()
                                             ZStack {
+                                                if userDefaults.bool(forKey: "Camera_Wallpaper_Home") == false {
                                                 Image(userDefaults.string(forKey: "Home_Wallpaper") ?? "Wallpaper_1").resizable().aspectRatio(contentMode: .fill).frame(width: 113, height: 164).clipped()
+                                                } else {
+                                                    Image(uiImage: (UIImage(data: userDefaults.object(forKey: "Home_Wallpaper") as? Data ?? Data()) ?? UIImage(named: "Wallpaper_1"))!).resizable().aspectRatio(contentMode: .fill).frame(width: 113, height: 164).clipped()
+                                                }
                                                 Image("homeScreenOverlay")
                                             }.padding(.trailing, 32)
                                         }
@@ -606,6 +633,10 @@ struct wallpaper_view: View {
                     
                 }
             }
+        }.onAppear() {
+            if photos_obsever.assets.count == 0 {
+                photos_obsever.fetch_photos()
+            }
         }
     }
 }
@@ -613,6 +644,8 @@ struct wallpaper_view: View {
 struct wallpaper_select_view: View {
     @Binding var current_nav_view: String
     @Binding var forward_or_backward: Bool
+    @Binding var last_photo: UIImage
+    @ObservedObject var photos_obsever = SettingsPhotosObserver()
     var userDefaults = UserDefaults.standard
     var body: some View {
         VStack(spacing: 0) {
@@ -638,10 +671,50 @@ struct wallpaper_select_view: View {
                         }
                         
                         .frame(height: 60) .padding([.leading, .trailing], 12)
+                        Spacer().frame(height:25)
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10).fill(Color.white).overlay(RoundedRectangle(cornerRadius: 10)
+                                                                                            .stroke(Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1.25))
+                            VStack(spacing:0) {
+                                Button(action: {forward_or_backward = false; DispatchQueue.main.asyncAfter(deadline:.now()+0.3){ withAnimation(.linear(duration: 0.28)) {current_nav_view = "Wallpaper_Grid_Camera_Roll"}}}) {
+                                    ZStack {
+                                        HStack {
+                                            Image(uiImage: last_photo).resizable().aspectRatio(contentMode: .fill).frame(width: 60, height: 60).cornerRadiusSpecific(radius: 10, corners: [.topLeft, .bottomLeft]).scaleEffect(0.985)
+                                            Text("Camera Roll").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black)
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }                                        }
+                                }
+                            }
+                        }
+                        
+                        .frame(height: 60) .padding([.leading, .trailing], 12)
                     }
                     
                 }
             }
+        }
+    }
+}
+
+class SettingsPhotosObserver: ObservableObject {
+    @Published var assets = [PHAsset]()
+    @Published var photo_count: Int = 0
+    func fetch_photos() {
+        DispatchQueue.global(qos: .background).async() {
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            
+            fetchOptions.predicate = NSPredicate(format: "mediaType == %d",
+                                                 PHAssetMediaType.image.rawValue)
+            fetchOptions.fetchLimit = 15000 //Let's try limiting to 15k to avoid crashing...some people have libraries over 100k and that is just somthing we can't handle.
+            let assets = PHAsset.fetchAssets(with: fetchOptions)
+            assets.enumerateObjects({ (object, count, stop) in
+                DispatchQueue.main.async() {
+                    self.assets.append(object)
+                    if object.mediaType == .image { self.photo_count += 1 }
+                }
+            })
         }
     }
 }
@@ -679,6 +752,60 @@ struct wallpaper_grid_view: View {
                         }
                     }.padding(8)
                     
+                }
+            }
+        }
+    }
+}
+
+struct wallpaper_grid_view_camera_roll: View {
+    @Binding var current_nav_view: String
+    @Binding var forward_or_backward: Bool
+    @Binding var wallpaper_camera_roll: UIImage?
+    @Binding var show_wallpaper_select_camera_roll: Bool
+    @ObservedObject var photos_obsever: SettingsPhotosObserver
+    let columns = [
+        GridItem(.flexible(minimum: 60)),
+        GridItem(.flexible(minimum: 60)),
+        GridItem(.flexible(minimum: 60)),
+        GridItem(.flexible(minimum: 60))
+    ]
+    var body: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                Color.white.edgesIgnoringSafeArea(.all)
+                ScrollView {
+                    ScrollViewReader { value in
+                        LazyVGrid(columns: columns, spacing: 5) {
+                            ForEach(photos_obsever.assets, id: \.self) { asset in
+                                GeometryReader { proxy in
+                                    Button(action: {
+                                        asset.getMainImage(completionHandler: { image in
+                                            wallpaper_camera_roll = image ?? UIImage()
+                                            if wallpaper_camera_roll == image {
+                                            withAnimation() {
+                                                show_wallpaper_select_camera_roll = true
+                                            }
+                                            }
+                                        })
+                                    }) {
+                                        PhotoLibraryImageView(asset: asset, proxy: proxy)
+                                    }
+                                } .clipped().innerShadowFull(color: Color.gray.opacity(0.8), radius: 0.02)
+                                .aspectRatio(1, contentMode: .fit).id(asset)
+                            }
+                        }.padding(8)
+                        .onAppear {
+                            value.scrollTo("bottom_info", anchor: .bottom)
+                        }  .onChange(of: photos_obsever.assets.count) { _ in
+                            value.scrollTo("bottom_info")
+                        }
+                        HStack {
+                            Spacer()
+                            Text("\(photos_obsever.photo_count) Photos").font(.custom("Helvetica Neue Regular", size: 20)).foregroundColor(.cgLightGray).lineLimit(1)
+                            Spacer()
+                        }.padding(.bottom, 12).id("bottom_info")
+                    }
                 }
             }
         }
@@ -736,6 +863,66 @@ struct wallpaper_set_view : View {
     }
 }
 
+struct wallpaper_set_view_camera_roll : View {
+    var wallpaper = "" //Fix later -> too lazy now
+    @Binding var wallpaper_camera_roll: UIImage?
+    @Binding var show_wallpaper_select_camera_roll: Bool
+    @State var show_wallpaper_select: Bool = false
+    @State  var originalImage: UIImage?
+    @State  var zoom: CGFloat?
+    @State  var position: CGSize?
+    @State  var finalImage: UIImage?
+    @State  var inputImage: UIImage?
+    @State var show_select_final: Bool = false
+    @State var show_overlay: Bool = false
+    @State var show_check: Bool = false
+    @State var execute_process: Bool = false
+    @State var to_set:[String] = []
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all)
+                ImageMoveAndScale(originalImage: $originalImage, originalPosition: $position, originalZoom: $zoom, processedImage: $finalImage, inputImage: $wallpaper_camera_roll, execute_process: $execute_process, to_set: $to_set, geometryProxy: geometry)
+                VStack {
+                    Spacer()
+                    if wallpaper == "Wallpaper_1" {
+                        LinearGradient(gradient:Gradient(colors: [Color(red: 158/255, green: 158/255, blue: 158/255).opacity(0.0), Color(red: 34/255, green: 34/255, blue: 34/255)]), startPoint: .top, endPoint: .bottom).frame(minWidth: geometry.size.width, maxWidth:geometry.size.width, minHeight: geometry.size.height/3.75, maxHeight: geometry.size.height/3.75, alignment: .center).clipped()
+                    }else {
+                        LinearGradient(gradient:Gradient(colors: [Color(red: 34/255, green: 34/255, blue: 34/255).opacity(0.0), Color(red: 24/255, green: 24/255, blue: 24/255).opacity(0.85)]), startPoint: .top, endPoint: .bottom).frame(minWidth: geometry.size.width, maxWidth:geometry.size.width, minHeight: geometry.size.height/4.25, maxHeight: geometry.size.height/4.25, alignment: .center).clipped()
+                    }
+                }
+                VStack(spacing:0) {
+                    status_bar(locked: false).frame(minHeight: 24, maxHeight:24).zIndex(1)
+                    wallpaper_header_camera_roll().frame(minHeight: 110, maxHeight:110).zIndex(0).clipped()
+                    Spacer()
+                    wallpaper_footer(wallpaper: wallpaper, show_wallpaper_select: $show_wallpaper_select_camera_roll, show_select_final: $show_select_final).frame(minHeight: 110, maxHeight:110).clipped().clipped()
+                }
+                if show_select_final {
+                    VStack(spacing:0) {
+                        Spacer().foregroundColor(.clear).zIndex(0)
+                        wallpaper_select_final_camera_roll(wallpaper: wallpaper, show_wallpaper_select: $show_wallpaper_select_camera_roll, show_select_final: $show_select_final, show_overlay: $show_overlay, show_check: $show_check, execute_process: $execute_process, to_set: $to_set).frame(minHeight: geometry.size.height/2, maxHeight: geometry.size.height/2).zIndex(1)
+                    }.transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1)
+                }
+                if show_overlay {
+                    ZStack {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 6).fill(Color.black.opacity(0.65))
+                            VStack {
+                                if show_check {
+                                    Image(systemName: "checkmark").foregroundColor(.white).font(.system(size: 26, weight: .bold)).padding(.top, 9)
+                                } else {
+                                    ProgressView().progressViewStyle(CircularProgressViewStyle(tint: .white)).padding([.bottom], 5).padding(.top, 10).scaleEffect(1.75, anchor: .center)
+                                }
+                                Text("Saving Photo").foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 24)).padding(.bottom, 2.5).padding(.top, 8)
+                            }
+                        }.padding([.leading, .trailing], 95).frame(height: 115)
+                    }
+                }
+            }.disabled(show_overlay)
+        }
+    }
+}
+
 struct wallpaper_header: View {
     private let text_color = LinearGradient([.white, .white], to: .trailing)
     var body: some View {
@@ -745,6 +932,23 @@ struct wallpaper_header: View {
                 Spacer()
                 VStack() {
                     Text("Wallpaper Preview").foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 24)).shadow(color: Color.black.opacity(0.92), radius: 0, x: 0.0, y: -1.2)
+                }
+                Spacer()
+                
+            }.padding([.leading, .trailing], 4)
+        }
+    }
+}
+
+struct wallpaper_header_camera_roll: View {
+    private let text_color = LinearGradient([.white, .white], to: .trailing)
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.65).overlay(Rectangle().fill(LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.21), Color.white.opacity(0.085)]), startPoint: .top, endPoint: .bottom)).frame(height:55).offset(y: -27)).border_top(width: 0.75, edges:[.top, .bottom], color: Color.black) .innerShadow(color: Color.white.opacity(0.24), radius: 0.03)
+            HStack {
+                Spacer()
+                VStack() {
+                    Text("Move and Scale").foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.92), radius: 0, x: 0.0, y: -1.2)
                 }
                 Spacer()
                 
@@ -811,6 +1015,7 @@ struct wallpaper_select_final: View {
                 VStack {
                     Button(action:{
                         userDefaults.set(wallpaper, forKey: "Lock_Wallpaper")
+                        UserDefaults.standard.set(false, forKey: "Camera_Wallpaper_Lock")
                         show_overlay = true
                         withAnimation(.linear(duration: 0.4)) {
                             show_select_final = false
@@ -832,6 +1037,7 @@ struct wallpaper_select_final: View {
                     }.padding([.bottom], 2.5).padding(.top, 28)
                     Button(action:{
                         userDefaults.set(wallpaper, forKey: "Home_Wallpaper")
+                        UserDefaults.standard.set(false, forKey: "Camera_Wallpaper_Home")
                         show_overlay = true
                         withAnimation(.linear(duration: 0.4)) {
                             show_select_final = false
@@ -854,6 +1060,110 @@ struct wallpaper_select_final: View {
                     Button(action:{
                         userDefaults.set(wallpaper, forKey: "Lock_Wallpaper")
                         userDefaults.set(wallpaper, forKey: "Home_Wallpaper")
+                        UserDefaults.standard.set(false, forKey: "Camera_Wallpaper_Lock")
+                        UserDefaults.standard.set(false, forKey: "Camera_Wallpaper_Home")
+                        show_overlay = true
+                        withAnimation(.linear(duration: 0.4)) {
+                            show_select_final = false
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now()+1.25) {
+                            show_check = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+                            withAnimation() {
+                                show_wallpaper_select = false
+                            }
+                        }
+                    }){
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
+                            RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
+                            Text("Set Both").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                        }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
+                    }.padding([.top, .bottom], 2.5)
+                    Spacer()
+                    Button(action:{
+                        withAnimation(.linear(duration: 0.4)) {
+                            show_select_final = false
+                        }
+                    }) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).opacity(0.6)
+                            RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 124/255, green: 124/255, blue: 124/255), location: 0), .init(color: Color(red: 26/255, green: 26/255, blue: 26/255), location: 0.50), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 0.53), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
+                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
+                        }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
+                    }.padding([.bottom], 25)
+                }
+            }
+        }
+    }
+}
+
+struct wallpaper_select_final_camera_roll: View {
+    var wallpaper: String
+    var userDefaults = UserDefaults.standard
+    @Binding var show_wallpaper_select: Bool
+    @Binding var show_select_final: Bool
+    @Binding var show_overlay: Bool
+    @Binding var show_check: Bool
+    @Binding var execute_process: Bool
+    @Binding var to_set:[String]
+    var body: some View {
+        GeometryReader {geometry in
+            ZStack {
+                VStack(spacing:0) {
+                    Rectangle().fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 101/255, green: 100/255, blue: 100/255).opacity(0.88), Color.init(red: 31/255, green: 30/255, blue: 30/255).opacity(0.88)]), startPoint: .top, endPoint: .bottom)).innerShadowBottom(color: Color.white.opacity(0.98), radius: 0.1).border_top(width: 1, edges:[.top], color: Color.black).frame(height:30)
+                    Rectangle().fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 21/255, green: 20/255, blue: 20/255).opacity(0.88), Color.black.opacity(0.9)]), startPoint: .top, endPoint: .bottom))
+                }
+                VStack {
+                    Button(action:{
+                      //  userDefaults.set(wallpaper, forKey: "Lock_Wallpaper")
+                        to_set = ["Lock"]
+                        execute_process = true
+                        show_overlay = true
+                        withAnimation(.linear(duration: 0.4)) {
+                            show_select_final = false
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now()+1.25) {
+                            show_check = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+                            withAnimation() {
+                                show_wallpaper_select = false
+                            }
+                        }
+                    }){
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
+                            RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
+                            Text("Set Lock Screen").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                        }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
+                    }.padding([.bottom], 2.5).padding(.top, 28)
+                    Button(action:{
+                        to_set = ["Home"]
+                        execute_process = true
+                        show_overlay = true
+                        withAnimation(.linear(duration: 0.4)) {
+                            show_select_final = false
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now()+1.25) {
+                            show_check = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+                            withAnimation() {
+                                show_wallpaper_select = false
+                            }
+                        }
+                    }){
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
+                            RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
+                            Text("Set Home Screen").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                        }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
+                    }.padding([.top, .bottom], 2.5)
+                    Button(action:{
+                        to_set = ["Lock", "Home"]
+                        execute_process = true
                         show_overlay = true
                         withAnimation(.linear(duration: 0.4)) {
                             show_select_final = false
