@@ -188,7 +188,7 @@ struct HomeScreen: View {
                         apps_second(apps_scale:$apps_scale, apps_scale_height: $apps_scale_height, show_searchField: $show_searchField, icon_scaler: $icon_scaler, current_view: $current_view, dock_offset: $dock_offset, width: geometry.size.width, height: geometry.size.height).frame(maxWidth: geometry.size.width, maxHeight:geometry.size.height).zIndex(0).clipped().tag(2).frame(width:search_width, height: search_height)
                     }.scale(apps_scale).tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)).onAppear() {
                         UIScrollView.appearance().bounces = false
-                   }.opacity(1/(Double(dock_offset) + 1)).clipped()
+                    }.opacity(1/(Double(dock_offset) + 1)).clipped().layoutPriority(1)
 
                     dock2(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset).frame(width:geometry.size.width).offset(y:dock_offset).clipped()
                 }
