@@ -57,5 +57,7 @@ Thanks to all who decide to use, learn from, and modify this project. As well as
  <a href="https://www.buymeacoffee.com/zzanehip" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## License
-Creative Commons Attribution 4.0: [https://creativecommons.org/licenses/by/4.0/]()
 
+The OldOS Project uses the [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) license.
+
+[DALinedTextView](https://github.com/danielamitay/DALinedTextView) is used in accordance with the terms of its MIT license.
