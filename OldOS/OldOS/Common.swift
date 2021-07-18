@@ -15,6 +15,87 @@ import MediaPlayer
 
 //So what is this entire file just called common? Basically, my mindset was to build the app in the same way Apple built interface builder — you have a collection of UI elements at your disposal that are bases. You can then make a copy in whatever other file you'd like if you require custom abilities. If you just need the generic version, you can use the generic.
 
+struct multitasking_music_controls: View {
+    @Binding var current_view: String
+    @Binding var should_update: Bool
+    @Binding var show_remove: Bool
+    @Binding var instant_multitasking_change: Bool
+    @Binding var show_multitasking: Bool
+    @Binding var apps_scale: CGFloat
+    @Binding var dock_offset: CGFloat
+    @State var now_playing = MPMusicPlayerController.systemMusicPlayer.nowPlayingItem?.title ?? ""
+    @State var is_playing = MPMusicPlayerController.systemMusicPlayer.playbackState
+    var body: some View {
+        HStack {
+            LazyVGrid(columns: [
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)*2/3), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)*2/3), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)*2/3), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
+            ], alignment: .center, spacing: UIScreen.main.bounds.height/(844/40)) {
+                Image("RotationUnlockButton").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width/(390/60))
+                Button(action:{
+                    let music_player = MPMusicPlayerController.systemMusicPlayer
+                    music_player.skipToPreviousItem()
+                    now_playing = MPMusicPlayerController.systemMusicPlayer.nowPlayingItem?.title ?? ""
+                }) {
+                    Image("MCPrev")
+                }
+                Button(action:{
+                    let music_player = MPMusicPlayerController.systemMusicPlayer
+                    if  (music_player.playbackState) == .playing {
+                        music_player.pause()
+                        is_playing = .paused
+                    } else {
+                        music_player.play()
+                        is_playing = .playing
+                    }
+                    
+                }) {
+                    Image(is_playing == .playing ? "MCPause" : "MCPlay")
+                }
+                Button(action:{
+                        let music_player = MPMusicPlayerController.systemMusicPlayer
+                        music_player.skipToNextItem()
+                    now_playing = MPMusicPlayerController.systemMusicPlayer.nowPlayingItem?.title ?? ""
+                    
+                }) {
+                    Image("MCNext")
+                }
+                Button(action:{
+                    if current_view == "iPod" {
+                        withAnimation {
+                            show_multitasking = false
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.36) {
+                            instant_multitasking_change = false
+                        }
+                        should_update = false
+                        show_remove = false
+                    } else {
+                        withAnimation(.linear(duration: 0.32)) {
+                            apps_scale = 4
+                            dock_offset = 100
+                        }
+                        DispatchQueue.main.asyncAfter(deadline:.now()+0.01) {
+                            withAnimation(.linear(duration: 0.32)) {
+                                current_view = "iPod"
+                            }
+                        }
+                    }
+                }){
+                Image("iPod").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width/(390/60))
+                }
+            }
+        }.overlay(VStack {
+            Spacer()
+            Text("\(now_playing)").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: 15)
+        })
+    }
+}
+
+
 struct toggle_orange: View {
     @State var offset = CGPoint(x: -53.6666666667, y: 0)
     @State var show_overlay: Bool = false
@@ -728,6 +809,7 @@ public struct RoundedCorners: Shape {
 
 struct dual_segmented_control: View {
     @Binding var selected: Int //either 0 or 1
+    @Binding var instant_multitasking_change: Bool
     var first_text: String
     var second_text: String
     var should_animate:Bool?
@@ -769,7 +851,7 @@ struct dual_segmented_control: View {
                     }
                 }
             )
-        }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
+        }.animation((should_animate == true || instant_multitasking_change == true) ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
     }
 }
 
@@ -855,6 +937,7 @@ struct tri_control_big_bluegray_no_stroke: View {
 
 struct tri_segmented_control: View {
     @Binding var selected: Int //either 0 or 1
+    @Binding var instant_multitasking_change: Bool
     var first_text: String
     var second_text: String
     var third_text: String
@@ -922,12 +1005,13 @@ struct tri_segmented_control: View {
                     }
                 }
             )
-        }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
+        }.animation((should_animate == true || instant_multitasking_change == true) ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
     }
 }
 
 struct tri_segmented_control_image: View {
     @Binding var selected: Int //either 0 or 1
+    @Binding var instant_multitasking_change: Bool
     var first_image: String
     var second_image: String
     var third_image: String
@@ -995,7 +1079,7 @@ struct tri_segmented_control_image: View {
                     }
                 }
             )
-        }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
+        }.animation((should_animate == true || instant_multitasking_change == true) ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
     }
 }
 
@@ -1696,6 +1780,12 @@ extension View {
     func innerShadowSliderRight(color: Color, radius: CGFloat = 0.1) -> some View {
         modifier(InnerShadowSliderRight(color: color, radius: min(max(0, radius), 1)))
     }
+    func innerShadowSliderMulti(color: Color, radius: CGFloat = 0.1) -> some View {
+        modifier(InnerShadowSliderMulti(color: color, radius: min(max(0, radius), 1)))
+    }
+    func innerShadowSliderMultiDiffed(color: Color, radius: CGFloat = 0.1) -> some View {
+        modifier(InnerShadowSliderDiffed(color: color, radius: min(max(0, radius), 1)))
+    }
     func innerShadowFull(color: Color, radius: CGFloat = 0.1) -> some View {
           modifier(InnerShadow_Full(color: color, radius: min(max(0, radius), 1)))
       }
@@ -1840,6 +1930,62 @@ private struct InnerShadowSliderRight: ViewModifier {
                 .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .trailing, endPoint: .leading)
                                   .frame(width: self.radius * self.minSide(geo)),
                                        alignment: .trailing)
+        }
+    }
+    
+    func minSide(_ geo: GeometryProxy) -> CGFloat {
+        CGFloat(3) * min(geo.size.width, geo.size.height) / 2
+    }
+}
+
+private struct InnerShadowSliderMulti: ViewModifier {
+    var color: Color = .gray
+    var radius: CGFloat = 0.1
+    
+    private var colors: [Color] {
+        [color.opacity(0.75), color.opacity(0.0), .clear]
+    }
+    
+    func body(content: Content) -> some View {
+        GeometryReader { geo in
+            content
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .top, endPoint: .bottom)
+                            .frame(height: self.radius * self.minSide(geo) * 1.25),
+                         alignment: .top)
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .bottom, endPoint: .top)
+                            .frame(height: self.radius * self.minSide(geo) * 0.25),
+                         alignment: .bottom)
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .trailing, endPoint: .leading)
+                                  .frame(width: self.radius * self.minSide(geo)),
+                                       alignment: .trailing)
+        }
+    }
+    
+    func minSide(_ geo: GeometryProxy) -> CGFloat {
+        CGFloat(3) * min(geo.size.width, geo.size.height) / 2
+    }
+}
+
+private struct InnerShadowSliderDiffed: ViewModifier {
+    var color: Color = .gray
+    var radius: CGFloat = 0.1
+    
+    private var colors: [Color] {
+        [color.opacity(0.75), color.opacity(0.0), .clear]
+    }
+    
+    func body(content: Content) -> some View {
+        GeometryReader { geo in
+            content
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .top, endPoint: .bottom)
+                            .frame(height: self.radius * self.minSide(geo) * 0.75).offset(y: 0.1),
+                         alignment: .top)
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .bottom, endPoint: .top)
+                            .frame(height: self.radius * self.minSide(geo)*0.25).opacity(0.45),
+                         alignment: .bottom)
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .leading, endPoint: .trailing)
+                            .frame(width: self.radius * self.minSide(geo)*0.1),
+                                       alignment: .leading)
         }
     }
     

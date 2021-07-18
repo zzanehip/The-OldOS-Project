@@ -43,12 +43,13 @@ struct iTunes: View {
     @State var search_selected_item_url: URL?
     @State var search_show_result: Bool = false
     @State var editing_state: String = "None"
+    @Binding var instant_multitasking_change: Bool
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 VStack(spacing:0) {
                     status_bar_in_app().frame(minHeight: 24, maxHeight:24).zIndex(1)
-                    itunes_title_bar(title: (selectedTab == "Music" && music_show_music == true) ? (music_selected_music?.collectionName ?? "") : (selectedTab == "Music" && music_show_category == true) ? selected_category.name : (selectedTab == "Videos" && videos_show_movie == true) ? (video_title ?? "") : (selectedTab == "Search" && search_show_result == true) ? (search_title ?? "") : selectedTab, selected_segment: $selected_segment, selected_segment_videos: $selected_segment_videos, forward_or_backward: $forward_or_backward, selectedTab: $selectedTab, music_show_music: $music_show_music, music_show_category: $music_show_category, videos_show_movie: $videos_show_movie, videos_show_tv: $videos_show_tv, categories_current_view: $categories_current_view, search_results: $search_results, search_show_application: $search_show_application, search_selected_application: $search_selected_application, video_title: $video_title, genius_selected_segment: $genius_selected_segment, search_show_result: $search_show_result, editing_state: $editing_state, show_edit: false, show_plus: false).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(1)
+                    itunes_title_bar(title: (selectedTab == "Music" && music_show_music == true) ? (music_selected_music?.collectionName ?? "") : (selectedTab == "Music" && music_show_category == true) ? selected_category.name : (selectedTab == "Videos" && videos_show_movie == true) ? (video_title ?? "") : (selectedTab == "Search" && search_show_result == true) ? (search_title ?? "") : selectedTab, selected_segment: $selected_segment, selected_segment_videos: $selected_segment_videos, forward_or_backward: $forward_or_backward, selectedTab: $selectedTab, music_show_music: $music_show_music, music_show_category: $music_show_category, videos_show_movie: $videos_show_movie, videos_show_tv: $videos_show_tv, categories_current_view: $categories_current_view, search_results: $search_results, search_show_application: $search_show_application, search_selected_application: $search_selected_application, video_title: $video_title, genius_selected_segment: $genius_selected_segment, search_show_result: $search_show_result, editing_state: $editing_state, show_edit: false, show_plus: false, instant_multitasking_change: $instant_multitasking_change).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(1)
                     iTunesTabView(selectedTab: $selectedTab, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, selected_segment: $selected_segment, selected_segment_videos: $selected_segment_videos, new_music_observer: new_music_observer, new_movietv_observer: new_movietv_observer, music_show_music: $music_show_music, music_selected_music: $music_selected_music, music_show_category: $music_show_category, videos_show_movie: $videos_show_movie, videos_selected_movie: $videos_selected_movie, videos_show_tv: $videos_show_tv, videos_selected_tv: $videos_selected_tv, selected_category: $selected_category, search_results: $search_results, search_show_application: $search_show_application, search_selected_application: $search_selected_application, video_title: $video_title, search_title: $search_title, genius_selected_segment: $genius_selected_segment, search_selected_item_url: $search_selected_item_url, search_show_result: $search_show_result, editing_state: $editing_state).clipped()
                 }
             }.compositingGroup().clipped()
@@ -1542,6 +1543,7 @@ struct itunes_title_bar : View {
     var show_plus: Bool
     public var edit_action: (() -> Void)?
     public var plus_action: (() -> Void)?
+    @Binding var instant_multitasking_change: Bool
     var body :some View {
         GeometryReader {geometry in
             ZStack {
@@ -1553,9 +1555,9 @@ struct itunes_title_bar : View {
                         if (selectedTab != "Music" || music_show_music == true || music_show_category == true) && (selectedTab != "Search" || search_show_result == true) && (selectedTab != "Videos" || videos_show_movie == true || videos_show_tv == true) && (selectedTab != "Genius") {
                             Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: ((selectedTab == "Music" && music_show_music == true) || (selectedTab == "Videos" && videos_show_movie == true) || (selectedTab == "Search" && search_show_result == true)) ? 175 : .infinity)
                         } else if selectedTab == "Music" {
-                            dual_segmented_control(selected: $selected_segment, first_text: "New Releases", second_text: "Top Tens", should_animate: false).frame(width: 220, height: 30)
+                            dual_segmented_control(selected: $selected_segment, instant_multitasking_change: $instant_multitasking_change, first_text: "New Releases", second_text: "Top Tens", should_animate: false).frame(width: 220, height: 30)
                         } else if selectedTab == "Videos" {
-                            tri_segmented_control(selected: $selected_segment_videos, first_text: "Movies", second_text: "TV Shows", third_text: "Music Videos", should_animate: false).frame(width: geometry.size.width-24, height: 30)
+                            tri_segmented_control(selected: $selected_segment_videos, instant_multitasking_change: $instant_multitasking_change, first_text: "Movies", second_text: "TV Shows", third_text: "Music Videos", should_animate: false).frame(width: geometry.size.width-24, height: 30)
                         } else if selectedTab == "Search" {
                             VStack {
                                 Spacer()
@@ -1657,7 +1659,7 @@ struct itunes_title_bar : View {
                                 Spacer()
                             }
                         } else if selectedTab == "Genius" {
-                            tri_segmented_control(selected: $genius_selected_segment, first_text: "Music", second_text: "Movies", third_text: "TV Shows", should_animate: false).frame(width: geometry.size.width-24, height: 30)
+                            tri_segmented_control(selected: $genius_selected_segment, instant_multitasking_change: $instant_multitasking_change, first_text: "Music", second_text: "Movies", third_text: "TV Shows", should_animate: false).frame(width: geometry.size.width-24, height: 30)
                         }
                         Spacer()
                     }
@@ -1828,8 +1830,8 @@ struct TabButton_iTunes: View {
 }
 
 
-struct iTunes_Previews: PreviewProvider {
-    static var previews: some View {
-        iTunes()
-    }
-}
+//struct iTunes_Previews: PreviewProvider {
+//    static var previews: some View {
+//        iTunes()
+//    }
+//}

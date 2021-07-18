@@ -13,7 +13,12 @@ import LocationProvider
 import AVKit
 import MediaPlayer
 import Photos
-struct Settings: View {
+struct Settings: View, Equatable {
+    static func == (lhs: Settings, rhs: Settings) -> Bool {
+        //Our views will want to redraw when we activate multitasking. The easiest solution is to make our views equatable and not have them redraw when changing it.
+        return lhs.show_multitasking != rhs.show_multitasking
+    }
+    
     @State var selectedPage = 1
     @ObservedObject var locationProvider : LocationProvider
     @ObservedObject var photos_obsever = SettingsPhotosObserver()
@@ -22,7 +27,9 @@ struct Settings: View {
     @State var wallpaper: String = ""
     @State var wallpaper_camera_roll: UIImage?
     @State var last_photo: UIImage = UIImage()
-    init() {
+    @Binding var show_multitasking: Bool
+    init(show_multitasking: Binding<Bool>) {
+        _show_multitasking = show_multitasking
         locationProvider = LocationProvider()
         do {try locationProvider.start()}
         catch {
@@ -41,7 +48,7 @@ struct Settings: View {
             ZStack {
                 VStack(spacing:0) {
                     status_bar_in_app(selected_page:selectedPage).frame(minHeight: 24, maxHeight:24).zIndex(1)
-                    title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, title: current_nav_view == "Location Services" ? "  \(current_nav_view)" : current_nav_view == "Wallpaper_Select" ? "" : current_nav_view == "Wallpaper_Grid" ? "Wallpaper" : current_nav_view == "Wallpaper_Grid_Camera_Roll" ? "Camera Roll" : current_nav_view.contains("General_") ? current_nav_view.replacingOccurrences(of: "General_", with: "") : current_nav_view == "Mail, Contacts, Calendars" ? "           Mail, Contacts, Calen..." : current_nav_view).frame(height: 60) //For lo
+                    title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, title: current_nav_view == "Location Services" ? "  \(current_nav_view)" : current_nav_view == "Wallpaper_Select" ? "" : current_nav_view == "Wallpaper_Grid" ? "Wallpaper" : current_nav_view == "Wallpaper_Grid_Camera_Roll" ? "Camera Roll" : current_nav_view.contains("General_") ? current_nav_view.replacingOccurrences(of: "General_", with: "") : current_nav_view == "Mail, Contacts, Calendars" ? "           Mail, Contacts, Calen..." : current_nav_view).frame(minHeight: 60, maxHeight: 60).zIndex(1) //For lo
                     switch current_nav_view {
                     case "Settings":
                         settings_home(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, usage_section: usage_section, display_section: display_section, apps_section: apps_section).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
@@ -107,12 +114,12 @@ struct Settings: View {
                 }.clipped()
                 if show_wallpaper_select {
                     VStack(spacing:0) {
-                        wallpaper_set_view(wallpaper:$wallpaper, show_wallpaper_select: $show_wallpaper_select)
+                        wallpaper_set_view(wallpaper:$wallpaper, show_wallpaper_select: $show_wallpaper_select).compositingGroup()
                     }.clipped().transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1)
                 }
                 if show_wallpaper_select_camera_roll {
                     VStack(spacing:0) {
-                wallpaper_set_view_camera_roll(wallpaper_camera_roll:$wallpaper_camera_roll, show_wallpaper_select_camera_roll: $show_wallpaper_select_camera_roll)
+                wallpaper_set_view_camera_roll(wallpaper_camera_roll:$wallpaper_camera_roll, show_wallpaper_select_camera_roll: $show_wallpaper_select_camera_roll).compositingGroup()
                     }.clipped().transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1)
                 }
             }.onAppear() {

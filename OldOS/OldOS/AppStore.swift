@@ -31,12 +31,13 @@ struct AppStore: View {
     @State var search_show_application: Bool = false
     @State var search_selected_application: Application_Data.Results?
     @State var editing_state: String = "None"
+    @Binding var instant_multitasking_change: Bool
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 VStack(spacing:0) {
                     status_bar_in_app().frame(minHeight: 24, maxHeight:24).zIndex(1)
-                    app_store_title_bar(title: (selectedTab != "Featured" || featured_show_application == false) ? (selectedTab != "Top 25" || top25_show_application == false) ? (selectedTab != "Search" || search_show_application == false) ? (selectedTab == "Categories" && categories_current_view == "Main") ? selectedTab : (selectedTab == "Categories" && categories_current_view == "Category") ? selected_category.name : selectedTab == "Updates" ? selectedTab : "Info" : "Info" : "Info" : "Info", selected_segment: $selected_segment, selected_segment_25: $selected_segment_25, forward_or_backward: $forward_or_backward, selectedTab: $selectedTab, featured_show_application: $featured_show_application, top25_show_application: $top25_show_application, categories_current_view: $categories_current_view, search_results: $search_results, search_show_application: $search_show_application, search_selected_application: $search_selected_application, editing_state: $editing_state, show_edit: false, show_plus: false).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(1)
+                    app_store_title_bar(title: (selectedTab != "Featured" || featured_show_application == false) ? (selectedTab != "Top 25" || top25_show_application == false) ? (selectedTab != "Search" || search_show_application == false) ? (selectedTab == "Categories" && categories_current_view == "Main") ? selectedTab : (selectedTab == "Categories" && categories_current_view == "Category") ? selected_category.name : selectedTab == "Updates" ? selectedTab : "Info" : "Info" : "Info" : "Info", selected_segment: $selected_segment, selected_segment_25: $selected_segment_25, forward_or_backward: $forward_or_backward, selectedTab: $selectedTab, featured_show_application: $featured_show_application, top25_show_application: $top25_show_application, categories_current_view: $categories_current_view, search_results: $search_results, search_show_application: $search_show_application, search_selected_application: $search_selected_application, editing_state: $editing_state, show_edit: false, show_plus: false, instant_multitasking_change: $instant_multitasking_change).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(1)
                     AppStoreTabView(selectedTab: $selectedTab, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, selected_segment: $selected_segment, selected_segment_25: $selected_segment_25, featured_observer: featured_observer, top_paid_and_free_observer: top_paid_and_free_observer, featured_show_application: $featured_show_application, featured_selected_application: $featured_selected_application, top25_show_application: $top25_show_application, top25_selected_application: $top25_selected_application, categories_current_view: $categories_current_view, categories_selected_application: $categories_selected_application, selected_category: $selected_category, search_results: $search_results, search_show_application: $search_show_application, search_selected_application: $search_selected_application, editing_state: $editing_state).clipped()
                 }
             }.compositingGroup().clipped()
@@ -48,11 +49,11 @@ struct AppStore: View {
     }
 }
 
-struct AppStore_Previews: PreviewProvider {
-    static var previews: some View {
-        AppStore()
-    }
-}
+//struct AppStore_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AppStore()
+//    }
+//}
 
 var appstore_tabs = ["Featured", "Categories", "Top 25", "Search", "Updates"]
 struct AppStoreTabView : View {
@@ -1339,6 +1340,7 @@ struct app_store_title_bar : View {
     var show_plus: Bool
     public var edit_action: (() -> Void)?
     public var plus_action: (() -> Void)?
+    @Binding var instant_multitasking_change: Bool
     var body :some View {
         GeometryReader {geometry in
             ZStack {
@@ -1350,9 +1352,9 @@ struct app_store_title_bar : View {
                         if (selectedTab != "Featured" || featured_show_application == true) && (selectedTab != "Top 25" || top25_show_application == true) && (selectedTab != "Search" || search_show_application == true) {
                             Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: (selectedTab == "Categories" && categories_current_view == "Category") ? 175 : .infinity)
                         } else if selectedTab == "Featured" {
-                            dual_segmented_control(selected: $selected_segment, first_text: "New", second_text: "Genius", should_animate: false).frame(width: 220, height: 30)
+                            dual_segmented_control(selected: $selected_segment, instant_multitasking_change: $instant_multitasking_change, first_text: "New", second_text: "Genius", should_animate: false).frame(width: 220, height: 30)
                         } else if selectedTab == "Top 25" {
-                            tri_segmented_control(selected: $selected_segment_25, first_text: "Paid", second_text: "Free", third_text: "Top Grossing", should_animate: false).frame(width: geometry.size.width-24, height: 30)
+                            tri_segmented_control(selected: $selected_segment_25, instant_multitasking_change: $instant_multitasking_change, first_text: "Paid", second_text: "Free", third_text: "Top Grossing", should_animate: false).frame(width: geometry.size.width-24, height: 30)
                         } else if selectedTab == "Search" {
                             VStack {
                                 Spacer()

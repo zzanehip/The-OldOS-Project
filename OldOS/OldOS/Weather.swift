@@ -11,7 +11,14 @@ import MapKit
 import Combine
 import Foundation
 
-struct Weather: View {
+struct Weather: View, Equatable {
+    
+    static func == (lhs: Weather, rhs: Weather) -> Bool {
+        //Our views will want to redraw when we activate multitasking. The easiest solution is to make our views equatable and not have them redraw when changing it.
+        return lhs.show_multitasking != rhs.show_multitasking
+    }
+
+    
     @State var current_nav_view: String = "Main"
     @State var forward_or_backward = false
     @State var show_settings:Bool = false
@@ -19,11 +26,15 @@ struct Weather: View {
     @State var collapse_pager: Bool = false
     @State var hide_weather: Bool = false
     @StateObject var page: Page = .first()
+    @Binding var show_multitasking: Bool
     @ObservedObject var weather_data: ObservableArray<WeatherObserver> = try! ObservableArray(array: [WeatherObserver(location: "", mode: "imperial")]).observeChildrenChanges()
     // @ObservedObject var weatherData = WeatherObserver()
     var items = Array(0..<3)
     
-    init() {
+    init(show_multitasking: Binding<Bool>) {
+        
+        _show_multitasking = show_multitasking
+        
         // Because of how our observable array works, empty values will result in breaking the application. With this approach, we never have an empty array. I'd say it would be wildy inefficent if we we're initialising our array with data from the web, but because we are pulling from userdefaults its almost instant and unnoticable. It appears this is how Apple actually does it in the Weather app.
         let userDefaults = UserDefaults.standard
         var weather = (userDefaults.object(forKey: "weather_cities") as? [String:String] ?? ["0":""]).sorted(by: <)
@@ -946,8 +957,8 @@ func json_iconography_to_offset(_ input: String) -> CGFloat {
     }
 }
 
-struct Weather_Previews: PreviewProvider {
-    static var previews: some View {
-        Weather()
-    }
-}
+//struct Weather_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Weather()
+//    }
+//}

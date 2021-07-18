@@ -29,8 +29,10 @@ struct Maps: View {
     @State var directions_mode: Int = 0
     @ObservedObject var mapType: map_type_observer = map_type_observer()
     @ObservedObject var locationProvider : LocationProvider
+    @Binding var instant_multitasking_change: Bool
     
-    init() {
+    init(instant_multitasking_change: Binding<Bool>) {
+        _instant_multitasking_change = instant_multitasking_change
         locationProvider = LocationProvider()
         do {try locationProvider.start()}
         catch {
@@ -49,7 +51,7 @@ struct Maps: View {
                         mapView.curl_view = XBCurlView(frame: CGRect(geometry.size.width, geometry.size.height-129), antialiasing: true)
                         mapView.mapType = mapType
                     }
-                    maps_tool_bar(selected_segment: $selected_segment, did_present: $did_present, mapType: mapType, settings_action: {
+                    maps_tool_bar(selected_segment: $selected_segment, did_present: $did_present, instant_multitasking_change: $instant_multitasking_change, mapType: mapType, settings_action: {
                                     if !did_present {
                                         mapView.present()
                                         did_present = true
@@ -104,7 +106,7 @@ struct Maps: View {
                             }
                         }).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 90, maxHeight:90).zIndex(2)
                         } else {
-                            maps_directions_mode_title_bar(title: "", selected_segment: $directions_mode, forward_or_backward: $forward_or_backward, show_edit: true, show_start: true, edit_action: {
+                            maps_directions_mode_title_bar(title: "", selected_segment: $directions_mode, forward_or_backward: $forward_or_backward, instant_multitasking_change: $instant_multitasking_change, show_edit: true, show_start: true, edit_action: {
                                 did_calculate_directions = false
                             }).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(2)
                             maps_directions_mode_title_bar_footer(mapType: mapType).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 62, maxHeight:62).zIndex(2)
@@ -668,6 +670,7 @@ extension MKCoordinateRegion: Equatable
 struct maps_tool_bar: View {
     @Binding var selected_segment: Int
     @Binding var did_present: Bool
+    @Binding var instant_multitasking_change: Bool
     @ObservedObject var mapType: map_type_observer
     var settings_action: (() -> Void)?
     var location_action: (() -> Void)?
@@ -677,7 +680,7 @@ struct maps_tool_bar: View {
             HStack {
                 tool_bar_rectangle_button_larger_image(action: {location_action?()}, button_type: mapType.location_selected == false ? .blue_gray : .blue, content: "TrackingLocation", use_image: true, height_modifier: -2).padding(.leading, 6)
                 Spacer()
-                dual_segmented_control(selected: $selected_segment, first_text: "Search", second_text: "Directions", should_animate: false).frame(width: 220, height: 30)
+                dual_segmented_control(selected: $selected_segment, instant_multitasking_change: $instant_multitasking_change, first_text: "Search", second_text: "Directions", should_animate: false).frame(width: 220, height: 30)
                 Spacer()
                 Button(action: {settings_action?()}) {
                     Image(did_present ? "UIButtonBarPageCurlSelected" : "UIButtonBarPageCurlDefault")
@@ -915,6 +918,7 @@ struct maps_directions_mode_title_bar : View {
     var title:String
     @Binding var selected_segment: Int
     @Binding var forward_or_backward: Bool
+    @Binding var instant_multitasking_change: Bool
     private let gradient = LinearGradient([.white, .white], to: .trailing)
     private let cancel_gradient = LinearGradient([(color: Color(red: 164/255, green: 175/255, blue:191/255), location: 0), (color: Color(red: 124/255, green: 141/255, blue:164/255), location: 0.51), (color: Color(red: 113/255, green: 131/255, blue:156/255), location: 0.51), (color: Color(red: 112/255, green: 130/255, blue:155/255), location: 1)], from: .top, to: .bottom)
     var show_edit: Bool
@@ -931,7 +935,7 @@ struct maps_directions_mode_title_bar : View {
                     HStack {
                         tool_bar_rectangle_button(action: {edit_action?()}, button_type: .blue_gray, content: " Edit ").padding(.leading, 5).padding(.trailing, 12)
                         Spacer()
-                        tri_segmented_control_image(selected: $selected_segment, first_image: "Driving", second_image: "Transit", third_image: "Walking", should_animate: false).frame(height: 30)
+                        tri_segmented_control_image(selected: $selected_segment, instant_multitasking_change: $instant_multitasking_change, first_image: "Driving", second_image: "Transit", third_image: "Walking", should_animate: false).frame(height: 30)
                         Spacer()
                         tool_bar_rectangle_button(action: {start_action?()}, button_type: .blue, content: "Start").padding(.trailing, 5).padding(.leading, 12)
                     }

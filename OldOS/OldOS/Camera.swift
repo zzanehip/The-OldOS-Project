@@ -18,6 +18,7 @@ struct Camera: View {
     @StateObject var model = CameraModel()
     
     @State var currentZoomFactor: CGFloat = 1.0
+    @Binding var instant_multitasking_change: Bool
     var body: some View {
         GeometryReader{ geometry in
             ZStack {
@@ -27,7 +28,7 @@ struct Camera: View {
                 VStack(spacing: 0) {
                     camera_header(model: model, camera_state: $camera_state, is_recording: $is_recording, recording_timer: $recording_timer).padding(.top, 10)
                     Spacer()
-                    camera_tool_bar(camera_state: $camera_state, is_recording: $is_recording, recording_timer: $recording_timer, model: model).frame(height: 60)
+                    camera_tool_bar(camera_state: $camera_state, is_recording: $is_recording, recording_timer: $recording_timer, model: model, instant_multitasking_change: $instant_multitasking_change).frame(height: 60)
                 }
                 
             }
@@ -37,11 +38,11 @@ struct Camera: View {
     }
 }
 
-struct Camera_Previews: PreviewProvider {
-    static var previews: some View {
-        Camera()
-    }
-}
+//struct Camera_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Camera()
+//    }
+//}
 
 enum camera_state {
     case photo, video
@@ -154,6 +155,7 @@ struct camera_tool_bar: View {
     @State var c_image: UIImage?
     @State var audioPlayer: AVAudioPlayer!
     @StateObject var model: CameraModel
+    @Binding var instant_multitasking_change: Bool
     private let gradient = LinearGradient([Color.clear, Color.clear], to: .trailing)
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var body: some View {
@@ -202,7 +204,7 @@ struct camera_tool_bar: View {
                     }) {
                     ZStack {
                         Image("PLCameraButtonSilver").frame(width: geometry.size.width/3.25, height: 82/2)
-                        Image(camera_state == .photo ? "PLCameraButtonIcon" : (is_recording == true && flash == true) ? "PLCameraButtonRecordOn" :  "PLCameraButtonRecordOff").animation(.none).onReceive(timer, perform: {_ in
+                        Image(camera_state == .photo ? "PLCameraButtonIcon" : (is_recording == true && flash == true) ? "PLCameraButtonRecordOn" :  "PLCameraButtonRecordOff").animation(instant_multitasking_change == true ? .default : .none).onReceive(timer, perform: {_ in
                             flash.toggle()
                         })
                     }

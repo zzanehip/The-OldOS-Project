@@ -23,6 +23,7 @@ struct Notes: View {
     ) var notes: FetchedResults<Note>
     @State var selected_note: Note = Note()
     @ObservedObject var keyboard = KeyboardResponder()
+    @Binding var instant_multitasking_change: Bool
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -46,7 +47,7 @@ struct Notes: View {
                     case "Main":
                         notes_main_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, selected_note: $selected_note, notes: notes).frame(width: geometry.size.width).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing))).clipped()
                     case "Destination":
-                        notes_destination_view(content: selected_note.content ?? "", last_edited_date: selected_note.last_edited_date, appear_or_disapear_animation: $appear_or_disapear_animation, is_editing_note: $is_editing_note, selected_note: $selected_note, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, added_note: $added_note, keyboard: keyboard, notes: notes).frame(width: geometry.size.width).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing))).clipped()
+                        notes_destination_view(content: selected_note.content ?? "", last_edited_date: selected_note.last_edited_date, appear_or_disapear_animation: $appear_or_disapear_animation, is_editing_note: $is_editing_note, selected_note: $selected_note, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, added_note: $added_note, instant_multitasking_change: $instant_multitasking_change, keyboard: keyboard, notes: notes).frame(width: geometry.size.width).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing))).clipped()
                     default:
                         notes_main_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, selected_note: $selected_note, notes: notes).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     }
@@ -132,6 +133,7 @@ struct notes_destination_view: View {
     @Binding var current_nav_view: String
     @Binding var forward_or_backward: Bool
     @Binding var added_note: Bool
+    @Binding var instant_multitasking_change: Bool
     @ObservedObject var keyboard: KeyboardResponder
     var notes: FetchedResults<Note>
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -139,7 +141,7 @@ struct notes_destination_view: View {
         GeometryReader { geometry in
             ZStack {
             VStack(spacing: 0) {
-                MultilineTextView(text: $content, selected_note: $selected_note, last_edited_date: $last_edited_date, geometry: geometry).padding(.bottom, keyboard.currentHeight).edgesIgnoringSafeArea(.bottom).animation(appear_or_disapear_animation == false ? .easeOut(duration: 0.17) : .linear(duration: 0.28)).compositingGroup()
+                MultilineTextView(text: $content, selected_note: $selected_note, last_edited_date: $last_edited_date, geometry: geometry).padding(.bottom, keyboard.currentHeight).edgesIgnoringSafeArea(.bottom).animation(instant_multitasking_change == true ? .default : appear_or_disapear_animation == false ? .easeOut(duration: 0.17) : .linear(duration: 0.28)).compositingGroup()
             }.overlay(VStack {
                 Image("edgeTopMarginThin").resizable().scaledToFit().frame(width: geometry.size.width + 4).clipped()
                 Spacer()
@@ -410,11 +412,11 @@ struct MultilineTextView: UIViewRepresentable {
     
 }
 
-struct Notes_Previews: PreviewProvider {
-    static var previews: some View {
-        Notes()
-    }
-}
+//struct Notes_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Notes()
+//    }
+//}
 
 struct notes_title_bar : View {
     var title:String
