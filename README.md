@@ -12,6 +12,7 @@
 <td align="center">
 <img width="2000" height="0"><br>
 <b>Updates: Version 1.0 is currently available 🎉</b><br>
+<small>Jul 22. FYI, my Twitter account got temporarliy locked when I entered my brithday. All will be fine, but I might be inactive for the next 24ish hours while I wait on Twitter to send me an account restoration tool.</small><br>
 <small>While I work on fixing an issue in Xcode 12.5+ with LazyVGrid, I recommend you build using Xcode 12.4 and below.</small>
 <img width="2000" height="0">
 </td>
