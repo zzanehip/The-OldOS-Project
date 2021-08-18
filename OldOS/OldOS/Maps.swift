@@ -30,9 +30,12 @@ struct Maps: View {
     @ObservedObject var mapType: map_type_observer = map_type_observer()
     @ObservedObject var locationProvider : LocationProvider
     @Binding var instant_multitasking_change: Bool
-    
-    init(instant_multitasking_change: Binding<Bool>) {
+    @Binding var show_multitasking: Bool
+    var should_show: Bool
+    init(instant_multitasking_change: Binding<Bool>, show_multitasking: Binding<Bool>, should_show: Bool) {
         _instant_multitasking_change = instant_multitasking_change
+        _show_multitasking = show_multitasking
+        self.should_show = should_show
         locationProvider = LocationProvider()
         do {try locationProvider.start()}
         catch {
@@ -167,7 +170,7 @@ struct Maps: View {
             } else {
                 mapView.remove_legal_view()
             }
-        })
+        }).shadow(color: Color.black.opacity((instant_multitasking_change == true && should_show == true) ? 0.85 : 0), radius: 6, x: 0, y: 4).disabled((show_multitasking == true && should_show == true))
     }
     
     func easy_int_to_transport(_ val:Int) -> MKDirectionsTransportType {

@@ -103,10 +103,10 @@ struct Controller: View {
                                 Weather(show_multitasking: $show_multitasking).equatable().padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Weather")
                             case "Maps":
                                 multitasking_controller(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset, multitasking_apps: $multitasking_apps, instant_multitasking_change: $instant_multitasking_change, current_multitasking_app: $current_multitasking_app, should_update: $should_update, show_remove: $show_remove, show_multitasking: $show_multitasking, relative_app: "Maps")
-                                Maps(instant_multitasking_change: $instant_multitasking_change).padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Maps")
+                                Maps(instant_multitasking_change: $instant_multitasking_change, show_multitasking: $show_multitasking, should_show: current_multitasking_app == "Maps").padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking(show_multitasking, instant_multitasking_change, current_multitasking_app == "Maps")//.modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Maps")
                             case "YouTube":
                                 multitasking_controller(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset, multitasking_apps: $multitasking_apps, instant_multitasking_change: $instant_multitasking_change, current_multitasking_app: $current_multitasking_app, should_update: $should_update, show_remove: $show_remove, show_multitasking: $show_multitasking, relative_app: "YouTube")
-                                Youtube().padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "YouTube")
+                                Youtube(instant_multitasking_change: $instant_multitasking_change).padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "YouTube")
                             case "Camera":
                                 multitasking_controller(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset, multitasking_apps: $multitasking_apps, instant_multitasking_change: $instant_multitasking_change, current_multitasking_app: $current_multitasking_app, should_update: $should_update, show_remove: $show_remove, show_multitasking: $show_multitasking, relative_app: "Camera")
                                 Camera(instant_multitasking_change: $instant_multitasking_change).padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Camera")
@@ -160,8 +160,8 @@ struct Controller: View {
 }
 
 extension View {
-    func modifiedForMultitasking(_ show_multitasking: Bool, _ instant_multitasking_change: Bool) -> some View {
-        self.offset(y: (show_multitasking == true) ? -(UIScreen.main.bounds.width/(390/85) + 20) : 0).clipped().shadow(color: Color.black.opacity((instant_multitasking_change == true) ? 0.85 : 0), radius: 6, x: 0, y: 4)
+    func modifiedForMultitasking(_ show_multitasking: Bool, _ instant_multitasking_change: Bool, _ should_show: Bool) -> some View {
+        self.offset(y: (show_multitasking == true && should_show == true) ? -(UIScreen.main.bounds.width/(390/85) + 20) : 0).clipped().disabled((show_multitasking == true && should_show == true))//.shadow(color: Color.black.opacity((instant_multitasking_change == true && should_show == true) ? 0.85 : 0), radius: 6, x: 0, y: 4).disabled((show_multitasking == true && should_show == true))
     }
     func modifiedForMultitasking2(_ show_multitasking: Bool, _ instant_multitasking_change: Bool, _ should_show: Bool) -> some View {
         self.offset(y: (show_multitasking == true && should_show == true) ? -(UIScreen.main.bounds.width/(390/85) + 20) : 0).clipped().shadow(color: Color.black.opacity((instant_multitasking_change == true && should_show == true) ? 0.85 : 0), radius: 6, x: 0, y: 4).disabled((show_multitasking == true && should_show == true))
