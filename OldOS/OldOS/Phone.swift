@@ -22,13 +22,14 @@ struct Phone: View {
     @State var selected_segment: Int = 0
     @ObservedObject var favorites_obs = favorites_observer()
     @ObservedObject var recents_obs = recents_observer()
+    @Binding var instant_multitasking_change: Bool
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 VStack(spacing:0) {
                     status_bar_in_app().frame(minHeight: 24, maxHeight:24).zIndex(1)
                     if selectedTab != "Keypad" {
-                        phone_title_bar(title:selectedTab == "Contacts" ? contacts_current_nav_view != "Contacts" ? "Info" : "All Contacts" : selectedTab, forward_or_backward: $forward_or_backward, selectedTab: $selectedTab, contacts_current_nav_view: $contacts_current_nav_view, is_editing_favorites: $show_edit, selected_segment: $selected_segment, favorites_obs: favorites_obs, recents_obs: recents_obs, show_edit: selectedTab == "Favorites" ? true : false, show_plus: selectedTab == "Favorites" ? show_edit == false ? true : false : false, edit_action: {
+                        phone_title_bar(title:selectedTab == "Contacts" ? contacts_current_nav_view != "Contacts" ? "Info" : "All Contacts" : selectedTab, forward_or_backward: $forward_or_backward, selectedTab: $selectedTab, contacts_current_nav_view: $contacts_current_nav_view, is_editing_favorites: $show_edit, selected_segment: $selected_segment, instant_multitasking_change: $instant_multitasking_change, favorites_obs: favorites_obs, recents_obs: recents_obs, show_edit: selectedTab == "Favorites" ? true : false, show_plus: selectedTab == "Favorites" ? show_edit == false ? true : false : false, edit_action: {
                             if selectedTab == "Favorites" {
                                 withAnimation {
                                 show_edit.toggle()
@@ -1342,6 +1343,7 @@ struct phone_title_bar : View {
     @Binding var contacts_current_nav_view: String
     @Binding var is_editing_favorites: Bool
     @Binding var selected_segment: Int
+    @Binding var instant_multitasking_change: Bool
     @ObservedObject var favorites_obs: favorites_observer
     @ObservedObject var recents_obs: recents_observer
     var show_edit: Bool
@@ -1358,7 +1360,7 @@ struct phone_title_bar : View {
                     if selectedTab != "Recents" {
                     Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title)
                     } else {
-                        dual_segmented_control(selected: $selected_segment, first_text: "All", second_text: "Missed").frame(width: 180, height: 30)
+                        dual_segmented_control(selected: $selected_segment, instant_multitasking_change: $instant_multitasking_change, first_text: "All", second_text: "Missed").frame(width: 180, height: 30)
                     }
                     Spacer()
                 }

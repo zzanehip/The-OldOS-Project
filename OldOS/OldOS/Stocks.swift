@@ -7,14 +7,23 @@
 
 import SwiftUI
 
-struct Stocks: View {
+struct Stocks: View, Equatable {
+    
+    static func == (lhs: Stocks, rhs: Stocks) -> Bool {
+        //Our views will want to redraw when we activate multitasking. The easiest solution is to make our views equatable and not have them redraw when changing it.
+        return lhs.show_multitasking != rhs.show_multitasking
+    }
+
+    
     @ObservedObject var stocks_observer = StocksObserver()
     @State var items = UserDefaults.standard.object(forKey: "stocks") as? [String]
     @State var selected_stock: stock?
     @State var show_settings:Bool = false
     @State var switch_to_settings: Bool = false
     @State var hide_stocks: Bool = false
-    init() {
+    @Binding var show_multitasking: Bool
+    init(show_multitasking: Binding<Bool>) {
+        _show_multitasking = show_multitasking
         for item in items ?? [] {
             stocks_observer.fetch_stocks(ticker: item, completion: {[self] in
             })
@@ -567,12 +576,12 @@ struct stocks_footer_grid: View {
     }
 }
 
-struct Stocks_Previews: PreviewProvider {
-    static var previews: some View {
-        Stocks()
-    }
-}
-
+//struct Stocks_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Stocks()
+//    }
+//}
+//
 
 struct CurrentStockData: Codable {
   let symbol: String?

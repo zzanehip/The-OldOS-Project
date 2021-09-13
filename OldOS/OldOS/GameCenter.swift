@@ -9,13 +9,20 @@ import Foundation
 import SwiftUI
 import GameKit
 
-struct GameCenter: View {
+struct GameCenter: View, Equatable {
+    
+    static func == (lhs: GameCenter, rhs: GameCenter) -> Bool {
+        //Our views will want to redraw when we activate multitasking. The easiest solution is to make our views equatable and not have them redraw when changing it.
+        return lhs.instant_multitasking_change != rhs.instant_multitasking_change
+    }
+    
     @State var current_nav_view: String = "Main"
     @State var forward_or_backward: Bool = false
     @State var selectedTab = "Me"
     @State var show_friend: Bool = false
     @State var current_friend = GKPlayer()
     @ObservedObject var gc_observer = game_center_observer()
+    @Binding var instant_multitasking_change: Bool
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -23,7 +30,7 @@ struct GameCenter: View {
                     status_bar().background(Color.black).frame(minHeight: 24, maxHeight:24).zIndex(1)
                     game_center_title_bar(title: selectedTab == "Friends" ? show_friend == false ? "\(gc_observer.friends.count) \(gc_observer.friends.count != 1 ? "Friends" : "Friend")" : current_friend.alias : selectedTab == "Games" ? "1 Game" : selectedTab == "Requests" ? "Friend Requests" : selectedTab, back_action: {
                         forward_or_backward = true; DispatchQueue.main.asyncAfter(deadline:.now()+0.3){ withAnimation(.linear(duration: 0.28)) {show_friend = false}}
-                    }, show_back: show_friend,selectedTab: $selectedTab).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(1)
+                    }, show_back: show_friend,selectedTab: $selectedTab, instant_multitasking_change: $instant_multitasking_change).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(1)
                     GameCenterTabView(selectedTab: $selectedTab, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, show_friend: $show_friend, current_friend: $current_friend, gc_observer: gc_observer).clipped()
                 }
             }.compositingGroup().clipped()
@@ -635,6 +642,7 @@ struct game_center_title_bar : View {
     public var back_action: (() -> Void)?
     var show_back: Bool?
     @Binding var selectedTab: String
+    @Binding var instant_multitasking_change: Bool
     var body :some View {
         ZStack {
             Image("GKNavbarPortrait").resizable().scaledToFill().clipped().shadow(color: Color.black.opacity(0.98), radius: 6, x: 0.0, y: 3)
@@ -642,7 +650,7 @@ struct game_center_title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title).animation(.none).frame(maxWidth: (selectedTab == "Friends" && show_back == true) ? 200 : .infinity)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title).animation(instant_multitasking_change == true ? .default : .none).frame(maxWidth: (selectedTab == "Friends" && show_back == true) ? 200 : .infinity)
                     Spacer()
                 }
                 Spacer()

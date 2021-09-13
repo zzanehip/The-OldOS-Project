@@ -15,6 +15,87 @@ import MediaPlayer
 
 //So what is this entire file just called common? Basically, my mindset was to build the app in the same way Apple built interface builder — you have a collection of UI elements at your disposal that are bases. You can then make a copy in whatever other file you'd like if you require custom abilities. If you just need the generic version, you can use the generic.
 
+struct multitasking_music_controls: View {
+    @Binding var current_view: String
+    @Binding var should_update: Bool
+    @Binding var show_remove: Bool
+    @Binding var instant_multitasking_change: Bool
+    @Binding var show_multitasking: Bool
+    @Binding var apps_scale: CGFloat
+    @Binding var dock_offset: CGFloat
+    @State var now_playing = MPMusicPlayerController.systemMusicPlayer.nowPlayingItem?.title ?? ""
+    @State var is_playing = MPMusicPlayerController.systemMusicPlayer.playbackState
+    var body: some View {
+        HStack {
+            LazyVGrid(columns: [
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)*2/3), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)*2/3), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)*2/3), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
+            ], alignment: .center, spacing: UIScreen.main.bounds.height/(844/40)) {
+                Image("RotationUnlockButton").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width/(390/60))
+                Button(action:{
+                    let music_player = MPMusicPlayerController.systemMusicPlayer
+                    music_player.skipToPreviousItem()
+                    now_playing = MPMusicPlayerController.systemMusicPlayer.nowPlayingItem?.title ?? ""
+                }) {
+                    Image("MCPrev")
+                }
+                Button(action:{
+                    let music_player = MPMusicPlayerController.systemMusicPlayer
+                    if  (music_player.playbackState) == .playing {
+                        music_player.pause()
+                        is_playing = .paused
+                    } else {
+                        music_player.play()
+                        is_playing = .playing
+                    }
+                    
+                }) {
+                    Image(is_playing == .playing ? "MCPause" : "MCPlay")
+                }
+                Button(action:{
+                        let music_player = MPMusicPlayerController.systemMusicPlayer
+                        music_player.skipToNextItem()
+                    now_playing = MPMusicPlayerController.systemMusicPlayer.nowPlayingItem?.title ?? ""
+                    
+                }) {
+                    Image("MCNext")
+                }
+                Button(action:{
+                    if current_view == "iPod" {
+                        withAnimation {
+                            show_multitasking = false
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.36) {
+                            instant_multitasking_change = false
+                        }
+                        should_update = false
+                        show_remove = false
+                    } else {
+                        withAnimation(.linear(duration: 0.32)) {
+                            apps_scale = 4
+                            dock_offset = 100
+                        }
+                        DispatchQueue.main.asyncAfter(deadline:.now()+0.01) {
+                            withAnimation(.linear(duration: 0.32)) {
+                                current_view = "iPod"
+                            }
+                        }
+                    }
+                }){
+                Image("iPod").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width/(390/60))
+                }
+            }
+        }.overlay(VStack {
+            Spacer()
+            Text("\(now_playing)").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: 15)
+        })
+    }
+}
+
+
 struct toggle_orange: View {
     @State var offset = CGPoint(x: -53.6666666667, y: 0)
     @State var show_overlay: Bool = false
@@ -572,7 +653,7 @@ struct status_bar_in_app: View {
                     Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadowStyle().mask( Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadowStyle().innerShadow2(color: Color.black.opacity(0.8), radius: 1))//Is it messy, yes, does it work, yes
                 }
                 Spacer()
-                Text("\(Int(battery_level))%").foregroundColor(Color.init(red: 74/255, green: 74/255, blue: 74/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadowStyle().offset(x: 10) //.isHidden(charging)
+                Text("\(Int(battery_level))%").foregroundColor(Color.init(red: 74/255, green: 74/255, blue: 74/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadowStyle().offset(x: 10).isHidden(charging)
                 battery_in_app(battery: Float(battery_level/100), charging: charging)
                     .onReceive(timer) { input in
                         if (UIDevice.current.batteryState != .unplugged) {
@@ -728,6 +809,7 @@ public struct RoundedCorners: Shape {
 
 struct dual_segmented_control: View {
     @Binding var selected: Int //either 0 or 1
+    @Binding var instant_multitasking_change: Bool
     var first_text: String
     var second_text: String
     var should_animate:Bool?
@@ -769,7 +851,7 @@ struct dual_segmented_control: View {
                     }
                 }
             )
-        }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
+        }.animation((should_animate == true || instant_multitasking_change == true) ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
     }
 }
 
@@ -855,6 +937,7 @@ struct tri_control_big_bluegray_no_stroke: View {
 
 struct tri_segmented_control: View {
     @Binding var selected: Int //either 0 or 1
+    @Binding var instant_multitasking_change: Bool
     var first_text: String
     var second_text: String
     var third_text: String
@@ -922,12 +1005,88 @@ struct tri_segmented_control: View {
                     }
                 }
             )
-        }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
+        }.animation((should_animate == true || instant_multitasking_change == true) ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
     }
 }
 
+struct tri_segmented_control_youtube: View {
+    @Binding var selected: Int //either 0 or 1
+    @Binding var instant_multitasking_change: Bool
+    var first_text: String
+    var second_text: String
+    var third_text: String
+    var should_animate:Bool?
+    private let unselected_gradient = LinearGradient([(color: Color(red: 158/255, green: 173/255, blue: 191/255), location: 0), (color: Color(red: 137/255, green: 155/255, blue: 178/255), location: 0.51), (color: Color(red: 127/255, green: 148/255, blue: 176/255), location: 0.51), (color: Color(red: 126/255, green: 148/255, blue: 178/255), location: 1)], from: .top, to: .bottom)
+    private let selected_gradient = LinearGradient([(color: Color(red: 136/255, green: 160/255, blue: 190/255), location: 0), (color: Color(red: 88/255, green: 119/255, blue: 162/255), location: 0.51), (color: Color(red: 71/255, green: 105/255, blue: 153/255), location: 0.51), (color: Color(red: 74/255, green: 108/255, blue: 154/255), location: 1)], from: .top, to: .bottom)
+    private let middle_gradient = LinearGradient([(color: Color(red: 73/255, green: 85/255, blue: 98/255), location: 0), (color: Color(red: 92/255, green: 118/255, blue: 156/255), location: 0.04), (color: Color(red: 58/255, green: 90/255, blue: 136/255), location: 0.51), (color: Color(red: 51/255, green: 84/255, blue: 131/255), location: 0.51), (color: Color(red: 37/255, green: 72/255, blue: 120/255), location: 1)], from: .top, to: .bottom)
+    var body: some View {
+        GeometryReader{ geometry in
+            HStack(spacing: 0) {
+                Button(action:{selected = 0}) {
+                    Text(first_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners(selected == 0 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
+                Button(action:{selected = 1}) {
+                    Text(second_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangle(selected == 1 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
+                Button(action:{selected = 2}) {
+                    Text(third_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight(selected == 2 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
+            }.overlay(
+                ZStack {
+                    HStack(spacing:0) {
+                        Spacer().frame(width: geometry.size.width/3-2)
+                        Rectangle().fill(selected == 0 ? selected_gradient: unselected_gradient).frame(width: 2).mask(
+                            VStack(spacing:0) {
+                                Rectangle().fill(LinearGradient([.clear, .white], from: .top, to: .bottom)).frame(height:4.5)
+                                Rectangle()
+                                Rectangle().fill(LinearGradient([.white, .clear], from: .top, to: .bottom)).frame(height: 1.5)
+                            })
+                        Rectangle().fill((selected == 1) ? selected_gradient: unselected_gradient).frame(width: 2).mask(
+                            VStack(spacing:0) {
+                                Rectangle().fill(LinearGradient([.clear, .white], from: .top, to: .bottom)).frame(height:4.5)
+                                Rectangle()
+                                Rectangle().fill(LinearGradient([.white, .clear], from: .top, to: .bottom)).frame(height: 1.5)
+                                
+                            })
+                        Spacer().frame(width: geometry.size.width*2/3-2)
+                    }
+                    HStack(spacing:0) {
+                        Spacer().frame(width: geometry.size.width*2/3-2)
+                        Rectangle().fill(selected == 1 ? selected_gradient: unselected_gradient).frame(width: 2).mask(
+                            VStack(spacing:0) {
+                                Rectangle().fill(LinearGradient([.clear, .white], from: .top, to: .bottom)).frame(height:4.5)
+                                Rectangle()
+                                Rectangle().fill(LinearGradient([.white, .clear], from: .top, to: .bottom)).frame(height: 1.5)
+                            })
+                        Rectangle().fill((selected == 2) ? selected_gradient: unselected_gradient).frame(width: 2).mask(
+                            VStack(spacing:0) {
+                                Rectangle().fill(LinearGradient([.clear, .white], from: .top, to: .bottom)).frame(height:4.5)
+                                Rectangle()
+                                Rectangle().fill(LinearGradient([.white, .clear], from: .top, to: .bottom)).frame(height: 1.5)
+                                
+                            })
+                        Spacer().frame(width: geometry.size.width/3-2)
+                    }
+                    HStack {
+                        Spacer().frame(width: geometry.size.width/3-0.5)
+                        Rectangle().fill(middle_gradient).frame(width: 1)
+                        Spacer().frame(width: geometry.size.width*2/3-0.5)
+                    }
+                    HStack {
+                        Spacer().frame(width: geometry.size.width*2/3-0.5)
+                        Rectangle().fill(middle_gradient).frame(width: 1)
+                        Spacer().frame(width: geometry.size.width/3-0.5)
+                    }
+                }
+            )
+        }.animation((should_animate == true || instant_multitasking_change == true) ? .linear(duration: 0.4) : .none)
+    }
+}
+
+
 struct tri_segmented_control_image: View {
     @Binding var selected: Int //either 0 or 1
+    @Binding var instant_multitasking_change: Bool
     var first_image: String
     var second_image: String
     var third_image: String
@@ -995,7 +1154,7 @@ struct tri_segmented_control_image: View {
                     }
                 }
             )
-        }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
+        }.animation((should_animate == true || instant_multitasking_change == true) ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
     }
 }
 
@@ -1381,6 +1540,99 @@ struct CustomSlider<Component: View>: View {
     }
 }
 
+struct CustomSliderVideo<Component: View>: View {
+    @Binding var value: Double
+    @Binding var should_update_from_timer: Bool?
+    @Binding var duration: Double?
+    @Binding var player: AVPlayer
+    var type: String
+    var range: (Double, Double)
+    var knobWidth: CGFloat?
+    let viewBuilder: (CustomSliderComponents) -> Component
+
+    init(player: Binding<AVPlayer>, type: String, should_update_from_timer: Binding<Bool?> = .constant(true), duration: Binding<Double?> = .constant(0), value: Binding<Double>, range: (Double, Double), knobWidth: CGFloat? = nil,
+         _ viewBuilder: @escaping (CustomSliderComponents) -> Component
+    ) {
+        self.type = type
+        _should_update_from_timer = should_update_from_timer
+        _duration = duration
+        _value = value
+        _player = player
+        self.range = range
+        self.viewBuilder = viewBuilder
+        self.knobWidth = knobWidth
+    }
+
+    var body: some View {
+      return GeometryReader { geometry in
+        self.view(geometry: geometry) // function below
+      }
+    }
+
+
+    private func view(geometry: GeometryProxy) -> some View {
+        var frame = geometry.localFrame
+           frame = geometry.frame(in: .local)
+            let drag = DragGesture(minimumDistance: 0).onChanged({ drag in
+        self.onSliderDragChange(drag, frame) }
+      ).onEnded({ _ in
+//        if type == "Song" {
+//           should_update_from_timer = true
+//       } //Maybe unnecesary now
+      })
+      let offsetX = self.getOffsetX(frame: frame)
+    
+      let knobSize = CGSize(width: knobWidth ?? frame.height, height: frame.height)
+      let barLeftSize = CGSize(width: CGFloat(offsetX + knobSize.width * 0.5), height:  frame.height)
+      let barRightSize = CGSize(width: frame.width - barLeftSize.width, height: frame.height)
+
+      let modifiers = CustomSliderComponents(
+          barLeft: CustomSliderModifier(name: .barLeft, size: barLeftSize, offset: 0),
+          barRight: CustomSliderModifier(name: .barRight, size: barRightSize, offset: barLeftSize.width),
+          knob: CustomSliderModifier(name: .knob, size: knobSize, offset: offsetX))
+      return ZStack { viewBuilder(modifiers).gesture(drag) }
+    }
+    private func onSliderDragChange(_ drag: DragGesture.Value,_ frame: CGRect) {
+        let width = (knob: Double(knobWidth ?? frame.size.height), view: Double(frame.size.width))
+        let xrange = (min: Double(0), max: Double(width.view - width.knob))
+        var value = Double(drag.startLocation.x + drag.translation.width) // knob center x
+        value -= 0.5*width.knob // offset from center to leading edge of knob
+        value = value > xrange.max ? xrange.max : value // limit to leading edge
+        value = value < xrange.min ? xrange.min : value // limit to trailing edge
+        value = value.convert(fromRange: (xrange.min, xrange.max), toRange: range)
+        self.value = value
+        if type == "Volume" {
+        MPVolumeView.setVolume(Float(value/100))
+        }
+        if type == "Video" {
+            guard let item = self.player.currentItem else {
+              return
+            }
+     
+            let targetTime = self.value * item.duration.seconds
+            player.seek(to: CMTime(seconds: targetTime, preferredTimescale: 600))
+        }
+//        if type == "Song" {
+//            should_update_from_timer = false
+//            let translation = drag.translation.x
+////            for n in 0...50 { //a for loop is a descent solution, maybe switch to more efficient if statements. Maybe we use this, idk yet.
+////            if Int(abs(drag.translation.x)) == Int(frame.size.width/50)*n {
+//                let music_player = MPMusicPlayerController.systemMusicPlayer
+//                DispatchQueue.global(qos: .background).async { //Updadting on main thread will freeze animation
+//                music_player.currentPlaybackTime = value/100*(duration ?? 0)
+////                }
+////            }
+//            }
+//        }
+    }
+    private func getOffsetX(frame: CGRect) -> CGFloat {
+        let width = (knob: knobWidth ?? frame.size.height, view: frame.size.width)
+        let xrange: (Double, Double) = (0, Double(width.view - width.knob))
+        let result = self.value.convert(fromRange: range, toRange: xrange)
+        return CGFloat(result)
+    }
+}
+
 struct skeumorphic_alert: View {
     var title: String?
     var subtitle: String?
@@ -1495,6 +1747,26 @@ struct tool_bar_rectangle_button: View {
                 } else {
                 Text(content).font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
                 }
+            }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(5.5, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
+        }.frame(height: 32 + (height_modifier ?? 0))
+    }
+}
+
+struct tool_bar_rectangle_button_image_done_size: View { //Is this a bad solution? I mean yeah. But does it work? Yeah.
+    public var action: (() -> Void)?
+    var button_type: tool_bar_button_type
+    var content: String
+    var use_image: Bool?
+    var height_modifier: CGFloat? = 0
+    private let gray_gradient = LinearGradient([(color: Color(red: 164/255, green: 175/255, blue:191/255), location: 0), (color: Color(red: 124/255, green: 141/255, blue:164/255), location: 0.51), (color: Color(red: 113/255, green: 131/255, blue:156/255), location: 0.51), (color: Color(red: 112/255, green: 130/255, blue:155/255), location: 1)], from: .top, to: .bottom)
+    private let blue_gradient = LinearGradient([(color: Color(red: 120/255, green: 158/255, blue:237/255), location: 0), (color: Color(red: 55/255, green: 110/255, blue:224/255), location: 0.51), (color: Color(red: 34/255, green: 96/255, blue:221/255), location: 0.52), (color: Color(red: 36/255, green: 100/255, blue:224/255), location: 1)], from: .top, to: .bottom)
+    var body: some View {
+        Button(action:{action?()}) {
+            ZStack {
+                    Image(content).resizable().scaledToFit().frame(width: 30)
+
+                Text("Done").font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11).opacity(0)
+                
             }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(5.5, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
         }.frame(height: 32 + (height_modifier ?? 0))
     }
@@ -1696,6 +1968,12 @@ extension View {
     func innerShadowSliderRight(color: Color, radius: CGFloat = 0.1) -> some View {
         modifier(InnerShadowSliderRight(color: color, radius: min(max(0, radius), 1)))
     }
+    func innerShadowSliderMulti(color: Color, radius: CGFloat = 0.1) -> some View {
+        modifier(InnerShadowSliderMulti(color: color, radius: min(max(0, radius), 1)))
+    }
+    func innerShadowSliderMultiDiffed(color: Color, radius: CGFloat = 0.1) -> some View {
+        modifier(InnerShadowSliderDiffed(color: color, radius: min(max(0, radius), 1)))
+    }
     func innerShadowFull(color: Color, radius: CGFloat = 0.1) -> some View {
           modifier(InnerShadow_Full(color: color, radius: min(max(0, radius), 1)))
       }
@@ -1840,6 +2118,62 @@ private struct InnerShadowSliderRight: ViewModifier {
                 .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .trailing, endPoint: .leading)
                                   .frame(width: self.radius * self.minSide(geo)),
                                        alignment: .trailing)
+        }
+    }
+    
+    func minSide(_ geo: GeometryProxy) -> CGFloat {
+        CGFloat(3) * min(geo.size.width, geo.size.height) / 2
+    }
+}
+
+private struct InnerShadowSliderMulti: ViewModifier {
+    var color: Color = .gray
+    var radius: CGFloat = 0.1
+    
+    private var colors: [Color] {
+        [color.opacity(0.75), color.opacity(0.0), .clear]
+    }
+    
+    func body(content: Content) -> some View {
+        GeometryReader { geo in
+            content
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .top, endPoint: .bottom)
+                            .frame(height: self.radius * self.minSide(geo) * 1.25),
+                         alignment: .top)
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .bottom, endPoint: .top)
+                            .frame(height: self.radius * self.minSide(geo) * 0.25),
+                         alignment: .bottom)
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .trailing, endPoint: .leading)
+                                  .frame(width: self.radius * self.minSide(geo)),
+                                       alignment: .trailing)
+        }
+    }
+    
+    func minSide(_ geo: GeometryProxy) -> CGFloat {
+        CGFloat(3) * min(geo.size.width, geo.size.height) / 2
+    }
+}
+
+private struct InnerShadowSliderDiffed: ViewModifier {
+    var color: Color = .gray
+    var radius: CGFloat = 0.1
+    
+    private var colors: [Color] {
+        [color.opacity(0.75), color.opacity(0.0), .clear]
+    }
+    
+    func body(content: Content) -> some View {
+        GeometryReader { geo in
+            content
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .top, endPoint: .bottom)
+                            .frame(height: self.radius * self.minSide(geo) * 0.75).offset(y: 0.1),
+                         alignment: .top)
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .bottom, endPoint: .top)
+                            .frame(height: self.radius * self.minSide(geo)*0.25).opacity(0.45),
+                         alignment: .bottom)
+                .overlay(LinearGradient(gradient: Gradient(colors: self.colors), startPoint: .leading, endPoint: .trailing)
+                            .frame(width: self.radius * self.minSide(geo)*0.1),
+                                       alignment: .leading)
         }
     }
     

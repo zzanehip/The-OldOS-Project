@@ -34,9 +34,11 @@ struct Safari: View {
     @State var show_save_bookmark: Bool = false
     @State var is_editing_bookmarks: Bool = false
     @State var new_page_delay: Bool = false
+    @Binding var instant_multitasking_change: Bool
     var items = Array(0..<1)
     
-    init() {
+    init(instant_multitasking_change: Binding<Bool>) {
+        _instant_multitasking_change = instant_multitasking_change
         let userDefaults = UserDefaults.standard
 
         var webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
@@ -159,15 +161,15 @@ struct Safari: View {
                     Spacer().frame(height:geometry.size.height*(1/9))
                     HStack {
                         Spacer()
-                        Text(views.array[page.index].webView.title != "" ? (views.array[page.index].webView.title ?? "Untitled") :  "Untitled").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(.none)
+                        Text(views.array[page.index].webView.title != "" ? (views.array[page.index].webView.title ?? "Untitled") :  "Untitled").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instant_multitasking_change == true ? .default : .none)
                         Spacer()
                     }
                     Spacer().frame(height:10)
                     HStack {
                         Spacer()
-                        Text(views.array[page.index].webView.url?.relativeString ?? "Untitled").foregroundColor(Color(red: 182/255, green: 188/255, blue: 192/255)).font(.custom("Helvetica Neue Bold", size: 16)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(.none).opacity(views.array[page.index].webView.url?.relativeString != nil ? 1 : 0)
+                        Text(views.array[page.index].webView.url?.relativeString ?? "Untitled").foregroundColor(Color(red: 182/255, green: 188/255, blue: 192/255)).font(.custom("Helvetica Neue Bold", size: 16)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instant_multitasking_change == true ? .default : .none).opacity(views.array[page.index].webView.url?.relativeString != nil ? 1 : 0)
                         Spacer()
-                    }.animationsDisabled()
+                    }.if(!instant_multitasking_change){$0.animationsDisabled()}
                     Spacer()
                 }.opacity(selecting_tab == true ? 1 : 0)
                 VStack {
@@ -178,7 +180,7 @@ struct Safari: View {
                             Circle().fill(Color.white).frame(width:7.5, height:7.5).opacity(views.array.firstIndex(of: index) == page.index ? 1 : 0.25)
                         }.opacity(views.array.count > 1 ? 1 : 0)
                         Spacer()
-                    }.animationsDisabled()
+                    }.if(!instant_multitasking_change){$0.animationsDisabled()}
                     Spacer().frame(height:geometry.size.height*(1.5/9))
                 }.opacity(selecting_tab == true ? 1 : 0)
                 ZStack {
@@ -1017,11 +1019,11 @@ struct google_search_bar: View {
     }
 }
 
-
-struct Safari_Previews: PreviewProvider {
-    static var previews: some View {
-        Safari()
-    }
-}
-
-
+//
+//struct Safari_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Safari()
+//    }
+//}
+//
+//

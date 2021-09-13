@@ -20,6 +20,7 @@ struct Photos: View {
     @State var selected_photo: PHAsset = PHAsset()
     @State var hide_bars: Bool = false
     @ObservedObject var photos_obsever = PhotosObserver()
+    @Binding var instant_multitasking_change: Bool
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -39,7 +40,7 @@ struct Photos: View {
                 }
                 VStack(spacing:0) {
                     status_bar().frame(minHeight: 24, maxHeight:24).zIndex(1)
-                    photos_title_bar(title: selectedTab == "Albums" ? current_nav_view == "Main" ? selectedTab : switcher_current_nav_view == "Main" ? current_nav_view : "\(Int(photos_obsever.assets.firstIndex(of: selected_photo) ?? 0 + 1)) of \(photos_obsever.assets.count)" : selectedTab, back_action:{forward_or_backward = true;  withAnimation(.linear(duration: 0.28)) {current_nav_view = "Main"}}, destination_back_action: {forward_or_backward = true;  withAnimation(.linear(duration: 0.28)) {switcher_current_nav_view = "Main"}}, show_albums_back: (current_nav_view != "Main" && selectedTab == "Albums" && switcher_current_nav_view != "Destination") ? true : false, show_destination_back: switcher_current_nav_view == "Destination" ? true : false,forward_or_backward: $forward_or_backward).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(2)
+                    photos_title_bar(title: selectedTab == "Albums" ? current_nav_view == "Main" ? selectedTab : switcher_current_nav_view == "Main" ? current_nav_view : "\(Int(photos_obsever.assets.firstIndex(of: selected_photo) ?? 0 + 1)) of \(photos_obsever.assets.count)" : selectedTab, back_action:{forward_or_backward = true;  withAnimation(.linear(duration: 0.28)) {current_nav_view = "Main"}}, destination_back_action: {forward_or_backward = true;  withAnimation(.linear(duration: 0.28)) {switcher_current_nav_view = "Main"}}, show_albums_back: (current_nav_view != "Main" && selectedTab == "Albums" && switcher_current_nav_view != "Destination") ? true : false, show_destination_back: switcher_current_nav_view == "Destination" ? true : false,forward_or_backward: $forward_or_backward, instant_multitasking_change: $instant_multitasking_change).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(2)
                     Spacer()
                 }.opacity(hide_bars == true ? 0 : 1).disabled(hide_bars)
             }.compositingGroup().clipped()
@@ -593,6 +594,7 @@ struct photos_title_bar : View {
     var show_albums_back: Bool?
     var show_destination_back: Bool?
     @Binding var forward_or_backward: Bool
+    @Binding var instant_multitasking_change: Bool
     var body :some View {
         ZStack {
             LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 0, green: 0, blue: 0), location: 0), .init(color: Color(red: 84/255, green: 84/255, blue: 84/255), location: 0.005), .init(color: Color(red: 59/255, green: 59/255, blue: 59/255), location: 0.04), .init(color: Color(red: 29/255, green: 29/255, blue: 29/255), location: 0.5), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 0.51), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 1)]), startPoint: .top, endPoint: .bottom).border_bottom(width: 0.95, edges: [.bottom], color: Color(red: 45/255, green: 48/255, blue: 51/255)).innerShadowBottom(color: Color(red: 230/255, green: 230/255, blue: 230/255), radius: 0.025).opacity(0.65).shadow(color: Color.black.opacity(0.25), radius: 0.25, x: 0, y: -0.5) //Correct border width for added shadow
@@ -612,7 +614,7 @@ struct photos_title_bar : View {
                     HStack {
                         Button(action:{back_action?()}) {
                             ZStack {
-                                Image("UINavigationBarBlackTranslucentBack").frame(width: 70, height: 33).scaledToFill().animation(.none)
+                                Image("UINavigationBarBlackTranslucentBack").frame(width: 70, height: 33).scaledToFill().animation(instant_multitasking_change ? .default : .none)
                                 HStack(alignment: .center) {
                                     Text("Albums").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                 }
@@ -621,7 +623,7 @@ struct photos_title_bar : View {
                         Spacer()
                     }
                     Spacer()
-                }.animation(.none).animationsDisabled()
+                }.animation(instant_multitasking_change ? .default : .none).if(!instant_multitasking_change){$0.animationsDisabled()}
                 
                 VStack {
                     Spacer()
@@ -630,7 +632,7 @@ struct photos_title_bar : View {
                         tool_bar_rectangle_button_larger_image_wide(button_type: .black, content: "UIButtonBarAction", use_image: true).padding(.trailing, 8)
                     }
                     Spacer()
-                }.animation(.none).animationsDisabled()
+                }.animation(instant_multitasking_change ? .default : .none).if(!instant_multitasking_change){$0.animationsDisabled()}
                 
             }
             
@@ -640,7 +642,7 @@ struct photos_title_bar : View {
                     HStack {
                         Button(action:{destination_back_action?()}) {
                             ZStack {
-                                Image("UINavigationBarBlackTranslucentBack").frame(width: 95, height: 33).scaledToFill().animation(.none)
+                                Image("UINavigationBarBlackTranslucentBack").frame(width: 95, height: 33).scaledToFill().animation(instant_multitasking_change ? .default : .none)
                                 HStack(alignment: .center) {
                                     Text("Camera Roll").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                 }
@@ -649,7 +651,7 @@ struct photos_title_bar : View {
                         Spacer()
                     }
                     Spacer()
-                }.animation(.none).animationsDisabled()
+                }.animation(instant_multitasking_change ? .default : .none).if(!instant_multitasking_change){$0.animationsDisabled()}
                 
             }
         }
@@ -928,3 +930,4 @@ enum PlayerAction {
     case play
     case pause
 }
+

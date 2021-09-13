@@ -24,17 +24,18 @@ struct Contacts: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
+                LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0), .init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0.5), .init(color: Color.white, location: 0.5), .init(color: Color.white, location: 1)]), startPoint: .top, endPoint: .bottom)
                 VStack(spacing:0) {
                     status_bar_in_app().frame(minHeight: 24, maxHeight:24).zIndex(1)
                     contacts_title_bar(title: contacts_current_nav_view != "Contacts" ? "Info" : "All Contacts", forward_or_backward: $forward_or_backward, selectedTab: $selectedTab, contacts_current_nav_view: $contacts_current_nav_view, is_editing_favorites: $show_edit, selected_segment: $selected_segment, show_plus: contacts_current_nav_view == "Contacts" ? true : false, plus_action: {
                         withAnimation(.linear(duration:0.35)){show_add_contact.toggle()}
                     }).frame(minWidth: geometry.size.width, maxWidth: geometry.size.width, minHeight: 60, maxHeight:60).zIndex(1)
-                    contacts_view_app(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, contacts_current_nav_view: $contacts_current_nav_view, current_contact: $current_contact)
+                    contacts_view_app(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, contacts_current_nav_view: $contacts_current_nav_view, current_contact: $current_contact).clipped()
                 }
                 if show_add_contact {
                     add_contact_view(show_add_contact: $show_add_contact).transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1).clipped().compositingGroup()
                 }
-            }.background(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0), .init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0.5), .init(color: Color.white, location: 0.5), .init(color: Color.white, location: 1)]), startPoint: .top, endPoint: .bottom)).clipped()
+            }.compositingGroup().clipped()//.background(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0), .init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0.5), .init(color: Color.white, location: 0.5), .init(color: Color.white, location: 1)]), startPoint: .top, endPoint: .bottom)).clipped()
         }.onAppear() {
             UIScrollView.appearance().bounces = true
             UITableView.appearance().backgroundColor = .clear

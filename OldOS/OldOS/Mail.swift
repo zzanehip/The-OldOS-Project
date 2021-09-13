@@ -46,7 +46,7 @@ struct Mail: View {
                     }).brightness(increase_brightness == true ? 0.5 : 0).clipped().transition(.asymmetric(insertion: .scale, removal: .opacity))
                     //Don't ask me why, but it likes to fade to gray, we set the brightness to 0.5 when removing to restore it to a neutral color.
                 }
-            })
+            }).compositingGroup().clipped()
         }.onAppear() {
             UIScrollView.appearance().bounces = true
         }.onDisappear() {
