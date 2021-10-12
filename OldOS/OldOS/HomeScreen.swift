@@ -651,7 +651,7 @@ struct search_result_item: View {
                 HStack {
                     Image(application.name == "Weather" ? "Weather Fahrenheit" : application.name).resizable().scaledToFit().frame(width: 35, height: 35).padding(.leading, 5)
                     Rectangle().fill(Color(red: 250/255, green: 250/255, blue: 250/255)).frame(width: 1, height: 48).offset(x: -2)
-                    Text(application.name).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).offset(x: -2)
+                    Text(application.name).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).offset(x: -2)
                     Spacer()
                 }.frame(height: 48)
                 Rectangle().fill((apps.filter({ search.isEmpty ? true : $0.name.localizedCaseInsensitiveContains(search) }).sorted(by: {$0.name > $1.name}).firstIndex(where: {$0.name == application.name}) ?? 0) % 2  == 0 ? Color(red: 182/255, green: 183/255, blue: 184/255) : Color(red: 182/255, green: 183/255, blue: 184/255)).frame(height:1)
@@ -777,12 +777,12 @@ struct multitasking_app: View {
                     ZStack {
                         Image(image_name).resizable().scaledToFit().frame(width: UIScreen.main.bounds.width/(390/60))
                         VStack {
-                            Text(getDayOfWeek(date: date)).foregroundColor(.white).font(.custom("Helvetica Neue Medium", size: 10)).padding(.top, 6).shadow(color: Color.black, radius: 0.2, x: 0, y: 0.75).offset(y: -4).frame(maxWidth: 54).lineLimit(0).minimumScaleFactor(0.8)
+                            Text(getDayOfWeek(date: date)).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 10)).padding(.top, 6).shadow(color: Color.black, radius: 0.2, x: 0, y: 0.75).offset(y: -4).frame(maxWidth: 54).lineLimit(0).minimumScaleFactor(0.8)
                             Spacer()
                         }
                         HStack {
                             Spacer()
-                            Text(timeString(date: date)).lineLimit(nil).foregroundColor(.black).font(.custom("Helvetica Neue Bold", size: 35)).multilineTextAlignment(.center).padding(.top, 10).frame(alignment:.center)
+                            Text(timeString(date: date)).lineLimit(nil).foregroundColor(.black).font(.custom("Helvetica Neue Bold", fixedSize: 35)).multilineTextAlignment(.center).padding(.top, 10).frame(alignment:.center)
                             Spacer()
                         }
                         VStack {
@@ -808,7 +808,7 @@ struct multitasking_app: View {
                             Spacer()
                         }.opacity(show_remove ? 1 : 0).animationsDisabled()
                     }
-                    Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", size: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
+                    Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
                 }.onTapGesture {
                     if !should_update {
                         withAnimation(.linear(duration: 0.32)) {
@@ -873,7 +873,7 @@ struct multitasking_app: View {
                         }.opacity(show_remove ? 1 : 0).animationsDisabled()
                         // }
                     }
-                    Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", size: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
+                    Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
                 }.onTapGesture {
                     if !should_update {
                         withAnimation(.linear(duration: 0.32)) {
@@ -935,7 +935,7 @@ struct app: View {
                     }
                     Image(image_name).resizable().scaledToFit().frame(width: UIScreen.main.bounds.width/(390/60))
                 }
-                Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", size: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
+                Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
             }
         }
     }
@@ -967,16 +967,16 @@ struct app_calendar: View {
                 ZStack {
                     Image(image_name).resizable().scaledToFit().frame(width: UIScreen.main.bounds.width/(390/60))
                     VStack {
-                        Text(getDayOfWeek(date: date)).foregroundColor(.white).font(.custom("Helvetica Neue Medium", size: 10)).padding(.top, 6).shadow(color: Color.black, radius: 0.2, x: 0, y: 0.75).offset(y: -4).frame(maxWidth: 54).lineLimit(0).minimumScaleFactor(0.8)
+                        Text(getDayOfWeek(date: date)).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 10)).padding(.top, 6).shadow(color: Color.black, radius: 0.2, x: 0, y: 0.75).offset(y: -4).frame(maxWidth: 54).lineLimit(0).minimumScaleFactor(0.8)
                         Spacer()
                     }
                     HStack {
                         Spacer()
-                        Text(timeString(date: date)).lineLimit(nil).foregroundColor(.black).font(.custom("Helvetica Neue Bold", size: 35)).multilineTextAlignment(.center).padding(.top, 10).frame(alignment:.center)
+                        Text(timeString(date: date)).lineLimit(nil).foregroundColor(.black).font(.custom("Helvetica Neue Bold", fixedSize: 35)).multilineTextAlignment(.center).padding(.top, 10).frame(alignment:.center)
                         Spacer()
                     }
                 }
-                Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", size: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
+                Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
             }
         }
     }
@@ -1042,7 +1042,7 @@ struct status_bar: View {
         ZStack {
             Color.black.opacity(0.65)
             HStack {
-                Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(Color.init(red: 200/255, green: 200/255, blue: 200/255)).font(.custom("Helvetica Neue Medium", size: 15)).onAppear() {
+                Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(Color.init(red: 200/255, green: 200/255, blue: 200/255)).font(.custom("Helvetica Neue Medium", fixedSize: 15)).onAppear() {
                     let networkInfo = CTTelephonyNetworkInfo()
                     let carrier = networkInfo.serviceSubscriberCellularProviders?.first?.value
                     
@@ -1052,7 +1052,7 @@ struct status_bar: View {
                 }
                 Image(systemName: "wifi").foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).opacity(wifi_connected ? 1 : 0)
                 Spacer()
-                Text("\(Int(battery_level))%").isHidden(charging).foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).font(.custom("Helvetica Neue Medium", size: 15)).offset(x: 10)
+                Text("\(Int(battery_level))%").isHidden(charging).foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).font(.custom("Helvetica Neue Medium", fixedSize: 15)).offset(x: 10)
                 battery(battery: Float(battery_level/100), charging: charging)
                     .onReceive(timer) { input in
                         if (UIDevice.current.batteryState != .unplugged) {
@@ -1082,7 +1082,7 @@ struct status_bar: View {
                 if locked {
                     Image(systemName: "lock.fill").resizable().foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).frame(width: 10, height: 14)
                 } else {
-                    Text(timeString(date: date).uppercased()).foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).font(.custom("Helvetica Neue Medium", size: 15))
+                    Text(timeString(date: date).uppercased()).foregroundColor(Color.init(red: 190/255, green: 190/255, blue: 190/255)).font(.custom("Helvetica Neue Medium", fixedSize: 15))
                 }
                 Spacer()
             }

@@ -184,14 +184,14 @@ struct wifi_view: View {
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: wifi_top_section)
                         Spacer().frame(height:15)
                         HStack {
-                            Text("Choose a Network...").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Choose a Network...").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         Spacer().frame(height:4)
                         list_section_blue(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: wifi_networks)
                         Spacer().frame(height:20)
                         list_section_oversize(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: ask_to_join)
-                        Text("Known networks will be joined\n automatically. If no known networks are available, you will we asked before joining \na new network.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Known networks will be joined\n automatically. If no known networks are available, you will we asked before joining \na new network.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                     }
                 }
             }.onAppear() {
@@ -247,7 +247,7 @@ struct wifi_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text(connection_status ?? "Not Connected").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text(connection_status ?? "Not Connected").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }.onAppear() {
             connection_status = getWiFiSsid() ?? nil
@@ -281,7 +281,7 @@ struct notification_content: View {
     @State var notification_access: Bool = true
     var body: some View {
         HStack {
-            Text(notification_access ? "On" : "Off").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text(notification_access ? "On" : "Off").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             // Image(systemName: "chevron.right").foregroundColor(Color(red: 127/255, green: 127/255, blue: 127/255)).padding(.trailing, 12)
             Image("UITableNext").padding(.trailing, 12)
         }
@@ -301,7 +301,7 @@ struct notifications_view: View {
                     VStack {
                         Spacer().frame(height:20)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: notification_top_section)
-                        Text("Turn off Notifications to disable Sounds,\n Alerts and Home Screen Badges for the\n applications below.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Turn off Notifications to disable Sounds,\n Alerts and Home Screen Badges for the\n applications below.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                     }
                 }
             }
@@ -333,7 +333,7 @@ struct location_services_view: View {
                     VStack {
                         Spacer().frame(height:20)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: location_services_top_section)
-                        Text("Allow the apps below to determine your\n approximate location.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Allow the apps below to determine your\n approximate location.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:15)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: location_access_section)
                     }
@@ -366,7 +366,7 @@ struct location_content: View {
     }
     var body: some View {
         HStack {
-            Text(location_access ? "On" : "Off").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text(location_access ? "On" : "Off").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }
     }
@@ -387,7 +387,7 @@ struct carrier_view: View {
                     VStack {
                         Spacer().frame(height:20)
                         HStack {
-                            Text("Carriers").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Carriers").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section_blue(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: carrier_top_section)
@@ -430,17 +430,17 @@ struct sounds_view : View {
                     VStack {
                         Spacer().frame(height:20)
                         HStack {
-                            Text("Silent").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Silent").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: sounds_top_section)
                         Spacer().frame(height:20)
                         HStack {
-                            Text("Ringer and Alerts").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Ringer and Alerts").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section_content_only(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: sounds_slider_section)
-                        Text("The volume of the ringer and alerts can\n be adjusted using the volume buttons.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("The volume of the ringer and alerts can\n be adjusted using the volume buttons.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:15)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: sounds_bottom_section)
                         Spacer().frame(height: 15)
@@ -472,7 +472,7 @@ struct ringtone_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("Marimba").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text("Marimba").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }
     }
@@ -482,7 +482,7 @@ struct texttone_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("Tri-tone").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text("Tri-tone").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }
     }
@@ -669,7 +669,7 @@ struct wallpaper_select_view: View {
                                     ZStack {
                                         HStack {
                                             Image("Wallpaper_21").resizable().aspectRatio(contentMode: .fill).frame(width: 60, height: 60).cornerRadiusSpecific(radius: 10, corners: [.topLeft, .bottomLeft]).scaleEffect(0.985)
-                                            Text("Wallpaper").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black)
+                                            Text("Wallpaper").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black)
                                             Spacer()
                                             Image("UITableNext").padding(.trailing, 12)
                                         }                                        }
@@ -687,7 +687,7 @@ struct wallpaper_select_view: View {
                                     ZStack {
                                         HStack {
                                             Image(uiImage: last_photo).resizable().aspectRatio(contentMode: .fill).frame(width: 60, height: 60).cornerRadiusSpecific(radius: 10, corners: [.topLeft, .bottomLeft]).scaleEffect(0.985)
-                                            Text("Camera Roll").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black)
+                                            Text("Camera Roll").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black)
                                             Spacer()
                                             Image("UITableNext").padding(.trailing, 12)
                                         }                                        }
@@ -809,7 +809,7 @@ struct wallpaper_grid_view_camera_roll: View {
                         }
                         HStack {
                             Spacer()
-                            Text("\(photos_obsever.photo_count) Photos").font(.custom("Helvetica Neue Regular", size: 20)).foregroundColor(.cgLightGray).lineLimit(1)
+                            Text("\(photos_obsever.photo_count) Photos").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
                             Spacer()
                         }.padding(.bottom, 12).id("bottom_info")
                     }
@@ -860,7 +860,7 @@ struct wallpaper_set_view : View {
                                 } else {
                                     ProgressView().progressViewStyle(CircularProgressViewStyle(tint: .white)).padding([.bottom], 5).padding(.top, 10).scaleEffect(1.75, anchor: .center)
                                 }
-                                Text("Saving Photo").foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 24)).padding(.bottom, 2.5).padding(.top, 8)
+                                Text("Saving Photo").foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 24)).padding(.bottom, 2.5).padding(.top, 8)
                             }
                         }.padding([.leading, .trailing], 95).frame(height: 115)
                     }
@@ -920,7 +920,7 @@ struct wallpaper_set_view_camera_roll : View {
                                 } else {
                                     ProgressView().progressViewStyle(CircularProgressViewStyle(tint: .white)).padding([.bottom], 5).padding(.top, 10).scaleEffect(1.75, anchor: .center)
                                 }
-                                Text("Saving Photo").foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 24)).padding(.bottom, 2.5).padding(.top, 8)
+                                Text("Saving Photo").foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 24)).padding(.bottom, 2.5).padding(.top, 8)
                             }
                         }.padding([.leading, .trailing], 95).frame(height: 115)
                     }
@@ -938,7 +938,7 @@ struct wallpaper_header: View {
             HStack {
                 Spacer()
                 VStack() {
-                    Text("Wallpaper Preview").foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 24)).shadow(color: Color.black.opacity(0.92), radius: 0, x: 0.0, y: -1.2)
+                    Text("Wallpaper Preview").foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 24)).shadow(color: Color.black.opacity(0.92), radius: 0, x: 0.0, y: -1.2)
                 }
                 Spacer()
                 
@@ -955,7 +955,7 @@ struct wallpaper_header_camera_roll: View {
             HStack {
                 Spacer()
                 VStack() {
-                    Text("Move and Scale").foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.92), radius: 0, x: 0.0, y: -1.2)
+                    Text("Move and Scale").foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.92), radius: 0, x: 0.0, y: -1.2)
                 }
                 Spacer()
                 
@@ -985,7 +985,7 @@ struct wallpaper_footer: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 124/255, green: 124/255, blue: 124/255), location: 0), .init(color: Color(red: 26/255, green: 26/255, blue: 26/255), location: 0.50), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 0.53), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
+                            Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading], 25).padding([.top, .bottom], 28)
                     }
                     Button(action:{
@@ -996,7 +996,7 @@ struct wallpaper_footer: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Set").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Set").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.trailing], 25).padding([.top, .bottom], 28)
                     }
                 }
@@ -1039,7 +1039,7 @@ struct wallpaper_select_final: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Set Lock Screen").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Set Lock Screen").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 2.5).padding(.top, 28)
                     Button(action:{
@@ -1061,7 +1061,7 @@ struct wallpaper_select_final: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Set Home Screen").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Set Home Screen").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Button(action:{
@@ -1085,7 +1085,7 @@ struct wallpaper_select_final: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Set Both").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Set Both").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Spacer()
@@ -1097,7 +1097,7 @@ struct wallpaper_select_final: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).opacity(0.6)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 124/255, green: 124/255, blue: 124/255), location: 0), .init(color: Color(red: 26/255, green: 26/255, blue: 26/255), location: 0.50), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 0.53), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
-                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
+                            Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 25)
                 }
@@ -1143,7 +1143,7 @@ struct wallpaper_select_final_camera_roll: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Set Lock Screen").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Set Lock Screen").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 2.5).padding(.top, 28)
                     Button(action:{
@@ -1165,7 +1165,7 @@ struct wallpaper_select_final_camera_roll: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Set Home Screen").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Set Home Screen").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Button(action:{
@@ -1187,7 +1187,7 @@ struct wallpaper_select_final_camera_roll: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Set Both").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Set Both").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Spacer()
@@ -1199,7 +1199,7 @@ struct wallpaper_select_final_camera_roll: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).opacity(0.6)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 124/255, green: 124/255, blue: 124/255), location: 0), .init(color: Color(red: 26/255, green: 26/255, blue: 26/255), location: 0.50), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 0.53), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
-                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
+                            Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 25)
                 }
@@ -1267,7 +1267,7 @@ struct general_about_view: View {
                     VStack() {
                         Spacer().frame(height: 15)
                         HStack {
-                            Text(UIDevice.current.name).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text(UIDevice.current.name).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: about_top)
@@ -1300,13 +1300,13 @@ struct general_usage_view: View {
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: usage_top)
                         Spacer().frame(height:25)
                         HStack {
-                            Text("Time since last full charge").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Time since last full charge").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: usage_mid1)
                         Spacer().frame(height:25)
                         HStack {
-                            Text("Call Time").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Call Time").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: usage_mid2)
@@ -1314,7 +1314,7 @@ struct general_usage_view: View {
                     }
                     VStack {
                         HStack {
-                            Text("Cellular Network Data").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Cellular Network Data").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: usage_bottom)
@@ -1345,14 +1345,14 @@ struct general_network_view: View {
                     VStack() {
                         Spacer().frame(height: 15)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: network_top)
-                        Text("Using 3G loads data faster, but may\n decrease battery life.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Using 3G loads data faster, but may\n decrease battery life.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:15)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: network_data)
                         Spacer().frame(height:20)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: network_data_net)
                         Spacer().frame(height:20)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: network_roaming)
-                        Text("Turn data roaming off when abroad\n to avoid susbtantial roaming charges\n when using email, web browsing, and\n other data services.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Turn data roaming off when abroad\n to avoid susbtantial roaming charges\n when using email, web browsing, and\n other data services.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                     }
                     VStack {
                         Spacer().frame(height:20)
@@ -1384,7 +1384,7 @@ struct general_bluetooth_view: View {
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: bluetooth_top)
                         Spacer().frame(height:15)
                         HStack {
-                            Text("Devices").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Devices").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: bluetooth_search)
@@ -1460,7 +1460,7 @@ struct general_keyboard_view: View {
                     VStack() {
                         Spacer().frame(height: 15)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: keyboard_top)
-                        Text("Double tapping the space bar will\n insert a period followed by a space.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Double tapping the space bar will\n insert a period followed by a space.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:15)
                     }
                     
@@ -1488,9 +1488,9 @@ struct general_international_view: View {
                         Spacer().frame(height:25)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: international_bottom)
                         Spacer().frame(height:25)
-                        Text("Region Format Example").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 18)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Region Format Example").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 18)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:10)
-                        Text("Tuesday, January 5, 2021\n 12:34 AM\n (408) 555-1212").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 18)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Tuesday, January 5, 2021\n 12:34 AM\n (408) 555-1212").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 18)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:15)
                     }
                     
@@ -1518,7 +1518,7 @@ struct general_accessibility_view: View {
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: acb_top)
                         Spacer().frame(height:25)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: acb_mid)
-                        Text("Automatically speak auto-corrections\n and auto-capitalizations.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Automatically speak auto-corrections\n and auto-capitalizations.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:25)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: acb_bottom)
                         Spacer().frame(height: 15)
@@ -1535,7 +1535,7 @@ struct acb_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("Off").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text("Off").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }
     }
@@ -1545,7 +1545,7 @@ struct international_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("English").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text("English").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }
     }
@@ -1555,7 +1555,7 @@ struct international_keyboard_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("1").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text("1").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }
     }
@@ -1565,7 +1565,7 @@ struct international_region_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("United States").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text("United States").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }
     }
@@ -1575,7 +1575,7 @@ struct international_calendar_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("Gregorian").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+            Text("Gregorian").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
             Image("UITableNext").padding(.trailing, 12)
         }
     }
@@ -1627,7 +1627,7 @@ struct network_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text(CTTelephonyNetworkInfo().serviceSubscriberCellularProviders?.first?.value.carrierName ?? "Not Available").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text(CTTelephonyNetworkInfo().serviceSubscriberCellularProviders?.first?.value.carrierName ?? "Not Available").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1636,7 +1636,7 @@ struct usage_sub_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("0 Minutes").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("0 Minutes").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1645,7 +1645,7 @@ struct usage_sub_content2: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("0 bytes").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("0 bytes").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1654,7 +1654,7 @@ struct songs_videos_photos_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("0").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("0").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1663,7 +1663,7 @@ struct applications_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("19").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("19").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1672,7 +1672,7 @@ struct capacity_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text(DiskStatus.totalDiskSpace).font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text(DiskStatus.totalDiskSpace).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1681,7 +1681,7 @@ struct available_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text(DiskStatus.freeDiskSpace).font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text(DiskStatus.freeDiskSpace).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1690,7 +1690,7 @@ struct version_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("4.3 (8F190)").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("4.3 (8F190)").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1699,7 +1699,7 @@ struct carrier_about_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("Carrier 10.0").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("Carrier 10.0").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1709,7 +1709,7 @@ struct model_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text(UIDevice.current.model).font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text(UIDevice.current.model).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1718,7 +1718,7 @@ struct serial_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text(randomString(length: 11)).font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text(randomString(length: 11)).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1727,7 +1727,7 @@ struct wifi_bluetooth_address_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("\(randomString(length: 2)):\(randomString(length: 2)):\(randomString(length: 2)):\(randomString(length: 2)):\(randomString(length: 2)):\(randomString(length: 2))").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("\(randomString(length: 2)):\(randomString(length: 2)):\(randomString(length: 2)):\(randomString(length: 2)):\(randomString(length: 2)):\(randomString(length: 2))").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1736,7 +1736,7 @@ struct imei_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("\(randomNumberString(length: 2)) \(randomNumberString(length: 6)) \(randomNumberString(length: 6)) \(randomNumberString(length: 1))").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("\(randomNumberString(length: 2)) \(randomNumberString(length: 6)) \(randomNumberString(length: 6)) \(randomNumberString(length: 1))").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1745,7 +1745,7 @@ struct iccid_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("\(randomNumberString(length: 18))").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("\(randomNumberString(length: 18))").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1754,7 +1754,7 @@ struct modem_content: View {
     var body: some View {
         HStack {
             Spacer()
-            Text("04.10.01").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
+            Text("04.10.01").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.trailing, 12)
         }
     }
 }
@@ -1782,7 +1782,7 @@ struct mcc_view: View {
                     VStack() {
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("Accounts").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Accounts").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: acount)
@@ -1790,7 +1790,7 @@ struct mcc_view: View {
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: new_data)
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("Mail").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Mail").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: show_organize)
@@ -1800,7 +1800,7 @@ struct mcc_view: View {
                     VStack {
                         Spacer().frame(height:15)
                         HStack {
-                            Text("Contacts").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Contacts").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: contacts)
@@ -1808,7 +1808,7 @@ struct mcc_view: View {
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: sim_contacts)
                         Spacer().frame(height:15)
                         HStack {
-                            Text("Calendars").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Calendars").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: calendars)
@@ -1825,7 +1825,7 @@ struct mcc_view: View {
 struct mcc_content: View {
     var text: String
     var body: some View {
-        Text(text).font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+        Text(text).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
         Image("UITableNext").padding(.trailing, 12)
     }
 }
@@ -1848,7 +1848,7 @@ struct mcc_content_toggle: View {
 struct mcc_sim: View {
     var body: some View {
         Spacer()
-        Text("Import SIM Contacts        ").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black)
+        Text("Import SIM Contacts        ").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black)
         Spacer()
     }
 }
@@ -1876,11 +1876,11 @@ struct phone_view: View {
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: facetime)
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("Calls").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Calls").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: calls_tty)
-                        Text("International Assist automatically\n adds the correct prefix to US\n numbers when dialing from abroad.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("International Assist automatically\n adds the correct prefix to US\n numbers when dialing from abroad.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:15)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: simpin)
                     }
@@ -1911,7 +1911,7 @@ struct safari_view: View {
                     VStack() {
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("General").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("General").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: search_engine)
@@ -1919,11 +1919,11 @@ struct safari_view: View {
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: autofill)
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("Security").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Security").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: fraud)
-                        Text("Warn when visiting fradulent websites.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Warn when visiting fradulent websites.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                         Spacer().frame(height:15)
                     }
                     VStack {
@@ -1988,19 +1988,19 @@ struct ipod_view: View {
                     VStack() {
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("Music").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Music").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: shake_lyrics)
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("Video").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Video").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: start_captioning)
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("TV Out").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("TV Out").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: widescreen_signal)
@@ -2030,23 +2030,23 @@ struct photos_view: View {
                     VStack() {
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("Slideshow").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Slideshow").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: play_shuffle)
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("HDR (High Dynamic Range)").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("HDR (High Dynamic Range)").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         Spacer().frame(height:15)
                         HStack {
-                            Text("HDR blends the best parts of three\nseparate exposures into a single photo.").multilineTextAlignment(.leading).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                            Text("HDR blends the best parts of three\nseparate exposures into a single photo.").multilineTextAlignment(.leading).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                             Spacer()
                         }
                         Spacer().frame(height: 15)
                         list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: keep_normal)
-                        Text("Save the normal exposed photo in\n addition to the HDR version.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
+                        Text("Save the normal exposed photo in\n addition to the HDR version.").multilineTextAlignment(.center).lineLimit(nil).fixedSize(horizontal: false, vertical: true).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24).frame(maxHeight: .infinity)
                     }
                     Spacer().frame(height: 15)
                 }
@@ -2071,7 +2071,7 @@ struct notes_view: View {
                     VStack() {
                         Spacer().frame(height: 15)
                         HStack {
-                            Text("Font").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Font").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         list_section_blue(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: font)
@@ -2111,7 +2111,7 @@ struct store_view: View {
 struct storec_sign_in: View {
     var body: some View {
         Spacer()
-        Text("Sign In               ").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black)
+        Text("Sign In               ").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black)
         Spacer()
     }
 }

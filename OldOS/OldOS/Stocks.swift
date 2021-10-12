@@ -124,7 +124,7 @@ struct stocks_settings_title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text("Stocks").ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1)
+                    Text("Stocks").ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1)
                     Spacer()
                 }
                 Spacer()
@@ -202,8 +202,8 @@ struct stocks_settings: View {
                                     }.transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge:.leading)).combined(with: .opacity)).offset(x:-4)
                                 }
                                     VStack(alignment: .leading, spacing: 1) {
-                                    Text(index.current_stock_data.symbol ?? "").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
-                                        Text(index.current_stock_data.companyName ?? "").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).fixedSize()
+                                    Text(index.current_stock_data.symbol ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
+                                        Text(index.current_stock_data.companyName ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).fixedSize()
                                     }
                                     ZStack {
                                         HStack {
@@ -295,9 +295,9 @@ struct stocks_header: View {
                                     }
                                 } //This nested in a ZStack is not by choice, its to silence unable to type check
                                 HStack(spacing: 0){
-                                    Text("\(stock.current_stock_data.symbol ?? "")").font(.custom("Helvetica Neue Bold", size: 20)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0.25, x: 0, y: -2/3).padding(.leading, 8)
+                                    Text("\(stock.current_stock_data.symbol ?? "")").font(.custom("Helvetica Neue Bold", fixedSize: 20)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0.25, x: 0, y: -2/3).padding(.leading, 8)
                                     Spacer()
-                                    Text("\(String(format: "%.2f", stock.current_stock_data.latestPrice ?? Double(0)))").font(.custom("Helvetica Neue Bold", size: 20)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0.25, x: 0, y: -2/3).padding(.trailing, 8)
+                                    Text("\(String(format: "%.2f", stock.current_stock_data.latestPrice ?? Double(0)))").font(.custom("Helvetica Neue Bold", fixedSize: 20)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0.25, x: 0, y: -2/3).padding(.trailing, 8)
                                     
                                     stock_delta_capsule(content: "\(String((stock_mode ?? "Price") == "Price" ? String(format: "%.2f", stock.current_stock_data.change ?? Double(0)) : (stock_mode ?? "Price") == "%" ?                      "\(String(format: "%.2f", (stock.current_stock_data.changePercent ?? Double(0))*100))%" : suffixNumber(number: Double(selected_stock?.current_stock_data.marketCap ?? Int(0)) ?? Double(0))).replacingOccurrences(of: "-", with: ""))", color_indicator: String(format: "%.2f", stock.current_stock_data.change ?? Double(0)).contains("-") ? "red" : "green").frame(width: 87, height: 35).padding(.trailing, 8)
                                 }
@@ -342,7 +342,6 @@ struct stocks_header: View {
     }
 }
 
-
 struct stock_delta_capsule: View {
     var content: String
     var color_indicator: String
@@ -363,7 +362,7 @@ struct stock_delta_capsule: View {
                         Rectangle().fill(Color.white).frame(width: 13.5, height: 3.5).shadow(color: Color.black.opacity(0.75), radius: 0.25, x: 0, y: -2/3).offset(x: 8.5)
                     }
                     Spacer()
-                    Text(content).font(.custom("Helvetica Neue Bold", size: 20)).textCase(.uppercase).multilineTextAlignment(.trailing).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0.25, x: 0, y: -2/3).padding(.trailing, 5).minimumScaleFactor(0.5).lineLimit(0)
+                    Text(content).font(.custom("Helvetica Neue Bold", fixedSize: 20)).textCase(.uppercase).multilineTextAlignment(.trailing).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0.25, x: 0, y: -2/3).padding(.trailing, 5).minimumScaleFactor(0.5).lineLimit(0)
                 }.frame(width: geometry.size.width, height: geometry.size.height)
             }
         }
@@ -407,7 +406,7 @@ struct stocks_footer: View {
                         })
                     }
                     VStack(spacing: 0) {
-                        Text("\(company_name)").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.white)
+                        Text("\(company_name)").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.white)
                         stocks_footer_grid(geometry: geometry, open: open, mkt_cap: mkt_cap, high: high, f_high: f_high, low: low, f_low: f_low, vol: vol, avg_vol: avg_vol, pe: pe, yield: yield)
                     }.padding(.bottom, 45)
                 }
@@ -454,21 +453,21 @@ struct stocks_footer_grid: View {
             HStack(spacing: 0) {
                 
                 HStack(spacing: 0) {
-                    Text("Open:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("Open:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20).overlay(
                     HStack {
-                        Text(open).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 60)
+                        Text(open).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 60)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20)
                 )
                 
                 HStack(spacing: 0) {
-                    Text("Mkt Cap:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("Mkt Cap:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20).overlay(
                     HStack {
-                        Text(mkt_cap).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 80)
+                        Text(mkt_cap).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 80)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20)
                 )
@@ -479,21 +478,21 @@ struct stocks_footer_grid: View {
             HStack(spacing: 0) {
                 
                 HStack(spacing: 0) {
-                    Text("High:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("High:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20).overlay(
                     HStack {
-                        Text(high).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 60)
+                        Text(high).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 60)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20)
                 )
                 
                 HStack(spacing: 0) {
-                    Text("52w High:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("52w High:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20).overlay(
                     HStack {
-                        Text(f_high).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 80)
+                        Text(f_high).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 80)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20)
                 )
@@ -503,21 +502,21 @@ struct stocks_footer_grid: View {
             HStack(spacing: 0) {
                 
                 HStack(spacing: 0) {
-                    Text("Low:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("Low:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20).overlay(
                     HStack {
-                        Text(low).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 60)
+                        Text(low).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 60)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20)
                 )
                 
                 HStack(spacing: 0) {
-                    Text("52w Low:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("52w Low:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20).overlay(
                     HStack {
-                        Text(f_low).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 80)
+                        Text(f_low).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 80)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20)
                 )
@@ -527,21 +526,21 @@ struct stocks_footer_grid: View {
             HStack(spacing: 0) {
                 
                 HStack(spacing: 0) {
-                    Text("Vol:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("Vol:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20).overlay(
                     HStack {
-                        Text(vol).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 60)
+                        Text(vol).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 60)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20)
                 )
                 
                 HStack(spacing: 0) {
-                    Text("Avg Vol:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("Avg Vol:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20).overlay(
                     HStack {
-                        Text(avg_vol).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 80)
+                        Text(avg_vol).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 80)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20)
                 )
@@ -551,21 +550,21 @@ struct stocks_footer_grid: View {
             HStack(spacing: 0) {
                 
                 HStack(spacing: 0) {
-                    Text("P/E:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("P/E:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20).overlay(
                     HStack {
-                        Text(pe).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 60)
+                        Text(pe).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 60)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.leading, 20)
                 )
                 
                 HStack(spacing: 0) {
-                    Text("Yield:").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white)
+                    Text("Yield:").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white)
                     Spacer()
                 }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20).overlay(
                     HStack {
-                        Text(yield).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.white).padding(.leading, 80)
+                        Text(yield).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).padding(.leading, 80)
                         Spacer()
                     }.frame(width: geometry.size.width/2 - 20).padding(.trailing, 20)
                 )

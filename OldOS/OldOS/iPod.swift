@@ -11,7 +11,7 @@ import StoreKit
 import SwiftUIPager
 
 //**MARK: Main Views
-let alphabet = ["Search", "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z", "#"] //swiftlint:disable comma
+let alphabet = ["Search", "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z", "#"]
 struct iPod: View {
     @State var current_nav_view: String = "Main"
     @State var prior_nav_view_coverflow: String = "Main"
@@ -25,6 +25,7 @@ struct iPod: View {
     @State var artists_current_view: String = "Artists"
     @State var current_artist: String = ""
     @State var playlist_current_nav_view: String = "Playlists"
+    @State var pre_nav_switch: String = "Main"
     @State var playlist: MPMediaItemCollection = MPMediaItemCollection.init(items: [])
     let rotation_publisher = NotificationCenter.default
         .publisher(for: UIDevice.orientationDidChangeNotification).makeConnectable()
@@ -36,15 +37,23 @@ struct iPod: View {
                     switch current_nav_view {
                     case "Main":
                         status_bar_in_app(selected_page:selectedPage).frame(minHeight: 24, maxHeight:24).zIndex(1)
-                        ipod_title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, artists_current_view: $artists_current_view, playlist_current_nav_view: $playlist_current_nav_view, selectedTab: $selectedTab, title:selectedTab == "Artists" ? artists_current_view != "Artists" ? (current_artist) : selectedTab :  selectedTab == "Playlists" ? playlist_current_nav_view != "Playlists" ? (playlist.value(forProperty: MPMediaPlaylistPropertyName) as? String ?? "---") : selectedTab : selectedTab).frame(height: 60).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity))
-                        iPodTabView(selectedTab: $selectedTab, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, artists_current_view: $artists_current_view, current_album: $current_album, current_artist: $current_artist, albums: $albums, playlist: $playlist, playlist_current_nav_view: $playlist_current_nav_view).clipped().transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                        ipod_title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, artists_current_view: $artists_current_view, playlist_current_nav_view: $playlist_current_nav_view, selectedTab: $selectedTab, title:selectedTab == "Artists" ? artists_current_view != "Artists" ? (current_artist) : selectedTab :  selectedTab == "Playlists" ? playlist_current_nav_view != "Playlists" ? (playlist.value(forProperty: MPMediaPlaylistPropertyName) as? String ?? "---") : selectedTab : selectedTab).frame(height: 60).if(pre_nav_switch == "Coverflow") {
+                            $0.transition(.opacity)
+                        }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity))
+                        iPodTabView(selectedTab: $selectedTab, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, artists_current_view: $artists_current_view, current_album: $current_album, current_artist: $current_artist, albums: $albums, playlist: $playlist, playlist_current_nav_view: $playlist_current_nav_view).clipped().if(pre_nav_switch == "Coverflow") {
+                            $0.transition(.opacity)
+                        }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "Now Playing":
                         status_bar().frame(minHeight: 24, maxHeight:24).zIndex(1)
-                        iPodNowPlaying(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, view_height: $view_height).clipped().transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                        iPodNowPlaying(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, view_height: $view_height).clipped().if(pre_nav_switch == "Coverflow") {
+                            $0.transition(.opacity)
+                        }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                    case "Coverflow":
+                        CoverFlowView().transition(.opacity)
                     default:
                         status_bar_in_app(selected_page:selectedPage).frame(minHeight: 24, maxHeight:24).zIndex(1)
                         ipod_title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, artists_current_view: $artists_current_view, playlist_current_nav_view: $playlist_current_nav_view, selectedTab: $selectedTab, title:selectedTab).frame(height: 60)
-                        iPodTabView(selectedTab: $selectedTab, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, artists_current_view: $artists_current_view, current_album: $current_album, current_artist: $current_artist, albums: $albums, playlist: $playlist, playlist_current_nav_view: $playlist_current_nav_view).clipped().transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                        iPodTabView(selectedTab: $selectedTab, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, artists_current_view: $artists_current_view, current_album: $current_album, current_artist: $current_artist, albums: $albums, playlist: $playlist, playlist_current_nav_view: $playlist_current_nav_view).clipped().transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal:  .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     }
                 }.clipped()
             }.onAppear() {
@@ -56,15 +65,28 @@ struct iPod: View {
                 UIScrollView.appearance().bounces = false
                 UITableView.appearance().showsVerticalScrollIndicator = true
             }.onReceive(rotation_publisher) { _ in
+                print("publish rot, ZK")
                 if UIDevice.current.orientation.isPortrait {
                     if did_utilize_coverflow {
-                    current_nav_view = prior_nav_view_coverflow
+                        withAnimation() {
+                            current_nav_view = prior_nav_view_coverflow
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.36) {
+                            pre_nav_switch = prior_nav_view_coverflow
+                        }
                     }
                 }
                 else if UIDevice.current.orientation.isLandscape {
-                    did_utilize_coverflow = true
-                    prior_nav_view_coverflow = current_nav_view
-                    current_nav_view = "Coverflow"
+                    if current_nav_view == "Now Playing" || current_nav_view == "Main" {
+                        did_utilize_coverflow = true
+                        prior_nav_view_coverflow = current_nav_view
+                    }
+                    pre_nav_switch = "Coverflow"
+                    if pre_nav_switch == "Coverflow" {
+                        withAnimation {
+                            current_nav_view = "Coverflow"
+                        }
+                    }
                 }
             }
         }
@@ -106,8 +128,8 @@ struct iPodTabView : View {
                     case "More":
                         ipod_more().frame(height: geometry.size.height - 57).tag("More")
                     default:
-                            ipod_playlists(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, playlist: $playlist, playlist_current_nav_view: $playlist_current_nav_view).frame(height: geometry.size.height - 57)
-                                .tag("Playlists")
+                        ipod_playlists(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, playlist: $playlist, playlist_current_nav_view: $playlist_current_nav_view).frame(height: geometry.size.height - 57)
+                            .tag("Playlists")
                     }
                 }.background(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0), .init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0.5), .init(color: Color.white, location: 0.5), .init(color: Color.white, location: 1)]), startPoint: .top, endPoint: .bottom))
                 // for bottom overflow...
@@ -137,16 +159,16 @@ struct iPodTabView : View {
 
 
 struct FlippedUpsideDown: ViewModifier {
-   func body(content: Content) -> some View {
-    content
-        .rotationEffect(Angle(degrees: 180))
-      .scaleEffect(x: -1, y: 1, anchor: .center)
-   }
+    func body(content: Content) -> some View {
+        content
+            .rotationEffect(Angle(degrees: 180))
+            .scaleEffect(x: -1, y: 1, anchor: .center)
+    }
 }
 extension View{
-   func flippedUpsideDown() -> some View{
-     self.modifier(FlippedUpsideDown())
-   }
+    func flippedUpsideDown() -> some View{
+        self.modifier(FlippedUpsideDown())
+    }
 }
 
 
@@ -278,7 +300,7 @@ struct now_playing_timing_controls: View {
                 Color.black.opacity(0.5).frame(width: geometry.size.width, height:geometry.size.height).innerShadowBottomView(color: Color.white.opacity(0.6), radius: 0.0275).border_bottom(width: 1, edges:[.bottom], color: Color.black)
                 VStack {
                     HStack {
-                        Text(formatTimeFor(seconds: playback_progress_duration ?? 0)).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.white).lineLimit(1).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).padding(.leading, 15)
+                        Text(formatTimeFor(seconds: playback_progress_duration ?? 0)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).lineLimit(1).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).padding(.leading, 15)
                         CustomSlider(type: "Song", should_update_from_timer: $should_update_from_timer, duration: $duration_full, value: $track_position,  range: (0, 100)) { modifiers in
                             ZStack {
                                 
@@ -290,7 +312,7 @@ struct now_playing_timing_controls: View {
                                 }.modifier(modifiers.knob)
                             }
                         }.frame(height: 20)
-                        Text("-\(formatTimeFor(seconds: playback_remaining_duratation ?? 0))").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.white).lineLimit(1).shadow(color: Color.black.opacity(0.75), radius: 0, x: 0.0, y: -1).padding(.trailing, 15)
+                        Text("-\(formatTimeFor(seconds: playback_remaining_duratation ?? 0))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).lineLimit(1).shadow(color: Color.black.opacity(0.75), radius: 0, x: 0.0, y: -1).padding(.trailing, 15)
                     }
                     HStack {
                         Button(action:{
@@ -384,14 +406,14 @@ struct now_playing_tracks: View {
                                     Spacer()
                                     HStack {
                                         HStack {
-                                            Text("\(String(track.albumTrackNumber)).").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.white).lineLimit(1).padding(.leading, 5).padding(.trailing, 5).multilineTextAlignment(.leading)
+                                            Text("\(String(track.albumTrackNumber)).").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).lineLimit(1).padding(.leading, 5).padding(.trailing, 5).multilineTextAlignment(.leading)
                                             Spacer()
                                         }.frame(width:60)
-                                        Text(track.title ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.white).lineLimit(1).padding(.leading, 14)
+                                        Text(track.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).lineLimit(1).padding(.leading, 14)
                                         Spacer()
                                         HStack {
                                             Spacer()
-                                            Text(formatTimeFor(seconds: track.playbackDuration)).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.white).lineLimit(1).padding(.trailing, 5).padding(.leading, 5).multilineTextAlignment(.trailing)
+                                            Text(formatTimeFor(seconds: track.playbackDuration)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).lineLimit(1).padding(.trailing, 5).padding(.leading, 5).multilineTextAlignment(.trailing)
                                         }.frame(width:60)
                                     }
                                     Spacer()
@@ -625,7 +647,7 @@ struct now_playing_footer: View {
                                 LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 218/255, green: 218/255, blue: 218/255), location: 0), .init(color: Color(red: 166/255, green: 166/255, blue: 166/255), location: 0.19), .init(color: Color(red: 204/255, green: 204/255, blue: 204/255), location: 0.5), .init(color: Color(red: 255/255, green: 255/255, blue: 255/255), location: 0.5), .init(color: Color(red: 255/255, green: 255/255, blue: 255/255), location: 1)]), startPoint: .top, endPoint: .bottom).frame(height: 8.5).cornerRadius(4.25).padding(.trailing, 4).modifier(modifiers.barRight)
                                 ZStack {
                                     Image("volume-slider-fat-knob").resizable().scaledToFill()
-
+                                    
                                 }.modifier(modifiers.knob)
                             }
                         }.frame(height: 25).padding([.top, .bottom]).padding([.leading, .trailing], 30).padding(.bottom,15)
@@ -668,30 +690,30 @@ struct SkeuomorphicList_Playlists: View {
     @State var search = ""
     var body: some View {
         ZStack(alignment: .top) {
-        List {
-            ipod_search(search: $search, no_right_padding: true, editing_state: $editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
-            ForEach(MusicObserver.playists, id: \.persistentID) { playlist in
-                Button(action:{
-                    self.playlist = playlist
-                    if   self.playlist == playlist, playlist.items.count != 0 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                            forward_or_backward = false; withAnimation(.linear(duration: 0.28)){playlist_current_nav_view = "Playlist_Desination"}
+            List {
+                ipod_search(search: $search, no_right_padding: true, editing_state: $editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
+                ForEach(MusicObserver.playists, id: \.persistentID) { playlist in
+                    Button(action:{
+                        self.playlist = playlist
+                        if   self.playlist == playlist, playlist.items.count != 0 {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                forward_or_backward = false; withAnimation(.linear(duration: 0.28)){playlist_current_nav_view = "Playlist_Desination"}
+                            }
                         }
-                    }
-                }) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Spacer().frame(height:4.5)
-                        HStack() {
-                            Text(playlist.value(forProperty: MPMediaPlaylistPropertyName) as? String ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 11).padding(.trailing, 40)
-                            Spacer()
-                            Image("UITableNext").padding(.trailing, 12)
+                    }) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Spacer().frame(height:4.5)
+                            HStack() {
+                                Text(playlist.value(forProperty: MPMediaPlaylistPropertyName) as? String ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 11).padding(.trailing, 40)
+                                Spacer()
+                                Image("UITableNext").padding(.trailing, 12)
+                            }
+                            Spacer().frame(height:9.5)
+                            Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                            
                         }
-                        Spacer().frame(height:9.5)
-                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-                        
-                    }
-                }.padding(.top, playlist == MusicObserver.playists.first ? 2.5 : 0)
-            }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
+                    }.padding(.top, playlist == MusicObserver.playists.first ? 2.5 : 0)
+                }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
             }
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
@@ -700,28 +722,28 @@ struct SkeuomorphicList_Playlists: View {
                 Color.white.edgesIgnoringSafeArea(.all).offset(y: 44)
                 List {
                     if MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
-                                   Button(action:{
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           HStack() {
+                        Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
+                                Button(action:{
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        HStack() {
                                             Image(uiImage: artist.representativeItem?.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
-                                               Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                     if MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
-                                   Button(action:{
+                        Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
+                                Button(action:{
                                     let musicPlayer = MPMusicPlayerController.systemMusicPlayer
                                     SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
                                         
@@ -748,32 +770,32 @@ struct SkeuomorphicList_Playlists: View {
                                         }
                                         
                                     }
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           HStack() {
-                                               Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        HStack() {
+                                            Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
                                             VStack(alignment: .leading, spacing: 0) {
-                                               Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
+                                                Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
                                                 Spacer().frame(height:1)
                                                 Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
-                                                    .font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(.cgLightGray).lineLimit(1)
+                                                    .font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(.cgLightGray).lineLimit(1)
                                             }.padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                 }.offset(y: 44)
             }
         }
-        }
-        
     }
+    
+}
 
 func result_results(_ array: [MPMediaItem]) -> String {
     if array.count == 1 {
@@ -812,78 +834,34 @@ struct SkeuomorphicList_Playlists_Destination: View {
     @State var search = ""
     var body: some View {
         ZStack(alignment:.top) {
-        List {
-            ipod_search(search: $search, no_right_padding: true, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
-            VStack(spacing:0) {
-                HStack(spacing: 8) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 8).fill(LinearGradient(gradient: Gradient(colors: [Color(red: 229/255, green: 230/255, blue: 231/255), Color(red: 210/255, green: 210/255, blue: 213/255)]), startPoint: .top, endPoint: .bottom))
-                        Text("Edit").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color(red: 51/255, green: 51/255, blue: 51/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
-                    }.overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(red:154/255, green:154/255, blue:154/255), lineWidth: 1)
-                    ).padding(.leading, 8).padding([.top], 8).padding(.bottom, 2)
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 8).fill(LinearGradient(gradient: Gradient(colors: [Color(red: 229/255, green: 230/255, blue: 231/255), Color(red: 210/255, green: 210/255, blue: 213/255)]), startPoint: .top, endPoint: .bottom))
-                        Text("Clear").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color(red: 51/255, green: 51/255, blue: 51/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
-                    }.overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(red:154/255, green:154/255, blue:154/255), lineWidth: 1)
-                    ).padding([.top], 8).padding(.bottom, 2)
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 8).fill(LinearGradient(gradient: Gradient(colors: [Color(red: 229/255, green: 230/255, blue: 231/255), Color(red: 210/255, green: 210/255, blue: 213/255)]), startPoint: .top, endPoint: .bottom))
-                        Text("Delete").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color(red: 51/255, green: 51/255, blue: 51/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
-                    }.overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(red:154/255, green:154/255, blue:154/255), lineWidth: 1)
-                    ).padding(.trailing, 8).padding([.top], 8).padding(.bottom, 2)
-                }.offset(y:-2)
-                Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-            }.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
-            Button(action:{
-                let musicPlayer = MPMusicPlayerController.systemMusicPlayer
-                SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
-                    
-                    guard err == nil else {
-                        print("error in capability check is \(err!)")
-                        return
-                    }
-                    
-                    if capability.contains(SKCloudServiceCapability.musicCatalogPlayback) {
-                        print("user has Apple Music subscription")
-                        musicPlayer.nowPlayingItem = nil
-                        musicPlayer.setQueue(with: MPMediaItemCollection(items: playlist.items.shuffled()))
-                        musicPlayer.prepareToPlay { (error) in
-                            if error != nil && error!.localizedDescription == "The operation couldn’t be completed. (MPCPlayerRequestErrorDomain error 1.)" {
-                            } else {
-                                musicPlayer.play()
-                                forward_or_backward = false; withAnimation(.linear(duration: 0.28)){current_nav_view = "Now Playing"}
-                            }
-                        }
-                    }
-                    
-                    if capability.contains(SKCloudServiceCapability.musicCatalogSubscriptionEligible) {
-                        print("user does not have subscription")
-                    }
-                    
-                }
-            }) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Spacer().frame(height:4.5)
-                    HStack() {
-                        
-                        ZStack(alignment: .leading) {
-                            HStack {
-                                Text("Shuffle").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
-                                Image("shuffle_icon")
-                            }
-                        }.padding(.leading, 11).padding(.trailing, 40)
-                    }.frame(minHeight: 44-0.95-9, maxHeight:44-0.95-9)
-                    Spacer().frame(height:4.5)
+            List {
+                ipod_search(search: $search, no_right_padding: true, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
+                VStack(spacing:0) {
+                    HStack(spacing: 8) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8).fill(LinearGradient(gradient: Gradient(colors: [Color(red: 229/255, green: 230/255, blue: 231/255), Color(red: 210/255, green: 210/255, blue: 213/255)]), startPoint: .top, endPoint: .bottom))
+                            Text("Edit").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color(red: 51/255, green: 51/255, blue: 51/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                        }.overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(red:154/255, green:154/255, blue:154/255), lineWidth: 1)
+                        ).padding(.leading, 8).padding([.top], 8).padding(.bottom, 2)
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8).fill(LinearGradient(gradient: Gradient(colors: [Color(red: 229/255, green: 230/255, blue: 231/255), Color(red: 210/255, green: 210/255, blue: 213/255)]), startPoint: .top, endPoint: .bottom))
+                            Text("Clear").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color(red: 51/255, green: 51/255, blue: 51/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                        }.overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(red:154/255, green:154/255, blue:154/255), lineWidth: 1)
+                        ).padding([.top], 8).padding(.bottom, 2)
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8).fill(LinearGradient(gradient: Gradient(colors: [Color(red: 229/255, green: 230/255, blue: 231/255), Color(red: 210/255, green: 210/255, blue: 213/255)]), startPoint: .top, endPoint: .bottom))
+                            Text("Delete").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color(red: 51/255, green: 51/255, blue: 51/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                        }.overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(red:154/255, green:154/255, blue:154/255), lineWidth: 1)
+                        ).padding(.trailing, 8).padding([.top], 8).padding(.bottom, 2)
+                    }.offset(y:-2)
                     Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-                }
-            }.frame(minHeight: 44, maxHeight:44).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).hideRowSeparator()
-            ForEach(playlist.items ?? [], id: \.persistentID) { song in
+                }.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
                 Button(action:{
                     let musicPlayer = MPMusicPlayerController.systemMusicPlayer
                     SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
@@ -896,7 +874,7 @@ struct SkeuomorphicList_Playlists_Destination: View {
                         if capability.contains(SKCloudServiceCapability.musicCatalogPlayback) {
                             print("user has Apple Music subscription")
                             musicPlayer.nowPlayingItem = nil
-                            musicPlayer.setQueue(with: MPMediaItemCollection(items: playlist.items.wrap(around: song)))
+                            musicPlayer.setQueue(with: MPMediaItemCollection(items: playlist.items.shuffled()))
                             musicPlayer.prepareToPlay { (error) in
                                 if error != nil && error!.localizedDescription == "The operation couldn’t be completed. (MPCPlayerRequestErrorDomain error 1.)" {
                                 } else {
@@ -916,24 +894,68 @@ struct SkeuomorphicList_Playlists_Destination: View {
                         Spacer().frame(height:4.5)
                         HStack() {
                             
-                            VStack(alignment: .leading) {
-                                Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
-                                Spacer().frame(height:1)
-                                Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
-                                    .font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(.cgLightGray).lineLimit(1)
-                            }.padding(.leading, 11)
-                            if song == MPMusicPlayerController.systemMusicPlayer.nowPlayingItem {
-                                Spacer()
-                                    Image("NowPlayingListItemIcon")
-                            }
-                        }.padding(.trailing, 11)
+                            ZStack(alignment: .leading) {
+                                HStack {
+                                    Text("Shuffle").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
+                                    Image("shuffle_icon")
+                                }
+                            }.padding(.leading, 11).padding(.trailing, 40)
+                        }.frame(minHeight: 44-0.95-9, maxHeight:44-0.95-9)
                         Spacer().frame(height:4.5)
                         Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
                     }
-                    
-                }.padding(.top, song == (playlist.items ?? []).first ? 2.5 : 0)
-            }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
-        }
+                }.frame(minHeight: 44, maxHeight:44).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).hideRowSeparator()
+                ForEach(playlist.items ?? [], id: \.persistentID) { song in
+                    Button(action:{
+                        let musicPlayer = MPMusicPlayerController.systemMusicPlayer
+                        SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
+                            
+                            guard err == nil else {
+                                print("error in capability check is \(err!)")
+                                return
+                            }
+                            
+                            if capability.contains(SKCloudServiceCapability.musicCatalogPlayback) {
+                                print("user has Apple Music subscription")
+                                musicPlayer.nowPlayingItem = nil
+                                musicPlayer.setQueue(with: MPMediaItemCollection(items: playlist.items.wrap(around: song)))
+                                musicPlayer.prepareToPlay { (error) in
+                                    if error != nil && error!.localizedDescription == "The operation couldn’t be completed. (MPCPlayerRequestErrorDomain error 1.)" {
+                                    } else {
+                                        musicPlayer.play()
+                                        forward_or_backward = false; withAnimation(.linear(duration: 0.28)){current_nav_view = "Now Playing"}
+                                    }
+                                }
+                            }
+                            
+                            if capability.contains(SKCloudServiceCapability.musicCatalogSubscriptionEligible) {
+                                print("user does not have subscription")
+                            }
+                            
+                        }
+                    }) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Spacer().frame(height:4.5)
+                            HStack() {
+                                
+                                VStack(alignment: .leading) {
+                                    Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
+                                    Spacer().frame(height:1)
+                                    Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
+                                        .font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(.cgLightGray).lineLimit(1)
+                                }.padding(.leading, 11)
+                                if song == MPMusicPlayerController.systemMusicPlayer.nowPlayingItem {
+                                    Spacer()
+                                    Image("NowPlayingListItemIcon")
+                                }
+                            }.padding(.trailing, 11)
+                            Spacer().frame(height:4.5)
+                            Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                        }
+                        
+                    }.padding(.top, song == (playlist.items ?? []).first ? 2.5 : 0)
+                }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
+            }
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -941,28 +963,28 @@ struct SkeuomorphicList_Playlists_Destination: View {
                 Color.white.edgesIgnoringSafeArea(.all).offset(y: 44)
                 List {
                     if MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
-                                   Button(action:{
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           HStack() {
+                        Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
+                                Button(action:{
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        HStack() {
                                             Image(uiImage: artist.representativeItem?.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
-                                               Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                     if MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
-                                   Button(action:{
+                        Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
+                                Button(action:{
                                     let musicPlayer = MPMusicPlayerController.systemMusicPlayer
                                     SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
                                         
@@ -989,29 +1011,29 @@ struct SkeuomorphicList_Playlists_Destination: View {
                                         }
                                         
                                     }
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           HStack() {
-                                               Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        HStack() {
+                                            Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
                                             VStack(alignment: .leading, spacing: 0) {
-                                               Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
+                                                Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
                                                 Spacer().frame(height:1)
                                                 Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
-                                                    .font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(.cgLightGray).lineLimit(1)
+                                                    .font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(.cgLightGray).lineLimit(1)
                                             }.padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                 }.offset(y: 44)
             }
-
+            
         }
         
     }
@@ -1026,7 +1048,7 @@ struct shuffle_bottom_divider: View {
                 VStack(alignment: .leading) {
                     Spacer()
                     HStack {
-                        Text("Shuffle").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
+                        Text("Shuffle").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
                         Image("shuffle_icon")
                     }
                     Spacer()
@@ -1153,48 +1175,48 @@ struct SkeuomorphicList_Artists: View {
     @State var search = ""
     var body: some View {
         ZStack(alignment: .top) {
-        List {
-            ipod_search(search: $search, no_right_padding: editing_state != "None" ? true : false, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
-            ForEach(indexes, id: \.self) { letter in
-                Section(header: alpha_list_header(letter: letter).id(letter) .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                    ForEach(MusicObserver.artists.filter({(artist) -> Bool in
-                        String(alphabet.contains(String(artist.representativeItem?.artist?.prefix(1) ?? "")) ? (artist.representativeItem?.artist?.prefix(1) ?? "") : "#") == letter
-                        
-                    }), id: \.persistentID) { artist in
-                        Button(action:{
-                            let q = MPMediaQuery.albums()
-                            let predicate = MPMediaPropertyPredicate.init(value: artist.representativeItem?.artistPersistentID, forProperty: MPMediaItemPropertyArtistPersistentID)
-                            q.addFilterPredicate(predicate)
-                            albums = q.collections ?? []
-                            current_artist = artist.representativeItem?.artist ?? ""
-                            if albums.count != 0, current_artist == artist.representativeItem?.artist ?? "" {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                                    forward_or_backward = false; withAnimation(.linear(duration: 0.28)){artists_current_view = "Artist_Albums"}
+            List {
+                ipod_search(search: $search, no_right_padding: editing_state != "None" ? true : false, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
+                ForEach(indexes, id: \.self) { letter in
+                    Section(header: alpha_list_header(letter: letter).id(letter) .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                        ForEach(MusicObserver.artists.filter({(artist) -> Bool in
+                            String(alphabet.contains(String(artist.representativeItem?.artist?.prefix(1) ?? "")) ? (artist.representativeItem?.artist?.prefix(1) ?? "") : "#") == letter
+                            
+                        }), id: \.persistentID) { artist in
+                            Button(action:{
+                                let q = MPMediaQuery.albums()
+                                let predicate = MPMediaPropertyPredicate.init(value: artist.representativeItem?.artistPersistentID, forProperty: MPMediaItemPropertyArtistPersistentID)
+                                q.addFilterPredicate(predicate)
+                                albums = q.collections ?? []
+                                current_artist = artist.representativeItem?.artist ?? ""
+                                if albums.count != 0, current_artist == artist.representativeItem?.artist ?? "" {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                        forward_or_backward = false; withAnimation(.linear(duration: 0.28)){artists_current_view = "Artist_Albums"}
+                                    }
                                 }
-                            }
-                        }) {
-                            VStack(alignment: .leading, spacing: 0) {
-                                Spacer()
-                                HStack() {
-                                    Text(artist.representativeItem?.artist ?? "").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 11).padding(.trailing, 40)
+                            }) {
+                                VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
+                                    HStack() {
+                                        Text(artist.representativeItem?.artist ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 11).padding(.trailing, 40)
+                                        Spacer()
+                                    }
+                                    Spacer().frame(height:9.5)
+                                    Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all).opacity(artist == MusicObserver.artists.filter({(artist) -> Bool in
+                                        String(alphabet.contains(String(artist.representativeItem?.artist?.prefix(1) ?? "")) ? (artist.representativeItem?.artist?.prefix(1) ?? "") : "#") == letter
+                                        
+                                    }).last ? 1 : 1 )
                                 }
-                                Spacer().frame(height:9.5)
-                                Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all).opacity(artist == MusicObserver.artists.filter({(artist) -> Bool in
-                                    String(alphabet.contains(String(artist.representativeItem?.artist?.prefix(1) ?? "")) ? (artist.representativeItem?.artist?.prefix(1) ?? "") : "#") == letter
-                                    
-                                }).last ? 1 : 1 )
                             }
-                        }
-                    }.hideRowSeparator()
-                }
-            }.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
-            HStack {
-                Spacer()
-                Text("\(MusicObserver.artists.count) Artists").font(.custom("Helvetica Neue Regular", size: 20)).foregroundColor(.cgLightGray).lineLimit(1)
-                Spacer()
-            }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        }
+                        }.hideRowSeparator()
+                    }
+                }.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
+                HStack {
+                    Spacer()
+                    Text("\(MusicObserver.artists.count) Artists").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
+                    Spacer()
+                }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -1202,28 +1224,28 @@ struct SkeuomorphicList_Artists: View {
                 Color.white.edgesIgnoringSafeArea(.all).offset(y: 44)
                 List {
                     if MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
-                                   Button(action:{
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           HStack() {
+                        Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
+                                Button(action:{
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        HStack() {
                                             Image(uiImage: artist.representativeItem?.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
-                                               Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                     if MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
-                                   Button(action:{
+                        Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
+                                Button(action:{
                                     let musicPlayer = MPMusicPlayerController.systemMusicPlayer
                                     SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
                                         
@@ -1250,30 +1272,30 @@ struct SkeuomorphicList_Artists: View {
                                         }
                                         
                                     }
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           HStack() {
-                                               Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        HStack() {
+                                            Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
                                             VStack(alignment: .leading, spacing: 0) {
-                                               Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
+                                                Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
                                                 Spacer().frame(height:1)
                                                 Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
-                                                    .font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(.cgLightGray).lineLimit(1)
+                                                    .font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(.cgLightGray).lineLimit(1)
                                             }.padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           //  Spacer().frame(height:9.5)
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        //  Spacer().frame(height:9.5)
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                 }.offset(y: 44)
             }
-
+            
         }
         
     }
@@ -1306,30 +1328,30 @@ struct SkeuomorphicList_Artists_Destination: View {
     @State var search = ""
     var body: some View {
         ZStack(alignment: .top) {
-        List {
-            ipod_search(search: $search, no_right_padding: true, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
-            ForEach(albums, id: \.persistentID) { album in
-                Button(action:{
-                    current_album = album
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.25) {
-                        forward_or_backward = false; withAnimation(.linear(duration: 0.28)){artists_current_view = "Artist_Album_Songs"}
-                    }
-                }) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        //Spacer().frame(height:4.5)
-                        HStack() {
-                            Image(uiImage: album.representativeItem?.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
-                            Text(album.representativeItem?.albumTitle ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
-                            Spacer()
-                            Image("UITableNext").padding(.trailing, 12)
+            List {
+                ipod_search(search: $search, no_right_padding: true, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
+                ForEach(albums, id: \.persistentID) { album in
+                    Button(action:{
+                        current_album = album
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.25) {
+                            forward_or_backward = false; withAnimation(.linear(duration: 0.28)){artists_current_view = "Artist_Album_Songs"}
                         }
-                        //  Spacer().frame(height:9.5)
-                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-                        
-                    }
-                }//.padding(.top, album == albums.first ? 2.5 : 0)
-            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-        }.background(Color.white)
+                    }) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            //Spacer().frame(height:4.5)
+                            HStack() {
+                                Image(uiImage: album.representativeItem?.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
+                                Text(album.representativeItem?.albumTitle ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                                Spacer()
+                                Image("UITableNext").padding(.trailing, 12)
+                            }
+                            //  Spacer().frame(height:9.5)
+                            Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                            
+                        }
+                    }//.padding(.top, album == albums.first ? 2.5 : 0)
+                }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+            }.background(Color.white)
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -1337,30 +1359,30 @@ struct SkeuomorphicList_Artists_Destination: View {
                 Color.white.edgesIgnoringSafeArea(.all).offset(y: 44)
                 List {
                     if MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
-                                   Button(action:{
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           //Spacer().frame(height:4.5)
-                                           HStack() {
+                        Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
+                                Button(action:{
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        //Spacer().frame(height:4.5)
+                                        HStack() {
                                             Image(uiImage: artist.representativeItem?.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
-                                               Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           //  Spacer().frame(height:9.5)
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        //  Spacer().frame(height:9.5)
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                     if MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
-                                   Button(action:{
+                        Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
+                                Button(action:{
                                     let musicPlayer = MPMusicPlayerController.systemMusicPlayer
                                     SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
                                         
@@ -1387,32 +1409,32 @@ struct SkeuomorphicList_Artists_Destination: View {
                                         }
                                         
                                     }
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           //Spacer().frame(height:4.5)
-                                           HStack() {
-                                               Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        //Spacer().frame(height:4.5)
+                                        HStack() {
+                                            Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
                                             VStack(alignment: .leading, spacing: 0) {
-                                               Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
+                                                Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
                                                 Spacer().frame(height:1)
                                                 Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
-                                                    .font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(.cgLightGray).lineLimit(1)
+                                                    .font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(.cgLightGray).lineLimit(1)
                                             }.padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           //  Spacer().frame(height:9.5)
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        //  Spacer().frame(height:9.5)
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                 }.offset(y: 44)
             }
-
-    }
+            
+        }
     }
 }
 
@@ -1432,10 +1454,10 @@ struct albums_destination: View {
                             Image(uiImage: (album.representativeItem?.artwork?.image(at: CGSize(width: 400, height: 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).withHorizontallyFlippedOrientation()).resizable().scaledToFill().frame(width:100, height: 100).clipped().rotationEffect(.degrees(-180)).offset(y:100).opacity(0.15)
                         }.frame(height: 120).clipped().padding(.leading, 6)
                         VStack(alignment:.leading) {
-                            Text(album.representativeItem?.artist ?? "").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
-                            Text(album.representativeItem?.albumTitle ?? "").font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
-                            Text("Released \((album.representativeItem?.value(forProperty: "year") as? NSNumber)?.stringValue ?? "")").font(.custom("Helvetica Neue Bold", size: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
-                            Text("\(removeDuplicates(album.items ?? []).count) Songs, \(formatTimeForMinutes(seconds: album.representativeItem?.playbackDuration ?? 0)) Mins.").font(.custom("Helvetica Neue Bold", size: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
+                            Text(album.representativeItem?.artist ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
+                            Text(album.representativeItem?.albumTitle ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
+                            Text("Released \((album.representativeItem?.value(forProperty: "year") as? NSNumber)?.stringValue ?? "")").font(.custom("Helvetica Neue Bold", fixedSize: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
+                            Text("\(removeDuplicates(album.items ?? []).count) Songs, \(formatTimeForMinutes(seconds: album.representativeItem?.playbackDuration ?? 0)) Mins.").font(.custom("Helvetica Neue Bold", fixedSize: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
                             Spacer()
                         }.padding(.top, 10)
                         Spacer()
@@ -1478,16 +1500,16 @@ struct albums_destination: View {
                                 HStack {
                                     HStack {
                                         Spacer()
-                                        Text("\(String(track.albumTrackNumber))").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
+                                        Text("\(String(track.albumTrackNumber))").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
                                         Spacer()
                                     }.frame(width:40)
-                                    Text(track.title ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1).padding(.leading, 14)
+                                    Text(track.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1).padding(.leading, 14)
                                     Spacer()
                                     if track == MPMusicPlayerController.systemMusicPlayer.nowPlayingItem {
                                         Image("NowPlayingListItemIcon").padding(.trailing, 5)
                                     }
                                     HStack {
-                                        Text(formatTimeFor(seconds: track.playbackDuration)).font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.trailing)
+                                        Text(formatTimeFor(seconds: track.playbackDuration)).font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.trailing)
                                     }.frame(width:40)
                                 }
                                 Spacer()
@@ -1566,74 +1588,74 @@ struct SkeuomorphicList_Songs: View {
     @State var search = ""
     var body: some View {
         ZStack(alignment:.top) {
-        List {
-            ipod_search(search: $search, no_right_padding: editing_state != "None" ? true : false, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
-            shuffle(songs: MusicObserver.songs, forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).hideRowSeparator()
-            ForEach(indexes, id: \.self) { letter in
-                Section(header: alpha_list_header(letter: letter).id(letter) .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                    ForEach(MusicObserver.songs.filter({(song) -> Bool in
-                        String(alphabet.contains(String(song.title?.prefix(1) ?? "")) ? (song.title?.prefix(1) ?? "") : "#") == letter
-                        
-                    }), id: \.persistentID) { song in
-                        Button(action:{
-                            let musicPlayer = MPMusicPlayerController.systemMusicPlayer
-                            SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
-                                
-                                guard err == nil else {
-                                    print("error in capability check is \(err!)")
-                                    return
-                                }
-                                
-                                if capability.contains(SKCloudServiceCapability.musicCatalogPlayback) {
-                                    print("user has Apple Music subscription")
-                                    musicPlayer.nowPlayingItem = nil
-                                    musicPlayer.setQueue(with: MPMediaItemCollection(items: [song]))
-                                    musicPlayer.prepareToPlay { (error) in
-                                        if error != nil && error!.localizedDescription == "The operation couldn’t be completed. (MPCPlayerRequestErrorDomain error 1.)" {
-                                        } else {
-                                            musicPlayer.play()
-                                            forward_or_backward = false; withAnimation(.linear(duration: 0.28)){current_nav_view = "Now Playing"}
+            List {
+                ipod_search(search: $search, no_right_padding: editing_state != "None" ? true : false, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
+                shuffle(songs: MusicObserver.songs, forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).hideRowSeparator()
+                ForEach(indexes, id: \.self) { letter in
+                    Section(header: alpha_list_header(letter: letter).id(letter) .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                        ForEach(MusicObserver.songs.filter({(song) -> Bool in
+                            String(alphabet.contains(String(song.title?.prefix(1) ?? "")) ? (song.title?.prefix(1) ?? "") : "#") == letter
+                            
+                        }), id: \.persistentID) { song in
+                            Button(action:{
+                                let musicPlayer = MPMusicPlayerController.systemMusicPlayer
+                                SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
+                                    
+                                    guard err == nil else {
+                                        print("error in capability check is \(err!)")
+                                        return
+                                    }
+                                    
+                                    if capability.contains(SKCloudServiceCapability.musicCatalogPlayback) {
+                                        print("user has Apple Music subscription")
+                                        musicPlayer.nowPlayingItem = nil
+                                        musicPlayer.setQueue(with: MPMediaItemCollection(items: [song]))
+                                        musicPlayer.prepareToPlay { (error) in
+                                            if error != nil && error!.localizedDescription == "The operation couldn’t be completed. (MPCPlayerRequestErrorDomain error 1.)" {
+                                            } else {
+                                                musicPlayer.play()
+                                                forward_or_backward = false; withAnimation(.linear(duration: 0.28)){current_nav_view = "Now Playing"}
+                                            }
                                         }
                                     }
-                                }
-                                
-                                if capability.contains(SKCloudServiceCapability.musicCatalogSubscriptionEligible) {
-                                    print("user does not have subscription")
-                                }
-                                
-                            }
-                        }) {
-                            VStack(alignment: .leading, spacing: 0) {
-                                Spacer().frame(height:4.5)
-                                HStack() {
                                     
-                                    VStack(alignment: .leading) {
-                                        Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
-                                        Spacer().frame(height:1)
-                                        Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
-                                            .font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(.cgLightGray).lineLimit(1)
-                                    }.padding(.leading, 11)
-                                    if song == MPMusicPlayerController.systemMusicPlayer.nowPlayingItem {
-                                        Spacer()
-                                            Image("NowPlayingListItemIcon")
+                                    if capability.contains(SKCloudServiceCapability.musicCatalogSubscriptionEligible) {
+                                        print("user does not have subscription")
                                     }
-                                }.padding(.trailing, 40)
-                                Spacer().frame(height:4.5)
-                                Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all).opacity(song == MusicObserver.songs.filter({(song) -> Bool in
-                                    String(alphabet.contains(String(song.title?.prefix(1) ?? "")) ? (song.title?.prefix(1) ?? "") : "#") == letter
                                     
-                                }).last ? 1 : 1 )
+                                }
+                            }) {
+                                VStack(alignment: .leading, spacing: 0) {
+                                    Spacer().frame(height:4.5)
+                                    HStack() {
+                                        
+                                        VStack(alignment: .leading) {
+                                            Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
+                                            Spacer().frame(height:1)
+                                            Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
+                                                .font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(.cgLightGray).lineLimit(1)
+                                        }.padding(.leading, 11)
+                                        if song == MPMusicPlayerController.systemMusicPlayer.nowPlayingItem {
+                                            Spacer()
+                                            Image("NowPlayingListItemIcon")
+                                        }
+                                    }.padding(.trailing, 40)
+                                    Spacer().frame(height:4.5)
+                                    Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all).opacity(song == MusicObserver.songs.filter({(song) -> Bool in
+                                        String(alphabet.contains(String(song.title?.prefix(1) ?? "")) ? (song.title?.prefix(1) ?? "") : "#") == letter
+                                        
+                                    }).last ? 1 : 1 )
+                                }
                             }
-                        }
-                    }.hideRowSeparator()
-                }
-            }.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
-            HStack {
-                Spacer()
-                Text("\(MusicObserver.songs.count) Songs").font(.custom("Helvetica Neue Regular", size: 20)).foregroundColor(.cgLightGray).lineLimit(1)
-                Spacer()
-            }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        }
+                        }.hideRowSeparator()
+                    }
+                }.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
+                HStack {
+                    Spacer()
+                    Text("\(MusicObserver.songs.count) Songs").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
+                    Spacer()
+                }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -1641,28 +1663,28 @@ struct SkeuomorphicList_Songs: View {
                 Color.white.edgesIgnoringSafeArea(.all).offset(y: 44)
                 List {
                     if MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
-                                   Button(action:{
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           HStack() {
+                        Section(header: generic_text_list_header(letter: "Artists (\(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results_collection(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.artists.filter { ($0.representativeItem?.artist ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { artist in
+                                Button(action:{
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        HStack() {
                                             Image(uiImage: artist.representativeItem?.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
-                                               Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Text(artist.representativeItem?.artist ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                     if MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count != 0 {
-                    Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
-                        ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
-                                   Button(action:{
+                        Section(header: generic_text_list_header(letter: "Songs (\(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)}.count) \(result_results(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search)})))").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
+                            ForEach(MusicObserver.songs.filter { ($0.title ?? "").localizedCaseInsensitiveContains(search) }, id: \.persistentID) { song in
+                                Button(action:{
                                     let musicPlayer = MPMusicPlayerController.systemMusicPlayer
                                     SKCloudServiceController().requestCapabilities { (capability:SKCloudServiceCapability, err:Error?) in
                                         
@@ -1689,29 +1711,29 @@ struct SkeuomorphicList_Songs: View {
                                         }
                                         
                                     }
-                                   }) {
-                                       VStack(alignment: .leading, spacing: 0) {
-                                           HStack() {
-                                               Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
+                                }) {
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        HStack() {
+                                            Image(uiImage: song.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95)
                                             VStack(alignment: .leading, spacing: 0) {
-                                               Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
+                                                Text(song.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
                                                 Spacer().frame(height:1)
                                                 Text("\(song.albumTitle ?? "---") - \(song.artist ?? "---")")
-                                                    .font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(.cgLightGray).lineLimit(1)
+                                                    .font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(.cgLightGray).lineLimit(1)
                                             }.padding(.leading, 6).padding(.trailing, 40)
-                                               Spacer()
-                                               Image("UITableNext").padding(.trailing, 12)
-                                           }
-                                           Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
-       
-                                       }
-                                   }
-                               }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-                    }
+                                            Spacer()
+                                            Image("UITableNext").padding(.trailing, 12)
+                                        }
+                                        Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
+                                        
+                                    }
+                                }
+                            }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
+                        }
                     }
                 }.offset(y: 44)
             }
-
+            
         }
     }
 }
@@ -1749,19 +1771,19 @@ struct shuffle: View {
                 
             }
         }) {
-        VStack(alignment: .leading, spacing: 0) {
-            Spacer().frame(height:4.5 + 0.95/2)
-            HStack() {
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Shuffle").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1)
-                        Image("shuffle_icon")
-                    }
-                }.padding(.leading, 11).padding(.trailing, 40)
+            VStack(alignment: .leading, spacing: 0) {
+                Spacer().frame(height:4.5 + 0.95/2)
+                HStack() {
+                    
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Shuffle").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1)
+                            Image("shuffle_icon")
+                        }
+                    }.padding(.leading, 11).padding(.trailing, 40)
+                }
+                Spacer().frame(height:4.5 + 0.95/2)
             }
-            Spacer().frame(height:4.5 + 0.95/2)
-        }
         }
     }
 }
@@ -1782,14 +1804,14 @@ struct ipod_videos: View {
                 Spacer().frame(height:35)
                 HStack {
                     Spacer()
-                    Text("No Videos") .font(.custom("Helvetica Neue Bold", size: 20))
+                    Text("No Videos") .font(.custom("Helvetica Neue Bold", fixedSize: 20))
                         .foregroundColor(Color(red: 98/255, green: 106/255, blue: 121/255))
                     Spacer()
                 }
                 Spacer().frame(height:20)
                 HStack {
                     Spacer()
-                    Text("You can download videos from iTunes.") .font(.custom("Helvetica Neue Bold", size: 14))
+                    Text("You can download videos from iTunes.") .font(.custom("Helvetica Neue Bold", fixedSize: 14))
                         .foregroundColor(Color(red: 98/255, green: 106/255, blue: 121/255))
                     Spacer().frame(width:5)
                     ZStack {
@@ -1834,7 +1856,7 @@ struct ipod_more: View {
                     HStack(alignment: .center) {
                         Spacer().frame(width:1, height: 44-0.95)
                         Image(value).frame(width:25, height: 44-0.95)
-                        Text(key).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                        Text(key).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
                         Spacer()
                         Image("UITableNext").padding(.trailing, 12)
                     }.padding(.leading, 15)
@@ -1843,9 +1865,9 @@ struct ipod_more: View {
                     
                 }
             }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 44).drawingGroup()
-        
+            
         }.background(Color.white)
-}
+    }
 }
 
 //**MARK: Music Observer
@@ -1856,10 +1878,12 @@ class MusicObserver: ObservableObject {
     @Published var songs: [MPMediaItem]
     @Published var playists: [MPMediaItemCollection]
     @Published var artists: [MPMediaItemCollection]
+    @Published var ab: [MPMediaItemCollection]
     init() {
         self.songs = [MPMediaItem]()
         self.playists = [MPMediaItemCollection]()
         self.artists = [MPMediaItemCollection]()
+        self.ab = [MPMediaItemCollection]()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { //We do this to ensure the transition works, and music library is loaded soon after
             self.initAllowMusicLibraryAccess()
         }
@@ -1872,6 +1896,10 @@ class MusicObserver: ObservableObject {
                     SKCloudServiceController.requestAuthorization { status2 in
                         if  SKCloudServiceController.authorizationStatus() == .authorized {
                             self.allowMusicLibraryAccess = true
+                            
+                            //** Loading Albums
+                            let ab = MPMediaQuery.albums()
+                            self.ab = ab.collections ?? []
                             
                             //** Loading Playlists
                             let p = MPMediaQuery.playlists()
@@ -1896,6 +1924,359 @@ class MusicObserver: ObservableObject {
     }
 }
 
+//**MARK: CoverFlow Views
+struct containerCoverflow: View {
+    //  var geometry: GeometryProxy
+    var body: some View {
+        CoverFlowView()
+    }
+}
+
+struct CoverFlowView: View {
+    @EnvironmentObject var MusicObserver: MusicObserver
+    @State var current_album: MPMediaItemCollection = MPMediaItemCollection.init(items: [])
+    @State var is_showing_back: Bool = false
+    //  var geometry: GeometryProxy
+    var body: some View {
+        GeometryReader {geometry in
+            ZStack {
+                CoverFlow_Sub(geometry: geometry, albums: MusicObserver.ab, current_album: $current_album, is_showing_back: $is_showing_back).frame(width: geometry.size.height, height: geometry.size.width) //.rotationEffect(.degrees(-90))
+                VStack {
+                    status_bar().frame(width: geometry.size.height, height: 24)
+                    Spacer()
+                    HStack(alignment: .bottom) {
+                        Image("CoverFlowPlayIndicator").padding(.leading, 8)
+                        Spacer()
+                        VStack {
+                            Text(current_album.representativeItem?.artist ?? "Unknown").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).multilineTextAlignment(.center).lineLimit(0)
+                            Text(current_album.representativeItem?.albumTitle ?? "Unknown").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.white).multilineTextAlignment(.center).lineLimit(0)
+                        }.isHidden(is_showing_back)
+                        Spacer()
+                        Image("CoverFlowInfoIcon").padding(.trailing, 8)
+                    }.padding(.bottom, 10)
+                }.frame(width: geometry.size.height, height: geometry.size.width)
+            }.frame(width: geometry.size.width, height: geometry.size.height)
+        }.rotationEffect(.degrees(UIDevice.current.orientation == .landscapeLeft ? 90 : -90)).onAppear() {
+            let music_player = MPMusicPlayerController.systemMusicPlayer
+            current_album = MusicObserver.ab[optional: MusicObserver.ab.firstIndex(where: {
+                $0.representativeItem?.albumPersistentID == music_player.nowPlayingItem?.albumPersistentID
+            }) ?? 0] ?? MPMediaItemCollection.init(items: [])
+        }
+        
+    }
+}
+
+
+struct coverflow_selected_item: View {
+    @State var current_song: MPMediaItem?
+    @State var new_track_delay: Bool = false
+    @Binding var current_album: MPMediaItemCollection
+    let song_publisher = NotificationCenter.default
+        .publisher(for: .MPMusicPlayerControllerNowPlayingItemDidChange)
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Image("NowPlayingTableBackground").resizable().scaledToFill().frame(width:geometry.size.width, height: geometry.size.height).clipped()
+                VStack(spacing: 0) {
+                    ZStack {
+                        Rectangle().fill(LinearGradient([Color(red: 171/255, green: 183/255, blue: 209/255), Color(red: 120/255, green: 144/255, blue: 188/255)], from: .top, to: .bottom)).frame(width: geometry.size.width, height: 50)
+                        HStack(spacing: 0) {
+                            VStack(alignment: .leading) {
+                                Text(current_album.representativeItem?.artist ?? "Unknown").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).lineLimit(0)
+                                Text(current_album.representativeItem?.albumTitle ?? "Unknown").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.white).lineLimit(0)
+                            }.padding([.leading, .trailing], 5)
+                            Spacer()
+                            Image(uiImage: current_album.representativeItem?.artwork?.image(at: CGSize(400, 400)) ?? UIImage(named:"noartplaceholder") ?? UIImage()).resizable().scaledToFill().frame(width: 50, height: 50)
+                        }.frame(width: geometry.size.width, height: 50)
+                    }.frame(width: geometry.size.width, height: 50)
+                    ScrollView(showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(removeDuplicates(current_album.items), id: \.persistentID) { track in
+                                Button(action:{
+                                    if new_track_delay == false {
+                                        new_track_delay = true
+                                        play_song(song: track)
+                                    }
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        new_track_delay = false
+                                    }
+                                }) {
+                                    VStack {
+                                        if track == removeDuplicates(current_album.items)[0] {
+                                            Rectangle().fill(Color(red: 65/255, green: 64/255, blue: 65/255)).frame(height:2)
+                                        }
+                                        Spacer()
+                                        HStack {
+                                            HStack {
+                                                Text("\(String(track.albumTrackNumber)).").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).lineLimit(1).padding(.leading, 5).padding(.trailing, 5).multilineTextAlignment(.leading)
+                                                Spacer()
+                                            }.frame(width:60)
+                                            Text(track.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).lineLimit(1).padding(.leading, 14)
+                                            Spacer()
+                                            HStack {
+                                                Spacer()
+                                                Text(formatTimeFor(seconds: track.playbackDuration)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).lineLimit(1).padding(.trailing, 5).padding(.leading, 5).multilineTextAlignment(.trailing)
+                                            }.frame(width:60)
+                                        }
+                                        Spacer()
+                                        Rectangle().fill(Color(red: 65/255, green: 64/255, blue: 65/255)).frame(height:2)
+                                    }.overlay(
+                                        ZStack {
+                                            HStack(alignment:.center) {
+                                                Rectangle().fill(Color(red: 65/255, green: 64/255, blue: 65/255)).frame(width:2).padding(.leading, 65)
+                                                Spacer()
+                                            }
+                                            HStack(alignment:.center) {
+                                                Spacer()
+                                                Rectangle().fill(Color(red: 65/255, green: 64/255, blue: 65/255)).frame(width:2).padding(.trailing, 65)
+                                            }
+                                            if track == current_song {
+                                                HStack(alignment:.center) {
+                                                    Image("play").resizable().renderingMode(.template).scaledToFit().foregroundColor(Color(red: 54/255, green: 98/255, blue: 214/255)).frame(height:10).padding(.leading, 40)
+                                                    Spacer()
+                                                }
+                                            }
+                                        }
+                                        
+                                    ).background((removeDuplicates(current_album.items).firstIndex(of: track) ?? 0) % 2  == 0 ? Color.clear : Color.black.opacity(0.2))
+                                }.frame(height: 44)
+                            }
+                        }
+                    }
+                }
+            }.frame(width: geometry.size.width, height: geometry.size.height).border_bottom(width: 1, edges: [.top, .leading, .trailing], color: Color.white)
+        }.onReceive(song_publisher) { (output) in
+            let music_player = MPMusicPlayerController.systemMusicPlayer
+            let current = music_player.nowPlayingItem
+            current_song = current
+        }.onAppear() {
+            let music_player = MPMusicPlayerController.systemMusicPlayer
+            let current = music_player.nowPlayingItem
+            current_song = current
+        }
+    }
+}
+
+struct TapView: UIViewRepresentable {
+    var tappedCallback: (() -> Void)
+    
+    func makeUIView(context: Context) -> UIView {
+        let v = UIView(frame: .zero)
+        let gesture = SingleTouchDownGestureRecognizer(target: context.coordinator,
+                                                       action: #selector(Coordinator.tapped))
+        v.addGestureRecognizer(gesture)
+        return v
+    }
+    
+    class Coordinator: NSObject {
+        var tappedCallback: (() -> Void)
+        
+        init(tappedCallback: @escaping (() -> Void)) {
+            self.tappedCallback = tappedCallback
+        }
+        
+        @objc func tapped(gesture:UITapGestureRecognizer) {
+            self.tappedCallback()
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(tappedCallback:self.tappedCallback)
+    }
+    
+    func updateUIView(_ uiView: UIView,
+                      context: Context) {
+    }
+}
+
+class SingleTouchDownGestureRecognizer: UIGestureRecognizer {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        if self.state == .possible {
+            self.state = .recognized
+        }
+    }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        self.state = .failed
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        self.state = .failed
+    }
+}
+
+struct CoverFlow_Sub: UIViewControllerRepresentable {
+    
+    typealias UIViewControllerType = UIViewController
+    
+    
+    var VC = UIViewController()
+    var geometry: GeometryProxy
+    var albums: [MPMediaItemCollection]
+    @Binding var current_album: MPMediaItemCollection
+    @Binding var is_showing_back: Bool
+    var v2 = UIView()
+    var v3 = UIView()
+    var backside: UIHostingController<coverflow_selected_item>?
+    var carousel = iCarousel()
+    var v = UIView()
+    init(geometry: GeometryProxy, albums: [MPMediaItemCollection], current_album: Binding<MPMediaItemCollection>, is_showing_back: Binding<Bool>) {
+        self.geometry = geometry
+        self.albums = albums
+        _current_album = current_album
+        _is_showing_back = is_showing_back
+        backside = UIHostingController(rootView: coverflow_selected_item(current_album: $current_album))
+    }
+    
+    func makeUIViewController(context: Context) -> UIViewController {
+        VC.view.frame = CGRect(x:0, y: 0, width: geometry.size.height, height: geometry.size.width)
+        v3.frame = CGRect(x: 0, y: 0, width: geometry.size.height, height: geometry.size.width)
+        carousel.frame = CGRect(x: 0, y:0, width: geometry.size.height, height: geometry.size.width)
+        carousel.dataSource = context.coordinator
+        carousel.delegate = context.coordinator
+        carousel.type = .coverFlow2
+        v2.frame = CGRect(0, 0, geometry.size.height * 3/5, geometry.size.width - 24)
+        backside?.view.frame = CGRect(0, 0, geometry.size.height * 0.5, geometry.size.width - 24)
+        v2.backgroundColor = .red
+        VC.view.addSubview(v3)
+        v3.addSubview(carousel)
+        v3.addSubview(backside?.view ?? UIView())
+        backside?.view.alpha = 0.5
+        backside?.view.center = CGPoint(geometry.size.height/2, geometry.size.width/2 + 12)
+        backside?.view.isHidden = true
+        let music_player = MPMusicPlayerController.systemMusicPlayer
+        carousel.currentItemIndex = albums.firstIndex(where: {
+            $0.representativeItem?.albumPersistentID == music_player.nowPlayingItem?.albumPersistentID
+        }) ?? 0
+        v.frame = CGRect(x: 0, y:0, width: geometry.size.height, height: geometry.size.width)
+        let gesture = SingleTouchDownGestureRecognizer(target: context.coordinator,
+                                                       action: #selector(Coordinator.flip_back))
+        v.addGestureRecognizer(gesture)
+        
+        return VC
+    }
+    
+    
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        
+    }
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    class Coordinator: NSObject, iCarouselDelegate, iCarouselDataSource {
+        var parent: CoverFlow_Sub
+        init(_ parent: CoverFlow_Sub) {
+            self.parent = parent
+        }
+        func numberOfItems(in carousel: iCarousel) -> Int {
+            return parent.albums.count
+        }
+        
+        @objc func flip_back() {
+            print("flip back")
+            parent.v.removeFromSuperview()
+            if #available(iOS 15, *) {
+                UIView.transition(with: self.parent.backside?.view ?? UIView(), duration: 1.0, options: [UIDevice.current.orientation == .landscapeLeft ? .transitionFlipFromBottom : .transitionFlipFromTop, .showHideTransitionViews], animations: {
+                    self.parent.backside?.view.isHidden = true
+                    self.parent.backside?.view.alpha = 0
+                })
+            } else {
+                UIView.transition(with: self.parent.backside?.view ?? UIView(), duration: 1.0, options: [.transitionFlipFromLeft, .showHideTransitionViews], animations: {
+                    self.parent.backside?.view.alpha = 0
+                })
+            }
+            UIView.transition(with: (parent.carousel.currentItemView!) ?? UIView(), duration: 1.0, options: [.allowAnimatedContent, .transitionFlipFromLeft, .showHideTransitionViews], animations: {
+                self.parent.carousel.currentItemView!.clipsToBounds = false
+                self.parent.carousel.currentItemView!.alpha = 1.0
+            })
+            if #available(iOS 15, *) {
+                //
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.parent.backside?.view.isHidden = true
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                self.parent.carousel.isUserInteractionEnabled = true
+                withAnimation(.linear(duration: 0.1)) {
+                    self.parent.is_showing_back = false
+                }
+            }
+        }
+        
+        func carouselCurrentItemIndexDidChange(_ carousel: iCarousel) {
+            parent.current_album = parent.albums[carousel.currentItemIndex]
+        }
+        
+        func carousel(_ carousel: iCarousel, didSelectItemAt index: Int) {
+            
+            parent.current_album = parent.albums[index]
+            if parent.current_album == parent.albums[index] {
+                parent.v3.insertSubview(parent.v, belowSubview: parent.backside?.view ?? UIView())
+                carousel.isUserInteractionEnabled = false
+                withAnimation(.linear(duration: 0.1)) {
+                    parent.is_showing_back = true
+                }
+                UIView.transition(with: (carousel.currentItemView!) ?? UIView(), duration: 1.0, options: [.transitionFlipFromRight, .allowAnimatedContent, .showHideTransitionViews], animations: {
+                    carousel.currentItemView!.alpha = 0.0
+                    self.parent.carousel.currentItemView!.clipsToBounds = false
+                })
+                
+                if #available(iOS 15, *) {
+                    
+                    
+                    UIView.transition(with: self.parent.backside?.view ?? UIView(), duration: 1.0, options: [UIDevice.current.orientation == .landscapeLeft ? .transitionFlipFromTop : .transitionFlipFromBottom, .showHideTransitionViews], animations: {
+                        self.parent.backside?.view.isHidden = false
+                        self.parent.backside?.view.alpha = 1.0
+                    })
+                } else {
+                    
+                    UIView.transition(with: self.parent.backside?.view ?? UIView(), duration: 1.0, options: [.transitionFlipFromRight, .allowAnimatedContent, .showHideTransitionViews], animations: {
+                        self.parent.backside?.view.isHidden = false
+                        self.parent.backside?.view.alpha = 1.0
+                    })
+                }
+            }
+            print("tap")
+        }
+        
+        func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
+            var view = UIHostingController(rootView: ios_14_image_hosting(image: (parent.albums[index].representativeItem?.artwork?.image(at: CGSize(250, 250)) ?? UIImage(named: "noartplaceholder")) ?? UIImage()))
+            view.view.frame = CGRect(0, 0, 250, 250)
+            return view.view
+            
+        }
+        
+        
+    }
+    
+    
+}
+
+struct ios_14_image_hosting: View {
+    var image: UIImage
+    var body: some View {
+        ZStack {
+            Image(uiImage: image).resizable().frame(width:250, height: 250).opacity(0.7).rotationEffect(.degrees(-180)).offset(y:250).rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+            Image(uiImage: image).resizable().frame(width:250, height: 250).innerShadowBottomWithOffset(color: Color.black.opacity(0.9), radius: 0.0125, offset: 250)
+        }.frame(height:250)
+    }
+}
+
+
+
+func resizeCoverFlowImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+    
+    let scale = newWidth / image.size.width
+    let newHeight = image.size.height * scale
+    UIGraphicsBeginImageContext(CGSize(newWidth, newHeight))
+    image.draw(in: CGRect(0, 0, newWidth, newHeight))
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return newImage ?? UIImage()
+}
+
+
+
 
 //**MARK: Common
 
@@ -1912,54 +2293,54 @@ struct ipod_search: View {
             VStack {
                 Spacer()
                 HStack {
-                HStack {
-                    Spacer(minLength: 5)
-                    HStack (alignment: .center,
-                            spacing: 10) {
-                        Image("search_icon").resizable().font(Font.title.weight(.medium)).frame(width: 15, height: 15).padding(.leading, 5)
-                        
-                        TextField ("Search", text: $search, onEditingChanged: { (changed) in
-                            if changed  {
+                    HStack {
+                        Spacer(minLength: 5)
+                        HStack (alignment: .center,
+                                spacing: 10) {
+                            Image("search_icon").resizable().font(Font.title.weight(.medium)).frame(width: 15, height: 15).padding(.leading, 5)
+                            
+                            TextField ("Search", text: $search, onEditingChanged: { (changed) in
+                                if changed  {
+                                    withAnimation() {
+                                        editing_state = "Active_Empty"
+                                    }
+                                } else {
+                                    withAnimation() {
+                                        editing_state = "None"
+                                    }
+                                }
+                            }) {
                                 withAnimation() {
-                            editing_state = "Active_Empty"
+                                    editing_state = "None"
                                 }
-                            } else {
-                                withAnimation() {
-                                editing_state = "None"
+                            }.onChange(of: search) { _ in
+                                if search != "" {
+                                    editing_state = "Active"
+                                } else {
+                                    if editing_state != "None" {
+                                        editing_state = "Active_Empty"
+                                    }
                                 }
+                            }.keyboardType(.alphabet).disableAutocorrection(true)
+                            if search.count != 0 {
+                                Button(action:{search = ""}) {
+                                    Image("UITextFieldClearButton")
+                                }.fixedSize()
                             }
-                        }) {
-                            withAnimation() {
-                            editing_state = "None"
-                            }
-                        }.onChange(of: search) { _ in
-                            if search != "" {
-                                editing_state = "Active"
-                            } else {
-                                if editing_state != "None" {
-                                editing_state = "Active_Empty"
-                                }
-                            }
-                        }.keyboardType(.alphabet).disableAutocorrection(true)
-                        if search.count != 0 {
-                            Button(action:{search = ""}) {
-                                Image("UITextFieldClearButton")
-                            }.fixedSize()
                         }
-                    }
-                    
-                    .padding([.top,.bottom], 5)
-                    .padding(.leading, 5)
-                    .cornerRadius(40)
-                    Spacer(minLength: 8)
-                } .ps_innerShadow(.capsule(gradient), radius:1.6, offset: CGPoint(0, 1), intensity: 0.7).strokeCapsule(Color(red: 166/255, green: 166/255, blue: 166/255), lineWidth: 0.33).padding(.leading, 5.5).padding(.trailing, no_right_padding == true ? 5.5 : 35)
+                        
+                        .padding([.top,.bottom], 5)
+                        .padding(.leading, 5)
+                        .cornerRadius(40)
+                        Spacer(minLength: 8)
+                    } .ps_innerShadow(.capsule(gradient), radius:1.6, offset: CGPoint(0, 1), intensity: 0.7).strokeCapsule(Color(red: 166/255, green: 166/255, blue: 166/255), lineWidth: 0.33).padding(.leading, 5.5).padding(.trailing, no_right_padding == true ? 5.5 : 35)
                     if editing_state != "None" {
                         Button(action:{hideKeyboard()}) {
-                        ZStack {
-                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25)
-                        }.frame(width: 59, height: 32).ps_innerShadow(.roundedRectangle(5.5, cancel_gradient), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
-                        .padding(.trailing, 5)
-                    }.frame(width: 59, height: 32).transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .trailing))).fixedSize()
+                            ZStack {
+                                Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25)
+                            }.frame(width: 59, height: 32).ps_innerShadow(.roundedRectangle(5.5, cancel_gradient), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
+                            .padding(.trailing, 5)
+                        }.frame(width: 59, height: 32).transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .trailing))).fixedSize()
                     }
                 }
                 Spacer()
@@ -2103,7 +2484,7 @@ struct VerticalIndex: ViewModifier {
                                         }
                                     }, label: {
                                         Image(systemName: "magnifyingglass")
-                                            .font(.custom("Helvetica Neue Bold", size: 13.25)).frame(width:14, height: 16.5)
+                                            .font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).frame(width:14, height: 16.5)
                                             .foregroundColor(Color(red: 106/255, green: 115/255, blue: 125/255))
                                             .padding(.trailing, 12)
                                     })
@@ -2117,7 +2498,7 @@ struct VerticalIndex: ViewModifier {
                                         }
                                     }, label: {
                                         Text(letter)
-                                            .font(.custom("Helvetica Neue Bold", size: 13.25)).frame(width:14, height: 16.5)
+                                            .font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).frame(width:14, height: 16.5)
                                             .foregroundColor(Color(red: 106/255, green: 115/255, blue: 125/255))
                                             .padding(.trailing, 12)
                                     })
@@ -2189,7 +2570,7 @@ struct TabButton : View {
                         }
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }
@@ -2200,7 +2581,7 @@ struct TabButton : View {
                         ).mask(Image("\(image)_iPod").renderingMode(.template).resizable().aspectRatio(contentMode: .fit).frame(width: image == "Songs" ? 20 : image == "Artists" ? 37.5 : 30, height: 30)).shadow(color: Color.black.opacity(0.75), radius: 0, x: 0, y: -1)
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }
@@ -2218,7 +2599,7 @@ struct alpha_list_header: View {
         ZStack {
             Rectangle().fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 148/255, green: 162/255, blue: 173/255), location: 0), .init(color: Color(red: 177/255, green: 186/255, blue: 195/255), location: 0.52), .init(color: Color(red: 183/255, green: 192/255, blue: 199/255), location: 0.93), .init(color: Color(red: 148/255, green: 158/255, blue: 166/255), location: 0.97), .init(color: Color(red: 152/255, green: 163/255, blue: 170/255), location: 1)]), startPoint: .top, endPoint: .bottom)).border_gradient(width: 2.4, edges: [.top], color: LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 176/255, green: 186/255, blue: 194/255), location: 0), .init(color: Color(red: 176/255, green: 186/255, blue: 194/255), location: 0.45), .init(color: Color(red: 165/255, green: 177/255, blue: 186/255), location: 0.5), .init(color: Color(red: 165/255, green: 177/255, blue: 186/255), location: 1)]), startPoint: .top, endPoint: .bottom)).border_gradient(width: 1.2, edges: [.top], color: LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 122/255, green: 134/255, blue: 142/255), location: 0), .init(color: Color(red: 122/255, green: 134/255, blue: 143/255), location: 0.45), .init(color: Color(red: 140/255, green: 152/255, blue: 160/255), location: 0.5), .init(color: Color(red: 140/255, green: 152/255, blue: 160/255), location: 1)]), startPoint: .top, endPoint: .bottom)).edgesIgnoringSafeArea([.leading, .trailing])
             HStack {
-                Text(letter).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color(red: 94/255, green: 90/255, blue: 90/255).opacity(0.75), radius: 0, x: 0, y: 1.2).padding(.leading, 12)
+                Text(letter).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color(red: 94/255, green: 90/255, blue: 90/255).opacity(0.75), radius: 0, x: 0, y: 1.2).padding(.leading, 12)
                 Spacer()
             }
         }
@@ -2231,7 +2612,7 @@ struct generic_text_list_header: View {
         ZStack {
             Rectangle().fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 148/255, green: 162/255, blue: 173/255), location: 0), .init(color: Color(red: 177/255, green: 186/255, blue: 195/255), location: 0.52), .init(color: Color(red: 183/255, green: 192/255, blue: 199/255), location: 0.93), .init(color: Color(red: 148/255, green: 158/255, blue: 166/255), location: 0.97), .init(color: Color(red: 152/255, green: 163/255, blue: 170/255), location: 1)]), startPoint: .top, endPoint: .bottom)).border_gradient(width: 2.4, edges: [.top], color: LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 176/255, green: 186/255, blue: 194/255), location: 0), .init(color: Color(red: 176/255, green: 186/255, blue: 194/255), location: 0.45), .init(color: Color(red: 165/255, green: 177/255, blue: 186/255), location: 0.5), .init(color: Color(red: 165/255, green: 177/255, blue: 186/255), location: 1)]), startPoint: .top, endPoint: .bottom)).border_gradient(width: 1.2, edges: [.top], color: LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 122/255, green: 134/255, blue: 142/255), location: 0), .init(color: Color(red: 122/255, green: 134/255, blue: 143/255), location: 0.45), .init(color: Color(red: 140/255, green: 152/255, blue: 160/255), location: 0.5), .init(color: Color(red: 140/255, green: 152/255, blue: 160/255), location: 1)]), startPoint: .top, endPoint: .bottom)).edgesIgnoringSafeArea([.leading, .trailing])
             HStack {
-                Text(letter).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color(red: 94/255, green: 90/255, blue: 90/255).opacity(0.75), radius: 0, x: 0, y: 1.2).padding(.leading, 12).textCase(.none)
+                Text(letter).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color(red: 94/255, green: 90/255, blue: 90/255).opacity(0.75), radius: 0, x: 0, y: 1.2).padding(.leading, 12).textCase(.none)
                 Spacer()
             }
         }
@@ -2253,28 +2634,28 @@ struct ipod_title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: 180).lineLimit(0)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: 180).lineLimit(0)
                     Spacer()
                 }
                 Spacer()
             }
             if MPMusicPlayerController.systemMusicPlayer.nowPlayingItem != nil {
-            VStack {
-                Spacer()
-                HStack {
+                VStack {
                     Spacer()
-                    Button(action:{forward_or_backward = false; withAnimation(.linear(duration: 0.28)){current_nav_view = "Now Playing"};UITableViewCell.appearance().backgroundColor = .clear}) {
-                        ZStack {
-                            Image("now_playing_icon").resizable().scaledToFit().frame(width:67, height: 40)
-                            VStack(alignment: .center, spacing: 0) {
-                                Text("Now").font(.custom("Helvetica Neue Bold", size: 11)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center)
-                                Text("Playing").font(.custom("Helvetica Neue Bold", size: 11)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center)
-                            }.offset(x:-3)
-                        }.padding(.trailing, 5.5)
+                    HStack {
+                        Spacer()
+                        Button(action:{forward_or_backward = false; withAnimation(.linear(duration: 0.28)){current_nav_view = "Now Playing"};UITableViewCell.appearance().backgroundColor = .clear}) {
+                            ZStack {
+                                Image("now_playing_icon").resizable().scaledToFit().frame(width:67, height: 40)
+                                VStack(alignment: .center, spacing: 0) {
+                                    Text("Now").font(.custom("Helvetica Neue Bold", fixedSize: 11)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center)
+                                    Text("Playing").font(.custom("Helvetica Neue Bold", fixedSize: 11)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center)
+                                }.offset(x:-3)
+                            }.padding(.trailing, 5.5)
+                        }
                     }
+                    Spacer()
                 }
-                Spacer()
-            }
             }
             if artists_current_view != "Artists", selectedTab == "Artists" {
                 VStack {
@@ -2286,7 +2667,7 @@ struct ipod_title_bar : View {
                             ZStack {
                                 Image(artists_current_view == "Artist_Albums" ? "Button2" : "Button_wp4").resizable().scaledToFit().frame(width:84*(33/34.33783783783784), height: 33)
                                 HStack(alignment: .center) {
-                                    Text(artists_current_view == "Artist_Albums" ? "Artists" : title).foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1).frame(maxWidth: 75).lineLimit(0)
+                                    Text(artists_current_view == "Artist_Albums" ? "Artists" : title).foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1).frame(maxWidth: 75).lineLimit(0)
                                 }
                             }.padding(.leading, 5.5)
                         }
@@ -2305,7 +2686,7 @@ struct ipod_title_bar : View {
                             ZStack {
                                 Image("Button_wp4").resizable().scaledToFit().frame(width:84*(33/34.33783783783784), height: 33)
                                 HStack(alignment: .center) {
-                                    Text("Playlists").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1).frame(maxWidth: 75).lineLimit(0)
+                                    Text("Playlists").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1).frame(maxWidth: 75).lineLimit(0)
                                 }
                             }.padding(.leading, 5.5)
                         }
@@ -2345,9 +2726,9 @@ struct now_playing_title_bar : View {
                 Spacer()
                 VStack(spacing:0) {
                     Spacer()
-                    Text(artist ?? "").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 159/255, green: 159/255, blue: 159/255)).shadow(color: Color.black.opacity(0.8), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center).lineLimit(1)
-                    Text(song ?? "").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center).lineLimit(1)
-                    Text(album ?? "").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 159/255, green: 159/255, blue: 159/255)).shadow(color: Color.black.opacity(0.8), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center).lineLimit(1)
+                    Text(artist ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 159/255, green: 159/255, blue: 159/255)).shadow(color: Color.black.opacity(0.8), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center).lineLimit(1)
+                    Text(song ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.8), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center).lineLimit(1)
+                    Text(album ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 159/255, green: 159/255, blue: 159/255)).shadow(color: Color.black.opacity(0.8), radius: 0, x: 0.0, y: -1).multilineTextAlignment(.center).lineLimit(1)
                     Spacer()
                 }.offset(y:-1)
                 Spacer()

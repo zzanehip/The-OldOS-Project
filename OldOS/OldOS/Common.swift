@@ -90,7 +90,7 @@ struct multitasking_music_controls: View {
             }
         }.overlay(VStack {
             Spacer()
-            Text("\(now_playing)").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: 15)
+            Text("\(now_playing)").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: 15)
         })
     }
 }
@@ -108,10 +108,10 @@ struct toggle_orange: View {
             )
             HStack {
                 Spacer()
-                Text("OFF").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color(red: 125/255, green: 125/255, blue: 125/255)).padding(.trailing,12).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).offset(x: 53.6666666667 + offset.x)
+                Text("OFF").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color(red: 125/255, green: 125/255, blue: 125/255)).padding(.trailing,12).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).offset(x: 53.6666666667 + offset.x)
             }.clipped()
             HStack {
-                Text("ON").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.white).padding(.leading,14).shadow(color: Color.black.opacity(0.45), radius: 0.34, x: 0, y: -1.25)
+                Text("ON").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.white).padding(.leading,14).shadow(color: Color.black.opacity(0.45), radius: 0.34, x: 0, y: -1.25)
                 ZStack {
                     Rectangle().fill(Color(red: 101/255, green: 41/255, blue: 1/255).opacity(0.6)).cornerRadius(4.25).padding(.leading, 4).offset(x:-1).frame(maxHeight:30).clipped().blur(0.5).opacity(offset.x > -52 ? 0.95 : 0)
                     Rectangle().fill(Color(red: 101/255, green: 41/255, blue: 1/255).opacity(0.6)).cornerRadius(4.25).padding(.leading, 4).offset(x:1).frame(maxHeight:30).clipped().blur(0.5).opacity(offset.x < -1 ? 0.95: 0)
@@ -133,7 +133,7 @@ struct generic_title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
                     Spacer()
                 }
                 Spacer()
@@ -161,7 +161,7 @@ struct generic_title_bar_clear_cancel : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
                     Spacer()
                 }
                 Spacer()
@@ -198,7 +198,7 @@ struct generic_title_bar_cancel_save : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
                     Spacer()
                 }
                 Spacer()
@@ -232,10 +232,10 @@ struct toggle: View {
             )
             HStack {
                 Spacer()
-                Text("OFF").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color(red: 125/255, green: 125/255, blue: 125/255)).padding(.trailing,12).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).offset(x: 53.6666666667 + offset.x)
+                Text("OFF").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color(red: 125/255, green: 125/255, blue: 125/255)).padding(.trailing,12).shadow(color: Color.white.opacity(0.84), radius: 2, x: 0.0, y: 2).offset(x: 53.6666666667 + offset.x)
             }.clipped()
             HStack {
-                Text("ON").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.white).padding(.leading,14).shadow(color: Color.black.opacity(0.45), radius: 0.34, x: 0, y: -1.25)
+                Text("ON").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.white).padding(.leading,14).shadow(color: Color.black.opacity(0.45), radius: 0.34, x: 0, y: -1.25)
                 ZStack {
                     Rectangle().fill(Color(red: 101/255, green: 41/255, blue: 1/255).opacity(0.6)).cornerRadius(4.25).padding(.leading, 4).offset(x:-1).frame(maxHeight:30).clipped().blur(0.5).opacity(offset.x > -52 ? 0.95 : 0)
                     Rectangle().fill(Color(red: 101/255, green: 41/255, blue: 1/255).opacity(0.6)).cornerRadius(4.25).padding(.leading, 4).offset(x:1).frame(maxHeight:30).clipped().blur(0.5).opacity(offset.x < -1 ? 0.95: 0)
@@ -280,7 +280,7 @@ struct PrimaryButtonStyle2: ButtonStyle {
 struct NoHighlightButtonStyle: ButtonStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
-            .font(.custom("Helvetica Neue Bold", size: 13.25)).frame(width:14, height: 16.5)
+            .font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).frame(width:14, height: 16.5)
             .foregroundColor(Color(red: 106/255, green: 115/255, blue: 125/255))
             .padding(.trailing, 12)
     }
@@ -309,7 +309,7 @@ struct list_section: View {
                                 if row.image != nil {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 row.content
                             }
@@ -326,7 +326,7 @@ struct list_section: View {
                                 if row.image != nil {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 row.content
                             }
@@ -361,7 +361,7 @@ struct list_section_content_only: View {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
                                 if row.title != "" {
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 }
                                 row.content
@@ -380,7 +380,7 @@ struct list_section_content_only: View {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
                                 if row.title != "" {
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 }
                                 row.content
@@ -416,7 +416,7 @@ struct list_section_content_only_large: View {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
                                 if row.title != "" {
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 }
                                 row.content
@@ -435,7 +435,7 @@ struct list_section_content_only_large: View {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
                                 if row.title != "" {
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 }
                                 row.content
@@ -471,7 +471,7 @@ struct list_section_oversize: View {
                                 if row.image != nil {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 row.content
                             }
@@ -488,7 +488,7 @@ struct list_section_oversize: View {
                                 if row.image != nil {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 0)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).padding(.leading, row.image != nil ? 0 : 0)
                                 row.content
                             }
                         }.frame(height: 50)
@@ -520,7 +520,7 @@ struct list_section_blue: View {
                                 if row.selected != nil {
                                 Image(row.image ?? "").resizable().frame(width:30, height: 30).padding(.leading, 12)
                                 }
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color(red: 50/255, green: 50/255, blue: 74/255)).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color(red: 50/255, green: 50/255, blue: 74/255)).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 row.content
                             }
@@ -539,7 +539,7 @@ struct list_section_blue: View {
                                 } else {
                                    // Spacer().frame(width:15).padding(.leading,12)
                                 }
-                                Text(row.title).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(row.selected == true ? Color(red: 62/255, green: 83/255, blue: 131/255) : .black).padding(.leading, row.image != nil ? 0 : 12)
+                                Text(row.title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(row.selected == true ? Color(red: 62/255, green: 83/255, blue: 131/255) : .black).padding(.leading, row.image != nil ? 0 : 12)
                                 Spacer()
                                 row.content
                             }
@@ -561,7 +561,7 @@ struct title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title)
                     Spacer()
                 }
                 Spacer()
@@ -574,7 +574,7 @@ struct title_bar : View {
                     ZStack {
                         Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                         HStack(alignment: .center) {
-                            Text((current_nav_view == "Wallpaper_Grid" || current_nav_view == "Wallpaper_Grid_Camera_Roll") ? "Back" : "Settings").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                            Text((current_nav_view == "Wallpaper_Grid" || current_nav_view == "Wallpaper_Grid_Camera_Roll") ? "Back" : "Settings").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                         }
                     }.padding(.leading, 6)
                     }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: AnyTransition.opacity))
@@ -591,7 +591,7 @@ struct title_bar : View {
                     ZStack {
                         Image("Button_wp4").resizable().aspectRatio(contentMode: .fit).frame(width:84, height: 34.33783783783784)
                         HStack(alignment: .center) {
-                            Text("Wallpaper").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1)
+                            Text("Wallpaper").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1)
                         }
                     }.padding(.leading, 6)
                     }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: AnyTransition.opacity))
@@ -608,7 +608,7 @@ struct title_bar : View {
                     ZStack {
                         Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                         HStack(alignment: .center) {
-                            Text("General").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                            Text("General").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                         }
                     }.padding(.leading, 6)
                     }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: AnyTransition.opacity))
@@ -641,7 +641,7 @@ struct status_bar_in_app: View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [Color.init(red: 237/255, green: 244/255, blue: 247/255), Color.init(red: 191/255, green: 199/255, blue: 203/255)]), startPoint: UnitPoint(x: 0.5, y: 0.07), endPoint: .bottom).innerShadowBottomView(color: Color.init(red: 142/255, green: 149/255, blue: 154/255), radius: 0.05).border_bottom(width: 0.45, edges:[.bottom], color: Color.init(red: 93/255, green: 100/255, blue: 105/255)).cornerRadiusSpecific(radius: 1.75, corners: [.topLeft, .topRight])
             HStack {
-                Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(carrier_id == "" ? .black : Color.init(red: 66/255, green: 66/255, blue: 66/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadowStyle().onAppear() {
+                Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(carrier_id == "" ? .black : Color.init(red: 66/255, green: 66/255, blue: 66/255)).font(.custom("Helvetica Neue Bold", fixedSize: 15)).shadowStyle().onAppear() {
                     let networkInfo = CTTelephonyNetworkInfo()
                     let carrier = networkInfo.serviceSubscriberCellularProviders?.first?.value
                     
@@ -680,7 +680,7 @@ struct status_bar_in_app: View {
             }.padding([.leading, .trailing], 4)
             HStack {
                 Spacer()
-                Text(timeString(date: date).uppercased()).foregroundColor(Color.black).font(.custom("Helvetica Neue Bold", size: 15)).shadowStyle()
+                Text(timeString(date: date).uppercased()).foregroundColor(Color.black).font(.custom("Helvetica Neue Bold", fixedSize: 15)).shadowStyle()
                 Spacer()
             }
         }.onAppear() {
@@ -732,6 +732,7 @@ struct battery_in_app: View {
                 Rectangle().fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 107/255, green: 208/255, blue: 55/255), Color.init(red: 215/255, green: 252/255, blue: 180/255), Color.init(red: 134/255, green: 226/255, blue: 73/255), Color.init(red: 68/255, green: 163/255, blue: 29/255)]), startPoint: .top, endPoint: UnitPoint(x: 0.5, y: 0.73))).innerShadow2(color: Color.init(red: 220/255, green: 255/255, blue: 177/255), radius: 0.2).frame(width: 21.5*CGFloat(battery), height: 12.25-1.5).offset(x:(-21.5/2)+(21.5/2)*CGFloat(battery)) .applyModifier(charging) {  AnyView($0.overlay(ZStack {Image(systemName:"bolt.fill").resizable().frame(width: 8, height: 12.25-2.5)}.frame(width: 21.5*CGFloat(battery), height: 12.25-1.5).foregroundColor(.black)))
                 }
             }
+            
             Rectangle().fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 250/255, green: 250/255, blue: 250/255), Color.init(red: 149/255, green: 149/255, blue: 149/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius:0.25).stroke(LinearGradient(gradient: Gradient(colors: [Color.init(red: 39/255, green: 41/255, blue: 47/255), Color.init(red: 95/255, green: 101/255, blue: 116/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 1)).frame(width: 3, height: 5).offset(x:-7.95)
         }
     }
@@ -820,10 +821,10 @@ struct dual_segmented_control: View {
         GeometryReader{ geometry in
             HStack(spacing: 0) {
                 Button(action:{selected = 0}) {
-                    Text(first_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                    Text(first_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
                 }.frame(width: geometry.size.width/2, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners(selected == 0 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 1}) {
-                    Text(second_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                    Text(second_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
                 }.frame(width: geometry.size.width/2, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight(selected == 1 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
             }.overlay(
                 ZStack {
@@ -867,10 +868,10 @@ struct dual_segmented_control_big_bluegray: View {
         GeometryReader{ geometry in
             HStack(spacing: 0) {
                 Button(action:{selected = 0}) {
-                    Text(first_text).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(selected == 0 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 0 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 0 ? -0.66 : 0.99)
+                    Text(first_text).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(selected == 0 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 0 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 0 ? -0.66 : 0.99)
                 }.frame(width: geometry.size.width/2, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners_Double(selected == 0 ? selected_gradient: unselected_gradient), radius:3, offset: CGPoint(0, 3), intensity: selected == 0 ? 0.4 : 0).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 1}) {
-                    Text(second_text).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(selected == 1 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 1 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 1 ? -0.66 : 0.99)
+                    Text(second_text).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(selected == 1 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 1 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 1 ? -0.66 : 0.99)
                 }.frame(width: geometry.size.width/2, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight_Double(selected == 1 ? selected_gradient: unselected_gradient), radius:3, offset: CGPoint(0, 3), intensity: selected == 1 ? 0.4 : 0).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
             }.strokeRoundedRectangle(12, Color(red: 172/255, green: 172/255, blue: 172/255), lineWidth: 0.75)
         }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
@@ -889,10 +890,10 @@ struct dual_segmented_control_big_bluegray_no_stroke: View {
         GeometryReader{ geometry in
             HStack(spacing: 0) {
                 Button(action:{selected = 0}) {
-                    Text(first_text).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(selected == 0 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 0 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 0 ? -0.66 : 0.99)
+                    Text(first_text).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(selected == 0 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 0 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 0 ? -0.66 : 0.99)
                 }.frame(width: geometry.size.width/2, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners_Double(selected == 0 ? selected_gradient: unselected_gradient), radius:3, offset: CGPoint(0, 3), intensity: selected == 0 ? 0.4 : 0).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 1}) {
-                    Text(second_text).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(selected == 1 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 1 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 1 ? -0.66 : 0.99)
+                    Text(second_text).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(selected == 1 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 1 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 1 ? -0.66 : 0.99)
                 }.frame(width: geometry.size.width/2, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight_Double(selected == 1 ? selected_gradient: unselected_gradient), radius:3, offset: CGPoint(0, 3), intensity: selected == 1 ? 0.4 : 0).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
             }
         }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
@@ -912,10 +913,10 @@ struct tri_control_big_bluegray_no_stroke: View {
         GeometryReader{ geometry in
             HStack(spacing: 0) {
                 Button(action:{selected = 0}) {
-                    Text(first_text).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(selected == 0 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 0 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 0 ? -0.66 : 0.99)
+                    Text(first_text).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(selected == 0 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 0 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 0 ? -0.66 : 0.99)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners_Double(selected == 0 ? selected_gradient: unselected_gradient), radius:3, offset: CGPoint(0, 3), intensity: selected == 0 ? 0.4 : 0).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 1}) {
-                    Text(second_text).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(selected == 1 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 1 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 1 ? -0.66 : 0.99)
+                    Text(second_text).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(selected == 1 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 1 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 1 ? -0.66 : 0.99)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangle(selected == 1 ? selected_gradient: unselected_gradient), radius:3, offset: CGPoint(0, 3), intensity: selected == 1 ? 0.4 : 0).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8).if(selected == 0 || selected == 2) {
                     $0.overlay(HStack(spacing: 0) {
                         if selected == 0 {
@@ -928,7 +929,7 @@ struct tri_control_big_bluegray_no_stroke: View {
                     })
                 }
                 Button(action:{selected = 2}) {
-                    Text(third_text).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(selected == 2 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 2 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 2 ? -0.66 : 0.99)
+                    Text(third_text).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(selected == 2 ? .white : Color(red: 127/255, green: 127/255, blue: 127/255)).shadow(color: selected == 2 ? Color.black.opacity(0.4) : Color.white.opacity(0.9), radius: 0, x: 0, y: selected == 2 ? -0.66 : 0.99)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight_Double(selected == 2 ? selected_gradient: unselected_gradient), radius:3, offset: CGPoint(0, 3), intensity: selected == 2 ? 0.4 : 0).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
             }
         }.animation(should_animate == true ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
@@ -949,13 +950,13 @@ struct tri_segmented_control: View {
         GeometryReader{ geometry in
             HStack(spacing: 0) {
                 Button(action:{selected = 0}) {
-                    Text(first_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                    Text(first_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners(selected == 0 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 1}) {
-                    Text(second_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                    Text(second_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangle(selected == 1 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 2}) {
-                    Text(third_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                    Text(third_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight(selected == 2 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
             }.overlay(
                 ZStack {
@@ -1171,13 +1172,13 @@ struct tri_segmented_control_gray: View {
         GeometryReader{ geometry in
             HStack(spacing: 0) {
                 Button(action:{selected = 0}) {
-                    Text(first_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(selected == 0 ? Color.white : Color(red: 74/255, green: 102/255, blue: 139/255)).shadow(color: selected == 0 ? Color(red:44/255, green: 45/255, blue:46/255).opacity(0.47) : Color.white.opacity(0.47), radius: 0, x: 0, y: selected == 0 ? -0.66 : 0.66)
+                    Text(first_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(selected == 0 ? Color.white : Color(red: 74/255, green: 102/255, blue: 139/255)).shadow(color: selected == 0 ? Color(red:44/255, green: 45/255, blue:46/255).opacity(0.47) : Color.white.opacity(0.47), radius: 0, x: 0, y: selected == 0 ? -0.66 : 0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners(selected == 0 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 1}) {
-                    Text(second_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(selected == 1 ? Color.white : Color(red: 74/255, green: 102/255, blue: 139/255)).shadow(color: selected == 1 ? Color(red:44/255, green: 45/255, blue:46/255).opacity(0.47) : Color.white.opacity(0.47), radius: 0, x: 0, y: selected == 1 ? -0.66 : 0.66)
+                    Text(second_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(selected == 1 ? Color.white : Color(red: 74/255, green: 102/255, blue: 139/255)).shadow(color: selected == 1 ? Color(red:44/255, green: 45/255, blue:46/255).opacity(0.47) : Color.white.opacity(0.47), radius: 0, x: 0, y: selected == 1 ? -0.66 : 0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangle(selected == 1 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 2}) {
-                    Text(third_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(selected == 2 ? Color.white : Color(red: 74/255, green: 102/255, blue: 139/255)).shadow(color: selected == 2 ? Color(red:44/255, green: 45/255, blue:46/255).opacity(0.47) : Color.white.opacity(0.47), radius: 0, x: 0, y: selected == 2 ? -0.66 : 0.66)
+                    Text(third_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(selected == 2 ? Color.white : Color(red: 74/255, green: 102/255, blue: 139/255)).shadow(color: selected == 2 ? Color(red:44/255, green: 45/255, blue:46/255).opacity(0.47) : Color.white.opacity(0.47), radius: 0, x: 0, y: selected == 2 ? -0.66 : 0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight(selected == 2 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
             }.overlay(
                 ZStack {
@@ -1650,14 +1651,14 @@ struct skeumorphic_alert: View {
                             Spacer()
                         }
                         VStack(alignment:.center) {
-                            Text(title ?? "").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).padding(.top, 15)
+                            Text(title ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).padding(.top, 15)
                             Spacer()
-                            Text(subtitle ?? "").font(.custom("Helvetica Neue Regular", size: 14.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).multilineTextAlignment(.center).padding([.leading, .trailing], 10).padding(.bottom, 5)
+                            Text(subtitle ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 14.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).multilineTextAlignment(.center).padding([.leading, .trailing], 10).padding(.bottom, 5)
                             Spacer()
                             Button(action:{dismiss_action?()}) {
                             ZStack {
                             RoundedRectangle(cornerRadius: 6).fill(LinearGradient([(color:Color(red: 214/255, green: 214/255, blue: 214/255), location: 0), (color:Color(red: 113/255, green: 115/255, blue: 119/255), location: 0.49), (color:Color(red: 74/255, green: 75/255, blue: 78/255), location: 0.50), (color:Color(red: 102/255, green: 103/255, blue: 106/255), location: 1)], from: .top, to: .bottom)).shadow(color: Color.white.opacity(0.2), radius: 0, x: 0, y: 0.5).opacity(0.80).blendMode(.screen).strokeRoundedRectangle(6, Color(red: 19/255, green: 30/255, blue: 58/255), lineWidth: 1).frame(height:40).padding(.bottom, 8).padding([.leading, .trailing], 8)
-                                Text("OK").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).padding(.bottom, 8)
+                                Text("OK").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).padding(.bottom, 8)
                             }
                             }
                              
@@ -1745,7 +1746,7 @@ struct tool_bar_rectangle_button: View {
                 if use_image == true {
                     Image(content).resizable().scaledToFit().frame(width: 13).padding([.leading, .trailing], 11)
                 } else {
-                Text(content).font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
+                Text(content).font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
                 }
             }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(5.5, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
         }.frame(height: 32 + (height_modifier ?? 0))
@@ -1786,7 +1787,7 @@ struct tool_bar_rectangle_button_larger_image: View {
                 if use_image == true {
                     Image(content).resizable().scaledToFit().frame(width: 19).padding([.leading, .trailing], 7)
                 } else {
-                Text(content).font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
+                Text(content).font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
                 }
             }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(5.5, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
         }.frame(height: 32 + (height_modifier ?? 0))
@@ -1807,7 +1808,7 @@ struct tool_bar_rectangle_button_larger_image_wide: View {
                 if use_image == true {
                     Image(content).resizable().scaledToFit().frame(width: 22).padding([.leading, .trailing], 12).offset(x: 2, y: -1)
                 } else {
-                Text(content).font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
+                Text(content).font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
                 }
             }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(5.5, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
         }.frame(height: 32 + (height_modifier ?? 0))
@@ -1831,7 +1832,7 @@ struct tool_bar_rectangle_button_custom_radius: View {
                 if use_image == true {
                     Image(content).resizable().scaledToFit().frame(width: 13).padding([.leading, .trailing], 11)
                 } else {
-                    Text(content).font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 0, x: 0, y: -1).lineLimit(0).padding([.leading, .trailing], 11)
+                    Text(content).font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 0, x: 0, y: -1).lineLimit(0).padding([.leading, .trailing], 11)
                 }
             }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(radius, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.8).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
         }.frame(height: 32 + (height_modifier ?? 0))

@@ -161,13 +161,13 @@ struct Safari: View {
                     Spacer().frame(height:geometry.size.height*(1/9))
                     HStack {
                         Spacer()
-                        Text(views.array[page.index].webView.title != "" ? (views.array[page.index].webView.title ?? "Untitled") :  "Untitled").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instant_multitasking_change == true ? .default : .none)
+                        Text(views.array[page.index].webView.title != "" ? (views.array[page.index].webView.title ?? "Untitled") :  "Untitled").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instant_multitasking_change == true ? .default : .none)
                         Spacer()
                     }
                     Spacer().frame(height:10)
                     HStack {
                         Spacer()
-                        Text(views.array[page.index].webView.url?.relativeString ?? "Untitled").foregroundColor(Color(red: 182/255, green: 188/255, blue: 192/255)).font(.custom("Helvetica Neue Bold", size: 16)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instant_multitasking_change == true ? .default : .none).opacity(views.array[page.index].webView.url?.relativeString != nil ? 1 : 0)
+                        Text(views.array[page.index].webView.url?.relativeString ?? "Untitled").foregroundColor(Color(red: 182/255, green: 188/255, blue: 192/255)).font(.custom("Helvetica Neue Bold", fixedSize: 16)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instant_multitasking_change == true ? .default : .none).opacity(views.array[page.index].webView.url?.relativeString != nil ? 1 : 0)
                         Spacer()
                     }.if(!instant_multitasking_change){$0.animationsDisabled()}
                     Spacer()
@@ -368,7 +368,7 @@ struct bookmarks_view: View {
                     HStack(alignment: .center) {
                         Spacer().frame(width:1, height: 44-0.95)
                         Image("HistoryFolder").frame(width:25, height: 44-0.95)
-                        Text("History").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                        Text("History").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
                         Spacer()
                         Image("UITableNext").padding(.trailing, 12)
                     }.padding(.leading, 15)
@@ -405,7 +405,7 @@ struct bookmarks_view: View {
                                 }.transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge:.leading)).combined(with: .opacity)).offset(x:-2)
                             }
                             Image("Bookmark").frame(width:25, height: 44-0.95)
-                            Text(value).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 12)
+                            Text(value).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 12)
                             if to_delete == key {
                                 Spacer()
                                 tool_bar_rectangle_button(action: {withAnimation() {
@@ -456,7 +456,7 @@ struct share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Add Bookmark").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Add Bookmark").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 2.5).padding(.top, 28)
                     Button(action:{
@@ -464,7 +464,7 @@ struct share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Add to Home Screen").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Add to Home Screen").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Button(action:{
@@ -472,7 +472,7 @@ struct share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Mail Link to this Page").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Mail Link to this Page").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Button(action:{
@@ -480,7 +480,7 @@ struct share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Print").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Print").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Spacer()
@@ -490,7 +490,7 @@ struct share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient([(color: Color(red: 107/255, green: 113/255, blue:119/255), location: 0), (color: Color(red: 53/255, green: 62/255, blue:69/255), location: 0.50), (color: Color(red: 41/255, green: 48/255, blue:57/255), location: 0.50), (color: Color(red: 56/255, green: 62/255, blue:71/255), location: 1)], from: .top, to: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
-                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
+                            Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 25)
                 }
@@ -526,7 +526,7 @@ struct add_bookmark_view: View {
                                 HStack {
                                     TextField("Title", text: $bookmark_name){
                                         save_action?()
-                                    }.font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
+                                    }.font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
                                     if bookmark_name.count != 0 {
                                         Button(action:{bookmark_name = ""}) {
                                             Image("UITextFieldClearButton")
@@ -537,7 +537,7 @@ struct add_bookmark_view: View {
                                 ZStack {
                                     Rectangle().fill(Color.clear).frame(height:50)
                                     HStack {
-                                        Text(url.relativeString).font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 143/255, green: 143/255, blue: 143/255)).padding(.leading, 12)
+                                        Text(url.relativeString).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 143/255, green: 143/255, blue: 143/255)).padding(.leading, 12)
                                         Spacer()
                                     }
                                 }.frame(height: 50)
@@ -566,7 +566,7 @@ struct enter_bookmark_title_content: View {
     @Binding var bookmark_name: String
     var body: some View {
         HStack {
-            TextField("Title", text: $bookmark_name).font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
+            TextField("Title", text: $bookmark_name).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
         
     }
 }
@@ -575,7 +575,7 @@ struct enter_bookmark_title_content: View {
 struct bookmark_content: View {
     var body: some View {
         HStack {
-            Text("Bookmarks").font(.custom("Helvetica Neue Regular", size: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
+            Text("Bookmarks").font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
             Spacer()
             //Image(systemName: "chevron.right").foregroundColor(Color(red: 127/255, green: 127/255, blue: 127/255)).padding(.trailing, 12)
             Image("UITableNext").padding(.trailing, 12)
@@ -840,7 +840,7 @@ struct safari_title_bar : View {
                     Spacer()
                     HStack {
                         Spacer()
-                        Text(current_webpage_title != "" ? current_webpage_title : "Untitled").foregroundColor(Color(red: 62/255, green: 69/255, blue: 79/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.51), radius: 0, x: 0.0, y: 2/3).padding([.leading, .trailing], 24)
+                        Text(current_webpage_title != "" ? current_webpage_title : "Untitled").foregroundColor(Color(red: 62/255, green: 69/255, blue: 79/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.51), radius: 0, x: 0.0, y: 2/3).padding([.leading, .trailing], 24)
                         Spacer()
                     }
                     HStack {
@@ -872,7 +872,7 @@ struct safari_title_bar : View {
                         Spacer()
                         Button(action:{hideKeyboard()}) {
                             ZStack {
-                                Text("Cancel").font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25)
+                                Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25)
                             }.frame(width: 59, height: 32).ps_innerShadow(.roundedRectangle(5.5, cancel_gradient), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                             .padding(.trailing, 12)
                         }.frame(width: 59, height: 32).padding(.top, 34)

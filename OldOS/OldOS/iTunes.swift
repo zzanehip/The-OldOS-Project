@@ -177,7 +177,7 @@ struct itunes_music_view: View {
                         VStack {
                             Spacer().frame(height: 10)
                             HStack {
-                                Text("New Music").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
+                                Text("New Music").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
                                 Spacer()
                             }
                             if new_music_observer.new_music.isEmpty {
@@ -195,9 +195,9 @@ struct itunes_music_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.frame(width:89, height: 89).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(music.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
-                                                        Text(music.collectionName ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
-                                                        Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(music.artistName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(music.collectionName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1)
+                                                        Text("0 Ratings").font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
                                                     Spacer()
                                                     Image("UITableNext").padding(.trailing, 12)
@@ -215,9 +215,9 @@ struct itunes_music_view: View {
                                                                                     .stroke(Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1.25)).padding([.leading, .trailing], 12)
                             }
                             Spacer().frame(height: 20)
-                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
+                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
                             Spacer().frame(height: 30)
-                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
+                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         }.padding([.top, .bottom], 12)
                     } else  {
                         Spacer()
@@ -234,7 +234,7 @@ struct itunes_music_view: View {
                                                     Rectangle().foregroundColor(.gray)
                                                 }.frame(width:59, height: 59).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                 VStack(alignment: .leading, spacing: 2) {
-                                                    Text(category.name).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
+                                                    Text(category.name).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1)
                                                 }
                                                 Spacer()
                                                 Image("UITableNext").padding(.trailing, 12)
@@ -251,9 +251,9 @@ struct itunes_music_view: View {
                             }.background(Color.white).cornerRadius(10).overlay(RoundedRectangle(cornerRadius: 10)
                                                                                 .stroke(Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1.25)).padding([.leading, .trailing], 12)
                             Spacer().frame(height: 20)
-                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
+                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
                             Spacer().frame(height: 30)
-                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
+                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         }.padding([.top, .bottom], 12).onAppear() {
                             for category in top_tens_obs.categories {
                                 fetch_first_image_for_top_songs_category(id: category.genre_id, completion: { result in
@@ -290,7 +290,7 @@ struct itunes_category_destination_view: View {
                         dual_segmented_control_big_bluegray(selected: $selected_segment, first_text: "Top Songs", second_text: "Top Albums").frame(width: geometry.size.width-24, height: 45)
                         Spacer().frame(height: 20)
                         if selected_segment == 0 {
-                            Text("Tap to Preview, Double-Tap to View Album").multilineTextAlignment(.center).lineLimit(0).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
+                            Text("Tap to Preview, Double-Tap to View Album").multilineTextAlignment(.center).lineLimit(0).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
                             if top_songs.isEmpty {
                                 Spacer()
                             } else {
@@ -304,8 +304,8 @@ struct itunes_category_destination_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.frame(width:59, height: 59).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 2) {
-                                                        Text("\(Int(top_songs.firstIndex(of: track) ?? 0) + 1). \(track.trackName ?? "")").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
-                                                        Text(track.artistName ?? "").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text("\(Int(top_songs.firstIndex(of: track) ?? 0) + 1). \(track.trackName ?? "")").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1)
+                                                        Text(track.artistName ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
                                                     Spacer()
                                                     tool_bar_rectangle_button_custom_radius(action: {
@@ -324,9 +324,9 @@ struct itunes_category_destination_view: View {
                                                                                     .stroke(Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1.25)).padding([.leading, .trailing], 12)
                             }
                             Spacer().frame(height: 20)
-                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
+                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
                             Spacer().frame(height: 30)
-                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
+                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         } else {
                             VStack(spacing:0){
                                 ForEach(top_albums, id:\.collectionID) { music in
@@ -338,9 +338,9 @@ struct itunes_category_destination_view: View {
                                                     Rectangle().foregroundColor(.gray)
                                                 }.frame(width:89, height: 89).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                 VStack(alignment: .leading, spacing: 4) {
-                                                    Text(music.artistName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
-                                                    Text("\(Int((top_albums.firstIndex(of: music) ?? 0) + 1)). \(music.collectionName ?? "---")").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
-                                                    Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                    Text(music.artistName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                    Text("\(Int((top_albums.firstIndex(of: music) ?? 0) + 1)). \(music.collectionName ?? "---")").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1)
+                                                    Text("0 Ratings").font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                 }
                                                 Spacer()
                                                 Image("UITableNext").padding(.trailing, 12)
@@ -358,9 +358,9 @@ struct itunes_category_destination_view: View {
                                                                                 .stroke(Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1.25)).padding([.leading, .trailing], 12)
                             
                             Spacer().frame(height: 20)
-                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
+                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
                             Spacer().frame(height: 30)
-                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
+                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         }
                     }.padding([.top, .bottom], 12).onAppear() {
                         //Top Songs
@@ -442,11 +442,11 @@ struct music_destination: View {
                         
                         VStack(alignment:.leading, spacing: 4) {
                             Spacer().frame(height: 2)
-                            Text(music_selected_music?.artistName ?? "").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
-                            Text(music_selected_music?.collectionName ?? "").font(.custom("Helvetica Neue Bold", size: 22)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
-                            Text("Genre: \(music_selected_music?.primaryGenreName ?? "")").font(.custom("Helvetica Neue Bold", size: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
-                            Text("Released \(format_iso_date(music_selected_music?.releaseDate ?? ""))").font(.custom("Helvetica Neue Bold", size: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
-                            Text("\(tracks.count) Songs").font(.custom("Helvetica Neue Bold", size: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
+                            Text(music_selected_music?.artistName ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
+                            Text(music_selected_music?.collectionName ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 22)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
+                            Text("Genre: \(music_selected_music?.primaryGenreName ?? "")").font(.custom("Helvetica Neue Bold", fixedSize: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
+                            Text("Released \(format_iso_date(music_selected_music?.releaseDate ?? ""))").font(.custom("Helvetica Neue Bold", fixedSize: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
+                            Text("\(tracks.count) Songs").font(.custom("Helvetica Neue Bold", fixedSize: 10)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1).multilineTextAlignment(.leading)
                             tool_bar_rectangle_button_custom_radius(action: {
                             }, button_type: .itunes_store, content: "$\(music_selected_music?.collectionPrice ?? 0)", height_modifier: -5, radius: 3.5).textCase(.uppercase)
                             Spacer()
@@ -485,10 +485,10 @@ struct music_destination: View {
                                 HStack {
                                     HStack {
                                         Spacer()
-                                        Text("\(String(Int(tracks.firstIndex(of: track) ?? 0) + 1))").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
+                                        Text("\(String(Int(tracks.firstIndex(of: track) ?? 0) + 1))").font(.custom("Helvetica Neue Bold", fixedSize: 12)).foregroundColor(.black).lineLimit(1).multilineTextAlignment(.leading)
                                         Spacer()
                                     }.frame(width:40)
-                                    Text(track.trackName ?? "---").font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(.black).lineLimit(1).padding(.leading, 14)
+                                    Text(track.trackName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 12)).foregroundColor(.black).lineLimit(1).padding(.leading, 14)
                                     Spacer()
                                     if track.trackExplicitness == "explicit" {
                                         Image("Explicit").resizable().renderingMode(.template).scaledToFit().foregroundColor(Color(red: 204/255, green: 0/255, blue: 0/255)).frame(width: 35).padding(.trailing, 5)
@@ -509,7 +509,7 @@ struct music_destination: View {
                             ).background((tracks.firstIndex(of: track) ?? 0) % 2  == 0 ? Color(red: 203/255, green: 203/255, blue: 208/255) : Color(red: 221/255, green: 222/255, blue: 224/255))
                         }.frame(height: 44)
                     }
-                    Text(music_selected_music?.copyright ?? "").font(.custom("Helvetica Neue Regular", size: 12)).foregroundColor(Color(red: 120/255, green: 121/255, blue: 121/255)).multilineTextAlignment(.leading).padding([.top, .bottom], 12)
+                    Text(music_selected_music?.copyright ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 12)).foregroundColor(Color(red: 120/255, green: 121/255, blue: 121/255)).multilineTextAlignment(.leading).padding([.top, .bottom], 12)
                 }
                 
             }.background(Color(red: 203/255, green: 204/255, blue: 207/255))
@@ -547,7 +547,7 @@ struct itunes_videos_view: View {
                         VStack {
                             Spacer().frame(height: 10)
                             HStack {
-                                Text("New Movies Chart").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
+                                Text("New Movies Chart").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
                                 Spacer()
                             }
                             if new_movietv_observer.new_movies.isEmpty {
@@ -565,9 +565,9 @@ struct itunes_videos_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.frame(width:89*67/100, height: 89).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
-                                                        Text(video.trackName ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
-                                                        Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.trackName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1)
+                                                        Text("0 Ratings").font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
                                                     Spacer()
                                                     Image("UITableNext").padding(.trailing, 12)
@@ -585,16 +585,16 @@ struct itunes_videos_view: View {
                                                                                     .stroke(Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1.25)).padding([.leading, .trailing], 12)
                             }
                             Spacer().frame(height: 20)
-                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
+                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
                             Spacer().frame(height: 30)
-                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
+                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         }.padding([.top, .bottom], 12)
                     }
                     if selected_segment_videos == 1 {
                         VStack {
                             Spacer().frame(height: 10)
                             HStack {
-                                Text("Top TV Shows").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
+                                Text("Top TV Shows").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
                                 Spacer()
                             }
                             if new_movietv_observer.new_tv.isEmpty {
@@ -612,9 +612,9 @@ struct itunes_videos_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.frame(width:89, height: 89).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
-                                                        Text(video.collectionName ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
-                                                        Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.collectionName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1)
+                                                        Text("0 Ratings").font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
                                                     Spacer()
                                                     Image("UITableNext").padding(.trailing, 12)
@@ -632,16 +632,16 @@ struct itunes_videos_view: View {
                                                                                     .stroke(Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1.25)).padding([.leading, .trailing], 12)
                             }
                             Spacer().frame(height: 20)
-                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
+                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
                             Spacer().frame(height: 30)
-                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
+                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         }.padding([.top, .bottom], 12)
                     }
                     if selected_segment_videos == 2 {
                         VStack {
                             Spacer().frame(height: 10)
                             HStack {
-                                Text("Top Music Videos").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
+                                Text("Top Music Videos").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
                                 Spacer()
                             }
                             if new_movietv_observer.new_music.isEmpty {
@@ -659,9 +659,9 @@ struct itunes_videos_view: View {
                                                         Rectangle().foregroundColor(.gray)
                                                     }.aspectRatio(contentMode: .fit).frame(width:89, height: 89).background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
-                                                        Text(video.trackName ?? "---").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).lineLimit(1)
-                                                        Text("0 Ratings").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.primaryGenreName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(video.trackName ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).lineLimit(1)
+                                                        Text("0 Ratings").font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                     }
                                                     Spacer()
                                                     Image("UITableNext").padding(.trailing, 12)
@@ -679,9 +679,9 @@ struct itunes_videos_view: View {
                                                                                     .stroke(Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1.25)).padding([.leading, .trailing], 12)
                             }
                             Spacer().frame(height: 20)
-                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
+                            Text("Apple ID: OldOS@mac.com").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.black).lineLimit(1).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9).frame(width: geometry.size.width - 24, height: 50).ps_innerShadow(.roundedRectangle(9, LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)), radius:5/3, offset: CGPoint(0, 1/3), intensity: 0).cornerRadius(9).strokeRoundedRectangle(9, Color(red: 133/255, green: 133/255, blue: 135/255), lineWidth: 0.5)
                             Spacer().frame(height: 30)
-                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
+                            Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         }.padding([.top, .bottom], 12)
                     }
                 }
@@ -702,7 +702,7 @@ struct search_destination: View {
                     Spacer()
                     ProgressView().progressViewStyle(CircularProgressViewStyle())
                     Spacer().frame(width: 8)
-                    Text("Loading...").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(Color(red: 48/255, green: 52/255, blue: 59/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                    Text("Loading...").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(Color(red: 48/255, green: 52/255, blue: 59/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                     Spacer()
                     
                 }
@@ -724,7 +724,7 @@ struct movies_destination: View {
                     Spacer()
                     ProgressView().progressViewStyle(CircularProgressViewStyle())
                     Spacer().frame(width: 8)
-                    Text("Loading...").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(Color(red: 48/255, green: 52/255, blue: 59/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                    Text("Loading...").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(Color(red: 48/255, green: 52/255, blue: 59/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                     Spacer()
                     
                 }
@@ -843,12 +843,12 @@ struct itunes_search: View {
                         ForEach(search_results, id:\.id) { result in
                             VStack(spacing: 10) {
                                 HStack {
-                                    Text(result.section_item.title ?? "").foregroundColor(Color(red: 78/255, green: 86/255, blue: 106/255)).font(.custom("Helvetica Neue Bold", size: 18)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding(.leading, 12)
+                                    Text(result.section_item.title ?? "").foregroundColor(Color(red: 78/255, green: 86/255, blue: 106/255)).font(.custom("Helvetica Neue Bold", fixedSize: 18)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding(.leading, 12)
                                     Spacer()
                                 }
                                 VStack(alignment: .leading) {
                                     if (result.section_item.title ?? "") == "Songs" || (result.section_item.title ?? "") == "Ringtones" {
-                                        Text("Tap to Preview, Double-Tap to View Album").multilineTextAlignment(.center).lineLimit(0).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", size: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
+                                        Text("Tap to Preview, Double-Tap to View Album").multilineTextAlignment(.center).lineLimit(0).foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Regular", fixedSize: 15)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 12)
                                     }
                                     VStack(spacing:0){
                                         ForEach(result.contents, id:\.id) { content in
@@ -869,10 +869,10 @@ struct itunes_search: View {
                                                                 Image("PlaceholderBig").resizable().frame(width: 60, height: 60)
                                                             }.scaledToFit().frame(width:60, height: 60).background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                             VStack(alignment: .leading, spacing: 4) {
-                                                                Text(content.containerName ?? content.artistName ?? "---").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
-                                                                Text(content.title ?? "---").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.black).lineLimit(1)
+                                                                Text(content.containerName ?? content.artistName ?? "---").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                                Text(content.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.black).lineLimit(1)
                                                                 if content.linkType == "tv-episode" {
-                                                                    Text(content.title2 ?? "---").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                                    Text(content.title2 ?? "---").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                                 }
                                                             }
                                                             Spacer()
@@ -888,9 +888,9 @@ struct itunes_search: View {
                                                                 Image("PlaceholderBig").resizable().frame(width: 60, height: 60)
                                                             }.frame(width:60, height: 60).scaledToFit().background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                             VStack(alignment: .leading, spacing: 4) {
-                                                                Text(content.containerName ?? content.artistName ?? "---").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
-                                                                Text(content.title ?? "---").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(.black).lineLimit(1)
-                                                                Text(content.collectionName ?? "---").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                                Text(content.containerName ?? content.artistName ?? "---").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                                Text(content.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(.black).lineLimit(1)
+                                                                Text(content.collectionName ?? "---").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                                                             }
                                                             Spacer()
                                                             if content.type == "ringtone" {
@@ -904,7 +904,7 @@ struct itunes_search: View {
                                                         HStack {
                                                             Rectangle().fill(Color.white).frame(width:60, height: 60)
                                                             VStack(alignment: .leading, spacing: 4) {
-                                                                Text(content.title ?? "---").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(Color(red: 33/255, green: 80/255, blue: 224/255)).lineLimit(1)
+                                                                Text(content.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(Color(red: 33/255, green: 80/255, blue: 224/255)).lineLimit(1)
                                                             }
                                                             Spacer()
                                                             Image("UITableNext").padding(.trailing, 12)
@@ -927,7 +927,7 @@ struct itunes_search: View {
                             Spacer().frame(height: geometry.size.height)
                         }
                         Spacer().frame(height: 30)
-                        Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", size: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
+                        Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 48/255, green: 57/255, blue: 70/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                     }.padding([.top, .bottom], 12)
                 }
             }
@@ -948,9 +948,9 @@ struct itunes_genius_view: View {
             VStack {
                 Image("geniusatom").resizable().scaledToFit().frame(width: 70).padding(.top, 100)
                 Spacer().frame(height: 15)
-                Text("You do not currently have any Genius\nrecommendations for \(genius_selected_segment == 0 ? "Music" : genius_selected_segment == 1 ? "Movies" : "TV Shows").").multilineTextAlignment(.center).font(.custom("Helvetica Neue Bold", size: 17)).foregroundColor(.black).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                Text("You do not currently have any Genius\nrecommendations for \(genius_selected_segment == 0 ? "Music" : genius_selected_segment == 1 ? "Movies" : "TV Shows").").multilineTextAlignment(.center).font(.custom("Helvetica Neue Bold", fixedSize: 17)).foregroundColor(.black).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                 Spacer().frame(height: 25)
-                Text("To start seeing recommendations,\nteach Genius about your tastes by\ndownloading content from iTunes.").multilineTextAlignment(.center).font(.custom("Helvetica Neue Regular", size: 17)).foregroundColor(Color(red: 100/255, green: 101/255, blue: 102/255)).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
+                Text("To start seeing recommendations,\nteach Genius about your tastes by\ndownloading content from iTunes.").multilineTextAlignment(.center).font(.custom("Helvetica Neue Regular", fixedSize: 17)).foregroundColor(Color(red: 100/255, green: 101/255, blue: 102/255)).shadow(color: Color.white.opacity(0.4), radius: 0, x: 0.0, y: 0.9)
                 Spacer()
             }.frame(width: geometry.size.width, height: geometry.size.height).background(LinearGradient(gradient: Gradient(stops: [.init(color: Color.white, location: 0), .init(color: Color(red: 200/255, green: 202/255, blue: 204/255), location: 1)]), startPoint: .top, endPoint: .bottom))
         }
@@ -974,7 +974,7 @@ struct itunes_more: View {
                     HStack(alignment: .center) {
                         Spacer().frame(width:1, height: 44-0.95)
                         Image(item.image).frame(width:25, height: 44-0.95)
-                        Text(item.name).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                        Text(item.name).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
                         Spacer()
                         Image("UITableNext").padding(.trailing, 12)
                     }.padding(.leading, 15)
@@ -1553,7 +1553,7 @@ struct itunes_title_bar : View {
                     HStack {
                         Spacer()
                         if (selectedTab != "Music" || music_show_music == true || music_show_category == true) && (selectedTab != "Search" || search_show_result == true) && (selectedTab != "Videos" || videos_show_movie == true || videos_show_tv == true) && (selectedTab != "Genius") {
-                            Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: ((selectedTab == "Music" && music_show_music == true) || (selectedTab == "Videos" && videos_show_movie == true) || (selectedTab == "Search" && search_show_result == true)) ? 175 : .infinity)
+                            Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: ((selectedTab == "Music" && music_show_music == true) || (selectedTab == "Videos" && videos_show_movie == true) || (selectedTab == "Search" && search_show_result == true)) ? 175 : .infinity)
                         } else if selectedTab == "Music" {
                             dual_segmented_control(selected: $selected_segment, instant_multitasking_change: $instant_multitasking_change, first_text: "New Releases", second_text: "Top Tens", should_animate: false).frame(width: 220, height: 30)
                         } else if selectedTab == "Videos" {
@@ -1675,7 +1675,7 @@ struct itunes_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Music").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Music").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1695,7 +1695,7 @@ struct itunes_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Top Tens").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Top Tens").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1718,7 +1718,7 @@ struct itunes_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Videos").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Videos").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1739,7 +1739,7 @@ struct itunes_title_bar : View {
                                 ZStack {
                                     Image("Button_wp4").resizable().aspectRatio(contentMode: .fit).frame(width:84, height: 34.33783783783784)
                                     HStack(alignment: .center) {
-                                        Text("Categories").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1)
+                                        Text("Categories").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1760,7 +1760,7 @@ struct itunes_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Search").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Search").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1808,7 +1808,7 @@ struct TabButton_iTunes: View {
                         }
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }
@@ -1819,7 +1819,7 @@ struct TabButton_iTunes: View {
                         ).mask(Image("\(image)_iTunes").renderingMode(.template).resizable().aspectRatio(contentMode: .fit).frame(width: image == "Music" ? 20 : (image == "Search" || image == "Genius") ? 25 : image == "Artists" ? 37.5 : 30, height: 30)).shadow(color: Color.black.opacity(0.75), radius: 0, x: 0, y: -1)
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }

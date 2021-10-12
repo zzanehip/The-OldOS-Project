@@ -4,3 +4,8 @@
 
 #import "DALinedTextView.h"
 #import "XBPageCurlView.h"
+
+#import "iCarousel.h"
+#import "FXImageView.h"
+#import "ReflectionView.h"
+#import "UIView+FlipTransition.h"

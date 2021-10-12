@@ -153,7 +153,7 @@ struct voicemail_view: View {
                 Spacer().frame(height:35)
                 HStack {
                     Spacer()
-                    Text("Cannot Connect\nto Voicemail") .font(.custom("Helvetica Neue Bold", size: 20))
+                    Text("Cannot Connect\nto Voicemail") .font(.custom("Helvetica Neue Bold", fixedSize: 20))
                         .foregroundColor(Color(red: 98/255, green: 106/255, blue: 121/255)).multilineTextAlignment(.center)
                     Spacer()
                 }
@@ -161,7 +161,7 @@ struct voicemail_view: View {
                 HStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 9).fill(LinearGradient([Color(red: 252/255, green: 253/255, blue: 253/255), Color(red: 232/255, green: 235/255, blue: 241/255)], from: .top, to: .bottom)).addBorder(Color(red: 138/255, green: 147/255, blue: 167/255), width: 0.8, cornerRadius: 11).padding([.leading, .trailing], 25).frame(height: 50)
-                        Text("Call \(CTTelephonyNetworkInfo().serviceSubscriberCellularProviders?.first?.value.carrierName ?? "")").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color(red: 102/255, green: 106/255, blue: 113/255))
+                        Text("Call \(CTTelephonyNetworkInfo().serviceSubscriberCellularProviders?.first?.value.carrierName ?? "")").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color(red: 102/255, green: 106/255, blue: 113/255))
                     }
                 }.padding(.bottom, 25)
             }
@@ -187,7 +187,7 @@ struct clear_recents_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
                             RoundedRectangle(cornerRadius: 9).fill(returnLinearGradient(.red)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Clear All Recents").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -0.6)
+                            Text("Clear All Recents").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -0.6)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 2.5).padding(.top, 28)
                     Spacer()
@@ -197,7 +197,7 @@ struct clear_recents_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient([(color: Color(red: 107/255, green: 113/255, blue:119/255), location: 0), (color: Color(red: 53/255, green: 62/255, blue:69/255), location: 0.50), (color: Color(red: 41/255, green: 48/255, blue:57/255), location: 0.50), (color: Color(red: 56/255, green: 62/255, blue:71/255), location: 1)], from: .top, to: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
-                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
+                            Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 25)
                 }
@@ -225,15 +225,15 @@ struct recents_view: View {
                     HStack(alignment: .center) {
                         Spacer().frame(width:1, height: 44-0.95)
                         VStack(alignment: .leading, spacing: 1.5) {
-                            Text(recent.number).font(.custom("Helvetica Neue Bold", size: 15.5)).foregroundColor(.black).lineLimit(1)
+                            Text(recent.number).font(.custom("Helvetica Neue Bold", fixedSize: 15.5)).foregroundColor(.black).lineLimit(1)
                             HStack {
-                            Text(recent.type).font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                            Text(recent.type).font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
                             Image("outgoingcall")
                                 Spacer()
                             }
                         }.padding(.trailing, 12)
                         Spacer()
-                        Text(format_date(recent.date)).font(.custom("Helvetica Neue Regular", size: 14.5)).foregroundColor(Color(red: 58/255, green: 111/255, blue: 209/255))
+                        Text(format_date(recent.date)).font(.custom("Helvetica Neue Regular", fixedSize: 14.5)).foregroundColor(Color(red: 58/255, green: 111/255, blue: 209/255))
                         Image("ABTableNextButton").padding(.trailing, 11).transition(.opacity)
                     }.padding(.leading, 11)
                     Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
@@ -326,10 +326,10 @@ struct favorites_view: View {
                                 }
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge:.leading)).combined(with: .opacity)).offset(x:-2)
                         }
-                        Text(favorite.name).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.trailing, 12)
+                        Text(favorite.name).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.trailing, 12)
                         if (to_delete ?? nil) != favorite {
                         Spacer()
-                            Text(favorite.type).font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).transition(.opacity)
+                            Text(favorite.type).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).transition(.opacity)
                         Image("ABTableNextButton").padding(.trailing, 11).transition(.opacity)
                         }
                         if  (to_delete ?? nil) == favorite {
@@ -406,13 +406,13 @@ struct double_text_title_bar: View {
                 VStack {
                     HStack {
                         Spacer()
-                        Text(top_text ?? "").foregroundColor(Color(red: 47/255, green: 62/255, blue: 88/255)).font(.custom("Helvetica Neue Regular", size: 14)).shadow(color: Color.white.opacity(0.65), radius: 0, x: 0.0, y: 2/3).padding([.leading, .trailing], 24)
+                        Text(top_text ?? "").foregroundColor(Color(red: 47/255, green: 62/255, blue: 88/255)).font(.custom("Helvetica Neue Regular", fixedSize: 14)).shadow(color: Color.white.opacity(0.65), radius: 0, x: 0.0, y: 2/3).padding([.leading, .trailing], 24)
                         Spacer()
                     }.padding(.top, 12)
                     Spacer()
                     HStack {
                         Spacer()
-                        Text(title ?? "").ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
+                        Text(title ?? "").ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
                         Spacer()
                     }
                     Spacer()
@@ -557,8 +557,8 @@ struct add_contact_view: View{
                                     ZStack {
                                         Image("ABPictureDropWell").cornerRadius(4)
                                         VStack(spacing: 1) {
-                                        Text("add").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255))
-                                        Text("photo").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255))
+                                        Text("add").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255))
+                                        Text("photo").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255))
                                         }
                                     }.padding([.leading, .trailing], 18)
                                 }
@@ -570,7 +570,7 @@ struct add_contact_view: View{
                                             Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                                             HStack {
                                                 TextField("First", text: $first_name){
-                                                }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if first_name.count != 0 {
                                                     Button(action:{first_name = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -582,7 +582,7 @@ struct add_contact_view: View{
                                             Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                                             HStack {
                                                 TextField("Last", text: $last_name){
-                                                }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if last_name.count != 0 {
                                                     Button(action:{last_name = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -594,7 +594,7 @@ struct add_contact_view: View{
                                             Rectangle().fill(Color.clear).frame(height:50)
                                             HStack {
                                                 TextField("Company", text: $company){
-                                                }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if company.count != 0 {
                                                     Button(action:{company = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -615,10 +615,10 @@ struct add_contact_view: View{
                                     ZStack {
                                         Rectangle().fill(Color.clear).frame(height:50)
                                         HStack(spacing: 5) {
-                                            Text("mobile").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
+                                            Text("mobile").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
                                             TextField("Phone", text: $phone){
-                                            }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
+                                            }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
                                             if phone.count != 0 {
                                                 Button(action:{phone = ""}) {
                                                     Image("UITextFieldClearButton")
@@ -640,10 +640,10 @@ struct add_contact_view: View{
                                     ZStack {
                                         Rectangle().fill(Color.clear).frame(height:50)
                                         HStack(spacing: 5) {
-                                            Text("home").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
+                                            Text("home").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
                                             TextField("Email", text: $email){
-                                            }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
+                                            }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
                                             if email.count != 0 {
                                                 Button(action:{email = ""}) {
                                                     Image("UITextFieldClearButton")
@@ -665,18 +665,18 @@ struct add_contact_view: View{
                                     ZStack {
                                         Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                                         HStack(spacing: 5) {
-                                            Text("ringtone").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
+                                            Text("ringtone").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color.clear).frame(width: 1, height: 50)
-                                          Text("Default").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
+                                          Text("Default").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
                                             Spacer()
                                         }
                                     }.frame(height: 50)
                                     ZStack {
                                         Rectangle().fill(Color.clear).frame(height:50)
                                         HStack(spacing: 5) {
-                                            Text("text tone").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
+                                            Text("text tone").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color.clear).frame(width: 1, height: 50)
-                                          Text("Default").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
+                                          Text("Default").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
                                             Spacer()
                                         }
                                     }.frame(height: 50)
@@ -694,10 +694,10 @@ struct add_contact_view: View{
                                     ZStack {
                                         Rectangle().fill(Color.clear).frame(height:50)
                                         HStack(spacing: 5) {
-                                            Text("home page").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
+                                            Text("home page").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
                                             TextField("URL", text: $url){
-                                            }.font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
+                                            }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
                                             if url.count != 0 {
                                                 Button(action:{url = ""}) {
                                                     Image("UITextFieldClearButton")
@@ -763,7 +763,7 @@ struct contacts_destination: View {
                         } else {
                             Image(uiImage: (UIImage(data: current_contact.imageData ?? Data()) ?? UIImage(named:"ABPicturePerson")) ?? UIImage()).resizable().aspectRatio(contentMode: .fill).background(Color(red: 246/255, green: 246/255, blue: 250/255)).frame(width: 66, height: 64).mask(Image("ABPictureOutline").compositingGroup() .background(Color.white).luminanceToAlpha()).overlay(Image("ABPictureOutline")).padding(.leading, 22)
                         }
-                        Text(current_contact.name).font(.custom("Helvetica Neue Bold", size: 20)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).lineLimit(0).padding(.leading, 5)
+                        Text(current_contact.name).font(.custom("Helvetica Neue Bold", fixedSize: 20)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).lineLimit(0).padding(.leading, 5)
                         Spacer()
                     }.padding(.top, 20)
                     Spacer().frame(height:20)
@@ -798,8 +798,8 @@ struct multiline_text_content: View {
         HStack {
             Spacer()
             VStack(alignment: .center) {
-            Text(first_line).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.center).frame(width:75, alignment: .center).lineLimit(0)
-                Text(second_line).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.center).frame(width:75, alignment: .center).lineLimit(0)
+            Text(first_line).font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.center).frame(width:75, alignment: .center).lineLimit(0)
+                Text(second_line).font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.center).frame(width:75, alignment: .center).lineLimit(0)
         }
             Spacer()
         }
@@ -832,8 +832,8 @@ struct contacts_destination_content: View {
             recents_obs.recents.append(recents_datatype(date: Date(), number: number, type: type))
         }) {
         HStack {
-            Text(type).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0)
-            Text(number).font(.custom("Helvetica Neue Bold", size: 15)).padding(.leading, 5)
+            Text(type).font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0)
+            Text(number).font(.custom("Helvetica Neue Bold", fixedSize: 15)).padding(.leading, 5)
             Spacer()
         }
         }.buttonStyle(PlainButtonStyle())
@@ -847,8 +847,8 @@ struct contacts_destination_content_email: View {
         Button(action:{
         }) {
         HStack {
-            Text(type).font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0)
-            Text(number).font(.custom("Helvetica Neue Bold", size: 15)).padding(.leading, 5)
+            Text(type).font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0)
+            Text(number).font(.custom("Helvetica Neue Bold", fixedSize: 15)).padding(.leading, 5)
             Spacer()
         }
     }.buttonStyle(PlainButtonStyle())
@@ -884,7 +884,7 @@ struct SkeuomorphicList_Contacts: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
                                     HStack() {
-                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
+                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", fixedSize: 18) : .custom("Helvetica Neue SemiBold", fixedSize: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", fixedSize: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 18))}.padding(.leading, 11).padding(.trailing, 40)
                                         Spacer()
                                     }
                                     Spacer()
@@ -899,7 +899,7 @@ struct SkeuomorphicList_Contacts: View {
                 }.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
                 HStack {
                     Spacer()
-                    Text("\(contacts_observer.contacts.count) Contacts").font(.custom("Helvetica Neue Regular", size: 20)).foregroundColor(.cgLightGray).lineLimit(1)
+                    Text("\(contacts_observer.contacts.count) Contacts").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
                     Spacer()
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
@@ -923,7 +923,7 @@ struct SkeuomorphicList_Contacts: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
                                     HStack() {
-                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
+                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", fixedSize: 18) : .custom("Helvetica Neue SemiBold", fixedSize: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", fixedSize: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 18))}.padding(.leading, 11).padding(.trailing, 40)
                                         Spacer()
                                         Image("UITableNext").padding(.trailing, 12)
                                     }
@@ -967,7 +967,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
                                     HStack() {
-                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
+                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", fixedSize: 18) : .custom("Helvetica Neue SemiBold", fixedSize: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", fixedSize: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 18))}.padding(.leading, 11).padding(.trailing, 40)
                                         Spacer()
                                     }
                                     Spacer()
@@ -982,7 +982,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                 }.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
                 HStack {
                     Spacer()
-                    Text("\(contacts_observer.contacts.count) Contacts").font(.custom("Helvetica Neue Regular", size: 20)).foregroundColor(.cgLightGray).lineLimit(1)
+                    Text("\(contacts_observer.contacts.count) Contacts").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
                     Spacer()
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
@@ -1008,7 +1008,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Spacer()
                                     HStack() {
-                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", size: 18) : .custom("Helvetica Neue SemiBold", size: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", size: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", size: 18))}.padding(.leading, 11).padding(.trailing, 40)
+                                        Group{Text(contact.givenName ?? "").font(contact.familyName == "" ? .custom("Helvetica Neue Bold", fixedSize: 18) : .custom("Helvetica Neue SemiBold", fixedSize: 18)) + Text(" ").font(.custom("Helvetica Neue SemiBold", fixedSize: 18)) + Text(contact.familyName ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 18))}.padding(.leading, 11).padding(.trailing, 40)
                                         Spacer()
                                         Image("UITableNext").padding(.trailing, 12)
                                     }
@@ -1172,7 +1172,7 @@ struct phone_keypad_view: View {
         VStack(spacing:0) {
             ZStack {
                 Rectangle().fill(LinearGradient([(color: Color(red: 104/255, green: 123/255, blue: 149/255), location:0), (color: Color(red: 38/255, green: 66/255, blue: 104/255), location:0.53), (color: Color(red: 11/255, green: 42/255, blue: 85/255), location:0.53), (color: Color(red: 11/255, green: 42/255, blue: 85/255), location:0.99), (color: Color(red: 5/255, green: 17/255, blue: 35/255), location:1)], from: .top, to: .bottom)).frame(height:110)
-                Text(formated_phone).font(.custom("Helvetica Neue Regular", size: 40)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1).lineLimit(0).minimumScaleFactor(0.5).padding([.leading, .trailing], 5).truncationMode(.head)
+                Text(formated_phone).font(.custom("Helvetica Neue Regular", fixedSize: 40)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1).lineLimit(0).minimumScaleFactor(0.5).padding([.leading, .trailing], 5).truncationMode(.head)
             }
             GeometryReader{ geometry in
                 VStack(spacing:0) {
@@ -1190,8 +1190,8 @@ struct phone_keypad_view: View {
                                     ZStack {
                                         numberpad_rectangle_blue_gray(geometry: geometry, i: i, highlight: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "\(Int(x*(x != 3 ? x : 2)+i+(x == 3 ? 1  : 0)))")
                                         VStack {
-                                            Text("\(Int(x*(x != 3 ? x : 2)+i+(x == 3 ? 1  : 0)))").font(.custom("Helvetica Neue Bold", size: 34)).foregroundColor(.white).shadow(color: Color.black.opacity(0.3), radius: 2, x: 0.0, y: 4) //This is the most asinine way to approach this, but its a sequence, so there ya go.
-                                            Text(sub_letters[Int(x*(x != 3 ? x : 2)+i+(x == 3 ? 1  : 0))] ?? "").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(Color(red: 137/255, green:140/255, blue:145/255)).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1)
+                                            Text("\(Int(x*(x != 3 ? x : 2)+i+(x == 3 ? 1  : 0)))").font(.custom("Helvetica Neue Bold", fixedSize: 34)).foregroundColor(.white).shadow(color: Color.black.opacity(0.3), radius: 2, x: 0.0, y: 4) //This is the most asinine way to approach this, but its a sequence, so there ya go.
+                                            Text(sub_letters[Int(x*(x != 3 ? x : 2)+i+(x == 3 ? 1  : 0))] ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(Color(red: 137/255, green:140/255, blue:145/255)).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1)
                                         }
                                     }
                                 }.buttonStyle(BluePrimitiveButtonStyle(is_pressed: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "\(Int(x*(x != 3 ? x : 2)+i+(x == 3 ? 1  : 0)))"))
@@ -1212,7 +1212,7 @@ struct phone_keypad_view: View {
                                 numberpad_rectangle_blue_gray(geometry: geometry, i: 0, highlight: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "star")
                                 VStack {
                                     Image("star_phone").resizable().scaledToFit().frame(width:26, height: 26).padding(.top, 7.5).shadow(color: Color.black.opacity(0.3), radius: 2, x: 0.0, y: 4)
-                                    Text("  ").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(Color(red: 137/255, green:140/255, blue:145/255)).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1)
+                                    Text("  ").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(Color(red: 137/255, green:140/255, blue:145/255)).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1)
                                 }
                             }
                         }.buttonStyle(BluePrimitiveButtonStyle(is_pressed: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "star"))
@@ -1227,8 +1227,8 @@ struct phone_keypad_view: View {
                             ZStack {
                                 numberpad_rectangle_blue_gray(geometry: geometry, i: 1, highlight: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "0")
                                 VStack {
-                                    Text("0").font(.custom("Helvetica Neue Bold", size: 34)).foregroundColor(.white).shadow(color: Color.black.opacity(0.3), radius: 2, x: 0.0, y: 4)
-                                    Text("+").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(Color(red: 137/255, green:140/255, blue:145/255)).scaleEffect(1.6).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1)
+                                    Text("0").font(.custom("Helvetica Neue Bold", fixedSize: 34)).foregroundColor(.white).shadow(color: Color.black.opacity(0.3), radius: 2, x: 0.0, y: 4)
+                                    Text("+").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(Color(red: 137/255, green:140/255, blue:145/255)).scaleEffect(1.6).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1)
                                 }
                             }
                         }.buttonStyle(BluePrimitiveButtonStyle(is_pressed: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "0"))
@@ -1244,7 +1244,7 @@ struct phone_keypad_view: View {
                                 numberpad_rectangle_blue_gray(geometry: geometry, i: 2, highlight: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "pound")
                                 VStack {
                                     Image("pound_phone").resizable().scaledToFit().frame(width:26, height: 26).padding(.top, 7.5).shadow(color: Color.black.opacity(0.3), radius: 2, x: 0.0, y: 4)
-                                    Text("a").font(.custom("Helvetica Neue Bold", size: 15)).foregroundColor(Color(red: 137/255, green:140/255, blue:145/255)).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1).opacity(0)
+                                    Text("a").font(.custom("Helvetica Neue Bold", fixedSize: 15)).foregroundColor(Color(red: 137/255, green:140/255, blue:145/255)).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1).opacity(0)
                                 }
                             }
                         }.buttonStyle(BluePrimitiveButtonStyle(is_pressed: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "pound"))
@@ -1270,7 +1270,7 @@ struct phone_keypad_view: View {
                                 numberpad_rectangle_green(geometry: geometry, highlight: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "call")
                                 HStack {
                                     Image("callglyph_big")
-                                    Text("Call").font(.custom("Helvetica Neue Bold", size: 26)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1)
+                                    Text("Call").font(.custom("Helvetica Neue Bold", fixedSize: 26)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -1)
                                 }
                             }
                         }.buttonStyle(BluePrimitiveButtonStyle(is_pressed: $is_pressed, currently_pressed_button: $currently_pressed_button, current_button: "call"))
@@ -1358,7 +1358,7 @@ struct phone_title_bar : View {
                 HStack {
                     Spacer()
                     if selectedTab != "Recents" {
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title)
                     } else {
                         dual_segmented_control(selected: $selected_segment, instant_multitasking_change: $instant_multitasking_change, first_text: "All", second_text: "Missed").frame(width: 180, height: 30)
                     }
@@ -1376,7 +1376,7 @@ struct phone_title_bar : View {
                             ZStack {
                                 Image("Button_wp5").resizable().scaledToFit().frame(width:200*84/162*(33/34.33783783783784), height: 33)
                                 HStack(alignment: .center) {
-                                    Text("All Contacts").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1).frame(maxWidth: 90).lineLimit(0)
+                                    Text("All Contacts").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1).frame(maxWidth: 90).lineLimit(0)
                                 }
                             }.padding(.leading, 5.5)
                         }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: AnyTransition.opacity))
@@ -1443,7 +1443,7 @@ struct TabButton_Phone : View {
                         }
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }
@@ -1454,7 +1454,7 @@ struct TabButton_Phone : View {
                         ).mask(Image("\(image)_Phone").renderingMode(.template).resizable().aspectRatio(contentMode: .fit).frame(width: image == "Keypad" ? 25 : image == "Voicemail" ? 37.5 : 30, height: 30)).shadow(color: Color.black.opacity(0.75), radius: 0, x: 0, y: -1)
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }

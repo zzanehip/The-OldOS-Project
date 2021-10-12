@@ -67,7 +67,7 @@ struct mail_content: View {
 struct mail_content_other: View {
     var body: some View {
         HStack {
-          Text("Other").font(.custom("Helvetica Neue Bold", size: 24))
+          Text("Other").font(.custom("Helvetica Neue Bold", fixedSize: 24))
         }
     }
 }

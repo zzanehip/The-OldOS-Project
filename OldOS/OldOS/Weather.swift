@@ -174,7 +174,7 @@ struct weather_settings: View {
                                         }
                                     }.transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge:.leading)).combined(with: .opacity)).offset(x:-4)
                                 }
-                                    Text(index.location_string).font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(.black).lineLimit(1)
+                                    Text(index.location_string).font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.black).lineLimit(1)
                                     ZStack {
                                         HStack {
                                             Spacer()
@@ -273,7 +273,7 @@ struct new_location_search: View {
                                 HStack(alignment: .center) {
                                     Spacer().frame(width:1, height: 44-0.95)
                                     
-                                    Text("\(index.name ?? ""), \(index.country ?? "")").font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(.black).lineLimit(1).padding(.trailing, 12)
+                                    Text("\(index.name ?? ""), \(index.country ?? "")").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.black).lineLimit(1).padding(.trailing, 12)
                                 }.padding([.leading], 8)
                                 Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
                                 
@@ -353,7 +353,7 @@ struct search_text_title_bar: View {
                 VStack {
                     HStack {
                         Spacer()
-                        Text(top_text ?? "").foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Regular", size: 14)).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -1).padding([.leading, .trailing], 24)
+                        Text(top_text ?? "").foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Regular", fixedSize: 14)).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -1).padding([.leading, .trailing], 24)
                         Spacer()
                     }.padding(.top, 12)
                     Spacer()
@@ -446,7 +446,7 @@ struct weather_settings_title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text("Weather").ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1)
+                    Text("Weather").ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1)
                     Spacer()
                 }
                 Spacer()
@@ -505,7 +505,7 @@ struct weather_content_view_day: View {
                             }
                         }.overlay(HStack {
                             HStack(spacing:0) {
-                                Text("\(t)").font(.custom("Helvetica Neue Bold", size: 18)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                                Text("\(t)").font(.custom("Helvetica Neue Bold", fixedSize: 18)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
                                 Spacer()
                             }.frame(width:geometry.size.width/2.5).padding(.leading, 8)
                             
@@ -514,8 +514,8 @@ struct weather_content_view_day: View {
                             Image(json_iconography_to_image(weatherData.forcast_data?.list?[optional: Int(i)]?.weather?[0].icon ?? "", is_mini: true))
                             
                             Spacer()
-                            Text("\(Int(weatherData.forcast_data?.list?[optional: Int(i)]?.temp?.max ?? Double()) )°").font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
-                            Text("\(Int(weatherData.forcast_data?.list?[optional: Int(i)]?.temp?.min ?? Double()) )°").font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(Color(red: 124/255, green: 149/255, blue: 189/255)).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5).padding(.trailing, 8)
+                            Text("\(Int(weatherData.forcast_data?.list?[optional: Int(i)]?.temp?.max ?? Double()) )°").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                            Text("\(Int(weatherData.forcast_data?.list?[optional: Int(i)]?.temp?.min ?? Double()) )°").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(Color(red: 124/255, green: 149/255, blue: 189/255)).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5).padding(.trailing, 8)
                         })
                     }
                     Rectangle().fill(LinearGradient([Color(red: 62/255, green: 78/255, blue: 105/255), Color(red: 62/255, green: 77/255, blue: 106/255)], from: .top, to: .bottom)).frame(height: geometry.size.height*34/750)
@@ -531,7 +531,7 @@ struct weather_content_view_day: View {
                     HStack {
                         Image("yahoo_button").padding(.leading, 8)
                         Spacer()
-                        Text("\(weatherData.last_updated_text)").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                        Text("\(weatherData.last_updated_text)").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
                         Spacer()
                         Button(action:{
                                 collapse_pager = true
@@ -572,7 +572,7 @@ struct weather_content_view_night_2: View {
                             }
                         }.overlay(HStack {
                             HStack(spacing:0) {
-                                Text("\(t)").font(.custom("Helvetica Neue Bold", size: 18)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                                Text("\(t)").font(.custom("Helvetica Neue Bold", fixedSize: 18)).textCase(.uppercase).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
                                 Spacer()
                             }.frame(width:geometry.size.width/2.5).padding(.leading, 8)
                             
@@ -581,8 +581,8 @@ struct weather_content_view_night_2: View {
                             Image(json_iconography_to_image(weatherData.forcast_data?.list?[optional: Int(i)]?.weather?[0].icon ?? "", is_mini: true))
                             
                             Spacer()
-                            Text("\(Int(weatherData.forcast_data?.list?[optional: Int(i)]?.temp?.max ?? Double()) )°").font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
-                            Text("\(Int(weatherData.forcast_data?.list?[optional: Int(i)]?.temp?.min ?? Double()) )°").font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(Color(red: 83/255, green: 76/255, blue: 84/255)).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5).padding(.trailing, 8)
+                            Text("\(Int(weatherData.forcast_data?.list?[optional: Int(i)]?.temp?.max ?? Double()) )°").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                            Text("\(Int(weatherData.forcast_data?.list?[optional: Int(i)]?.temp?.min ?? Double()) )°").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(Color(red: 83/255, green: 76/255, blue: 84/255)).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5).padding(.trailing, 8)
                         })
                     }
                     Rectangle().fill(LinearGradient([Color(red: 52/255, green: 34/255, blue: 50/255)], from: .top, to: .bottom)).frame(height: geometry.size.height*34/750)
@@ -598,7 +598,7 @@ struct weather_content_view_night_2: View {
                     HStack {
                         Image("yahoo_button").padding(.leading, 8)
                         Spacer()
-                        Text("\(weatherData.last_updated_text)").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                        Text("\(weatherData.last_updated_text)").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
                         Spacer()
                         Button(action:{
                             withAnimation(.easeIn(duration: 0.4)){
@@ -623,13 +623,13 @@ struct weather_header: View {
             Spacer()
             HStack() {
                 VStack(alignment:.leading) {
-                    Text("\(weatherData.location_string)").font(.custom("Helvetica Neue Bold", size: 20)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
-                    Text("H: \(Int(weatherData.current_data?.main?.tempMax ?? Double()))° L: \(Int(weatherData.current_data?.main?.tempMin ?? Double()))°").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white.opacity(0.8)).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                    Text("\(weatherData.location_string)").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                    Text("H: \(Int(weatherData.current_data?.main?.tempMax ?? Double()))° L: \(Int(weatherData.current_data?.main?.tempMin ?? Double()))°").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white.opacity(0.8)).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
                 }.padding(.leading, 8).padding(.top, 40)
                 Spacer()
                 Group {
-                    Text("\(Int(weatherData.current_data?.main?.temp ?? Double()))").font(.custom("Helvetica Neue Regular", size: 80)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
-                    Text("°").font(.custom("Helvetica Neue Regular", size: 40)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5).offset(x: -10, y: -14)
+                    Text("\(Int(weatherData.current_data?.main?.temp ?? Double()))").font(.custom("Helvetica Neue Regular", fixedSize: 80)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5)
+                    Text("°").font(.custom("Helvetica Neue Regular", fixedSize: 40)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0, y: 1.5).offset(x: -10, y: -14)
                 }.padding(.leading, 4)
             }
         }

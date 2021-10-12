@@ -104,13 +104,13 @@ struct camera_header: View {
         HStack {
             camera_capsule(content: HStack {
                 Image("PLCameraFlashIcon_2only_")
-                Text("Auto").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 21/255, green: 21/255, blue: 21/255)).opacity(0.85)
+                Text("Auto").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 21/255, green: 21/255, blue: 21/255)).opacity(0.85)
             }).frame(width: 80, height: 64/120*62).padding(.leading, 8)
             Spacer()
             if is_recording == true {
                 ZStack {
                     RoundedRectangle(cornerRadius:6).fill(Color.black.opacity(0.35)).strokeRoundedRectangle(6, Color(red: 255/255, green: 255/255, blue: 255/255).opacity(0.25), lineWidth: 0.95).frame(width: 95, height: 64/120*55)
-                    Text(String(format: "%02d:%02d:%02d", Int(current_time) / 3600 , (Int(current_time) % 3600)/60,  (Int(current_time) % 3600) % 60)).font(.custom("Helvetica Neue Regular", size: 19)).foregroundColor(.white)
+                    Text(String(format: "%02d:%02d:%02d", Int(current_time) / 3600 , (Int(current_time) % 3600)/60,  (Int(current_time) % 3600) % 60)).font(.custom("Helvetica Neue Regular", fixedSize: 19)).foregroundColor(.white)
                 }.padding(.trailing, 8)
             } else {
             Button(action: {model.flipCamera()}) {
@@ -120,7 +120,7 @@ struct camera_header: View {
         }.overlay(HStack {
             Spacer()
             camera_capsule(content: HStack {
-                Text("HDR On").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 21/255, green: 21/255, blue: 21/255)).opacity(0.85)
+                Text("HDR On").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 21/255, green: 21/255, blue: 21/255)).opacity(0.85)
             }).frame(width: 95, height: 64/120*62).opacity(camera_state == .photo ? 1 : 0)
             Spacer()
         }).onReceive(recording_timer, perform: {_ in

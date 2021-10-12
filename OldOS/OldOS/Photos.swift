@@ -252,7 +252,7 @@ struct photo_video_share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Email \(media_type.rawValue == 1 ? "Photo" : media_type.rawValue == 2 ? "Video" : "Other")").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Email \(media_type.rawValue == 1 ? "Photo" : media_type.rawValue == 2 ? "Video" : "Other")").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 2.5).padding(.top, 28)
                     Button(action:{
@@ -260,7 +260,7 @@ struct photo_video_share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("MMS").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("MMS").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Button(action:{
@@ -268,7 +268,7 @@ struct photo_video_share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 235/255, green: 235/255, blue: 236/255), location: 0), .init(color: Color(red: 208/255, green: 209/255, blue: 211/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 0.52), .init(color: Color(red: 192/255, green: 193/255, blue: 196/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Send to YouTube").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Send to YouTube").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.black).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.top, .bottom], 2.5)
                     Spacer()
@@ -280,7 +280,7 @@ struct photo_video_share_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).opacity(0.6)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 124/255, green: 124/255, blue: 124/255), location: 0), .init(color: Color(red: 26/255, green: 26/255, blue: 26/255), location: 0.50), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 0.53), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
-                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
+                            Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 25)
                 }
@@ -492,7 +492,7 @@ struct camera_roll: View {
                                                         HStack {
                                                             Image("PLVideoCameraPreview").padding(.leading, 4)
                                                             Spacer()
-                                                            Text(String(format: "%01d:%02d", (Int(asset.duration) % 3600)/60,  (Int(asset.duration) % 3600) % 60)).font(.custom("Helvetica Neue Bold", size: 11)).foregroundColor(.white).padding(.trailing, 4)
+                                                            Text(String(format: "%01d:%02d", (Int(asset.duration) % 3600)/60,  (Int(asset.duration) % 3600) % 60)).font(.custom("Helvetica Neue Bold", fixedSize: 11)).foregroundColor(.white).padding(.trailing, 4)
                                                         }
                                                     }
                                                 }
@@ -509,7 +509,7 @@ struct camera_roll: View {
                         }
                         HStack {
                             Spacer()
-                            Text("\(photos_obsever.photo_count) Photos, \(photos_obsever.video_count) Videos").font(.custom("Helvetica Neue Regular", size: 20)).foregroundColor(.cgLightGray).lineLimit(1)
+                            Text("\(photos_obsever.photo_count) Photos, \(photos_obsever.video_count) Videos").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
                             Spacer()
                         }.padding(.bottom, 12).id("bottom_info")
                     }
@@ -602,7 +602,7 @@ struct photos_title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: show_destination_back == true ? 140 : .infinity)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: show_destination_back == true ? 140 : .infinity)
                     Spacer()
                 }
                 Spacer()
@@ -616,7 +616,7 @@ struct photos_title_bar : View {
                             ZStack {
                                 Image("UINavigationBarBlackTranslucentBack").frame(width: 70, height: 33).scaledToFill().animation(instant_multitasking_change ? .default : .none)
                                 HStack(alignment: .center) {
-                                    Text("Albums").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                    Text("Albums").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                 }
                             }.padding(.leading, 8)
                         }
@@ -644,7 +644,7 @@ struct photos_title_bar : View {
                             ZStack {
                                 Image("UINavigationBarBlackTranslucentBack").frame(width: 95, height: 33).scaledToFill().animation(instant_multitasking_change ? .default : .none)
                                 HStack(alignment: .center) {
-                                    Text("Camera Roll").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                    Text("Camera Roll").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                 }
                             }.padding(.leading, 8)
                         }
@@ -675,8 +675,8 @@ struct photos_select_view: View {
                             HStack {
                                 Image(uiImage: last_photo).resizable().scaledToFill().frame(width: 60-0.95, height:60-0.95).clipped()
                                 Group {
-                                    Text("Camera Roll ").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.black)
-                                        + Text("(\(photos_obsever.assets.count))").font(.custom("Helvetica Neue Regular", size: 16)).foregroundColor(Color(red: 127/255, green: 127/255, blue: 127/255))
+                                    Text("Camera Roll ").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
+                                        + Text("(\(photos_obsever.assets.count))").font(.custom("Helvetica Neue Regular", fixedSize: 16)).foregroundColor(Color(red: 127/255, green: 127/255, blue: 127/255))
                                 }
                                 .lineLimit(0).padding(.leading, 6).padding(.trailing, 40)
                                 Spacer()
@@ -800,7 +800,7 @@ struct TabButton_Photos : View {
                         }
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }
@@ -811,7 +811,7 @@ struct TabButton_Photos : View {
                         ).mask(Image("\(image)_Photos").renderingMode(.template).resizable().aspectRatio(contentMode: .fit).frame(width: image == "Keypad" ? 25 : image == "Voicemail" ? 37.5 : 30, height: 30)).shadow(color: Color.black.opacity(0.75), radius: 0, x: 0, y: -1)
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(Color(red: 168/255, green: 168/255, blue: 168/255)).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }
@@ -866,6 +866,24 @@ class PlayerView: UIView {
         }
     }
     
+    func modifyGravity(gravity: PlayerGravity) {
+        switch gravity {
+        
+        case .aspectFill:
+            playerLayer.contentsGravity = .resizeAspectFill
+            playerLayer.videoGravity = .resizeAspectFill
+            
+        case .resize:
+            playerLayer.contentsGravity = .resize
+            playerLayer.videoGravity = .resize
+            
+        case .fit:
+            playerLayer.contentsGravity = .resizeAspect
+            playerLayer.videoGravity = .resizeAspect
+            
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -895,7 +913,9 @@ final class PlayerContainerView: UIViewRepresentable {
         return PlayerView(player: player, gravity: gravity)
     }
     
-    func updateUIView(_ uiView: PlayerView, context: Context) { }
+    func updateUIView(_ uiView: PlayerView, context: Context) {
+        uiView.modifyGravity(gravity: gravity)
+    }
 }
 
 class PlayerViewModel: ObservableObject {

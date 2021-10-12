@@ -98,8 +98,8 @@ struct lock_header: View {
             HStack {
                 Spacer()
                 VStack() {
-                    Text(timeString(date: date)).ps_innerShadow(Color.white, radius: 0.5, offset: 1, angle: .bottom).font(.custom("Helvetica Neue Light", size: 60))
-                    Text("\(getDayOfWeek(date: date)), \(Calendar.current.monthSymbols[date.get(.month)-1]) \(date.get(.day))").ps_innerShadow(Color.white, radius: 0.5, offset: 1, angle: .bottom,intensity: 0.2).foregroundColor(.white).font(.custom("Helvetica Neue", size: 18))
+                    Text(timeString(date: date)).ps_innerShadow(Color.white, radius: 0.5, offset: 1, angle: .bottom).font(.custom("Helvetica Neue Light", fixedSize: 60))
+                    Text("\(getDayOfWeek(date: date)), \(Calendar.current.monthSymbols[date.get(.month)-1]) \(date.get(.day))").ps_innerShadow(Color.white, radius: 0.5, offset: 1, angle: .bottom,intensity: 0.2).foregroundColor(.white).font(.custom("Helvetica Neue", fixedSize: 18))
                     
                 }
                 Spacer()
@@ -152,14 +152,14 @@ struct lock_footer: View {
                         }
                     }
                     ZStack(alignment: .topLeading) {
-                        Text("⮕").font(.custom("Helvetica Neue", size: 39)).ps_innerShadow(LinearGradient(gradient: Gradient(stops: [.init(color: Color.init(red: 166/255, green: 166/255, blue: 166/255), location: 0.5),.init(color: Color.init(red: 134/255, green: 134/255, blue: 134/255), location: 0.5)]), startPoint: .top, endPoint: .bottom), radius: 0.25, offset: CGPoint(1), intensity: 0.15)
+                        Text("⮕").font(.custom("Helvetica Neue", fixedSize: 39)).ps_innerShadow(LinearGradient(gradient: Gradient(stops: [.init(color: Color.init(red: 166/255, green: 166/255, blue: 166/255), location: 0.5),.init(color: Color.init(red: 134/255, green: 134/255, blue: 134/255), location: 0.5)]), startPoint: .top, endPoint: .bottom), radius: 0.25, offset: CGPoint(1), intensity: 0.15)
                                                                                                                                     
                     }
                 }.zIndex(1)
                 .clipShape(RoundedRectangle(cornerRadius: 10)).draggable(offset: $offset, current_view: $current_view, out_slides: $out_slides, apps_scale: $apps_scale, dock_offset: $dock_offset, apps_scale_height: $apps_scale_height, width: geometry.size.width)
                 .padding([.top, .bottom], 30.5).frame(width: 75).padding(.leading, 27.5)
                 Spacer()
-                Text("slide to unlock").font(.custom("Helvetica Neue", size: 25)).gradientForeground(colors: [Color.init(red: 78/255, green: 78/255, blue: 78/255), .white], startPoint: startPoint, endPoint: endPoint).padding(.trailing, 28)   .onAppear() {
+                Text("slide to unlock").font(.custom("Helvetica Neue", fixedSize: 25)).gradientForeground(colors: [Color.init(red: 78/255, green: 78/255, blue: 78/255), .white], startPoint: startPoint, endPoint: endPoint).padding(.trailing, 28)   .onAppear() {
                     withAnimation (Animation.easeInOut(duration: 3.6).repeatForever(autoreverses: false)){
                         if offset.x == 0 {
                         self.endPoint = UnitPoint(x: 2, y: 0)

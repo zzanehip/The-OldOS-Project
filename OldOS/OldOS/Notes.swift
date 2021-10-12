@@ -95,9 +95,9 @@ struct notes_main_view: View {
                                 VStack(spacing: 0) {
                                     Spacer()
                                     HStack {
-                                        Text(note.title ?? "").font(.custom("Noteworthy-Bold", size: 18)).foregroundColor(Color(red: 160/255, green: 92/255, blue: 62/255)).padding(.leading, 12)
+                                        Text(note.title ?? "").font(.custom("Noteworthy-Bold", fixedSize: 18)).foregroundColor(Color(red: 160/255, green: 92/255, blue: 62/255)).padding(.leading, 12)
                                         Spacer()
-                                        Text("\(note.last_edited_date ?? Date(), formatter: Self.long_format)").font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 99/255, green: 115/255, blue: 142/255)).padding(.trailing, 12)
+                                        Text("\(note.last_edited_date ?? Date(), formatter: Self.long_format)").font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 99/255, green: 115/255, blue: 142/255)).padding(.trailing, 12)
                                         Image("UITableNext").padding(.trailing, 12)
                                     }
                                    Spacer()
@@ -278,7 +278,7 @@ struct delete_note_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5))
                             RoundedRectangle(cornerRadius: 9).fill(returnLinearGradient(.red)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
-                            Text("Delete Note").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -0.6)
+                            Text("Delete Note").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -0.6)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 2.5).padding(.top, 28)
                     Spacer()
@@ -288,7 +288,7 @@ struct delete_note_view: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).opacity(0.6)
                             RoundedRectangle(cornerRadius: 9).fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 124/255, green: 124/255, blue: 124/255), location: 0), .init(color: Color(red: 26/255, green: 26/255, blue: 26/255), location: 0.50), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 0.53), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
-                            Text("Cancel").font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
+                            Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 25)
                 }
@@ -347,9 +347,9 @@ struct destination_header: View {
       }() //I've learned to love the Hacking With Swift way...recently
     var body: some View {
         HStack {
-            Text(numberOfDaysBetween(last_edited_date ?? Date(), Date()) == 0 ? "Today" : numberOfDaysBetween(last_edited_date ?? Date(), Date()) == 1 ? "1 day ago" : "\(numberOfDaysBetween(last_edited_date ?? Date(), Date())) days ago").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(Color(red: 161/255, green: 93/255, blue: 68/255)).padding(.leading, 32)
+            Text(numberOfDaysBetween(last_edited_date ?? Date(), Date()) == 0 ? "Today" : numberOfDaysBetween(last_edited_date ?? Date(), Date()) == 1 ? "1 day ago" : "\(numberOfDaysBetween(last_edited_date ?? Date(), Date())) days ago").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 161/255, green: 93/255, blue: 68/255)).padding(.leading, 32)
             Spacer()
-            Text(last_edited_date ?? Date(), formatter: Self.long_format).font(.custom("Helvetica Neue Regular", size: 14)).foregroundColor(Color(red: 161/255, green: 93/255, blue: 68/255)).padding(.trailing, 8)
+            Text(last_edited_date ?? Date(), formatter: Self.long_format).font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(Color(red: 161/255, green: 93/255, blue: 68/255)).padding(.trailing, 8)
         }.padding(.top, 10).padding(.bottom, 15).background(Color.clear)
     }
     func numberOfDaysBetween(_ start: Date, _ end: Date) -> Int {
@@ -436,7 +436,7 @@ struct notes_title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: selectedTab == "Destination" ? 200 : .infinity)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title).frame(maxWidth: selectedTab == "Destination" ? 200 : .infinity)
                     Spacer()
                 }
                 Spacer()
@@ -449,7 +449,7 @@ struct notes_title_bar : View {
                     ZStack {
                         Image("NotesBack").frame(width: 55, height: 33).scaledToFill()
                         HStack(alignment: .center) {
-                            Text("Notes").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                            Text("Notes").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                         }
                     }.padding(.leading, 5)
                     }
@@ -500,7 +500,7 @@ struct tool_bar_rectangle_button_background_image_notes_text: View {
         Button(action:{action?()}) {
             ZStack {
                 Image("header button").frame(width: 60, height: 32).scaledToFill()
-                Text(content).font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
+                Text(content).font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
                 
             }
         }.frame(width: 60, height: 32)

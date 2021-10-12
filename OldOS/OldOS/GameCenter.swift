@@ -132,27 +132,27 @@ struct game_center_me_view: View {
                     ).opacity(0)
                     VStack(spacing:0) {
                         Spacer().frame(height: 30)
-                        Text("\(gc_observer.local_player.alias) is...").font(.custom("Superclarendon Bold", size: 15)).foregroundColor(Color(red: 35/255, green: 66/255, blue: 45/255)).lineLimit(0).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.85), radius: 0, y: 1)
+                        Text("\(gc_observer.local_player.alias) is...").font(.custom("Superclarendon Bold", fixedSize: 15)).foregroundColor(Color(red: 35/255, green: 66/255, blue: 45/255)).lineLimit(0).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.85), radius: 0, y: 1)
                         ZStack {
                             Image("GKAliasShadowTexture").resizable(capInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0), resizingMode: .tile).frame(width:geometry.size.width, height: 74).mask(
-                                Text("\(gc_observer.local_player.alias)").font(.custom("Phosphate-Inline", size: 74)).lineLimit(0).offset(x: 3.5, y: 3.5)
+                                Text("\(gc_observer.local_player.alias)").font(.custom("Phosphate-Inline", fixedSize: 74)).lineLimit(0).offset(x: 3.5, y: 3.5)
                             ).shadow(color: Color(red: 86/255, green: 164/255, blue: 108/255).opacity(0.5), radius: 0, y: 1)
                             Image("GKAliasTexture").resizable(capInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0), resizingMode: .tile).frame(width:geometry.size.width, height: 74).mask(
-                                Text("\(gc_observer.local_player.alias)").font(.custom("Phosphate-Inline", size: 74))).lineLimit(0)
+                                Text("\(gc_observer.local_player.alias)").font(.custom("Phosphate-Inline", fixedSize: 74))).lineLimit(0)
                         }
                         Spacer().frame(height: 30)
                         HStack {
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonRed", text: "\(gc_observer.friends.count)")
-                                Text("FRIENDS").font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                Text("FRIENDS").font(.custom("Helvetica Neue Bold", fixedSize: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                             }.frame(width:geometry.size.width/3-20)
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonYellow", text: "1")
-                                Text("GAME").font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                Text("GAME").font(.custom("Helvetica Neue Bold", fixedSize: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                             }.frame(width:geometry.size.width/3-20)
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonBlue", text: "\(gc_observer.achievements.count)")
-                                Text("ACHIEVEMENTS").font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1).lineLimit(1)
+                                Text("ACHIEVEMENTS").font(.custom("Helvetica Neue Bold", fixedSize: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1).lineLimit(1)
                             }.frame(width:geometry.size.width/3-15)
                         }.clipped()
                         Spacer().frame(height: 30)
@@ -163,7 +163,7 @@ struct game_center_me_view: View {
                                 RoundedRectangle(cornerRadius: 8.5*10/12 ).padding([.leading, .trailing], 12))
                             Image("GKAliasShadowTexture").resizable(capInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0), resizingMode: .tile).brightness(0.07).frame(height: 40).mask(
                                 RoundedRectangle(cornerRadius: 8.5*10/15)).ps_innerShadow(.roundedRectangle(8.5*10/15), radius: 1, intensity: 0.6).padding([.leading, .trailing], 15)
-                            Text("Status").font(.custom("Superclarendon Bold", size: 16.5)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 86/255, green: 164/255, blue: 108/255).opacity(0.7), radius: 0, y: 0.8)
+                            Text("Status").font(.custom("Superclarendon Bold", fixedSize: 16.5)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 86/255, green: 164/255, blue: 108/255).opacity(0.7), radius: 0, y: 0.8)
                         }
                         Spacer().frame(height:20)
                         large_ribbon_button(ribbon: "GKRibbonButton", text: "Account: \(gc_observer.local_player.alias)@mac.com").padding([.leading, .trailing], 10)
@@ -248,9 +248,9 @@ struct game_center_friends_view: View {
                                                 }
                                                 HStack {
                                                     VStack(alignment: .leading, spacing: 1) {
-                                                        Text("No Status") .font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
-                                                        Text(friend.alias).font(.custom("Superclarendon Bold", size: 15)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
-                                                        Text("Never Played") .font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
+                                                        Text("No Status") .font(.custom("Helvetica Neue Bold", fixedSize: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
+                                                        Text(friend.alias).font(.custom("Superclarendon Bold", fixedSize: 15)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                                        Text("Never Played") .font(.custom("Helvetica Neue Bold", fixedSize: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
                                                     }.padding([.leading], 18)
                                                     Spacer()
                                                     Image("GKDisclosureIndicator").padding([.trailing], 12).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
@@ -317,27 +317,27 @@ struct game_center_friends_destination: View {
                     ).opacity(0)
                     VStack(spacing:0) {
                         Spacer().frame(height: 30)
-                        Text("\(friend.alias) is...").font(.custom("Superclarendon Bold", size: 15)).foregroundColor(Color(red: 35/255, green: 66/255, blue: 45/255)).lineLimit(0).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.85), radius: 0, y: 1)
+                        Text("\(friend.alias) is...").font(.custom("Superclarendon Bold", fixedSize: 15)).foregroundColor(Color(red: 35/255, green: 66/255, blue: 45/255)).lineLimit(0).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.85), radius: 0, y: 1)
                         ZStack {
                             Image("GKAliasShadowTexture").resizable(capInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0), resizingMode: .tile).frame(width:geometry.size.width, height: 74).mask(
-                                Text("\(friend.alias)").font(.custom("Phosphate-Inline", size: 74)).lineLimit(0).offset(x: 3.5, y: 3.5)
+                                Text("\(friend.alias)").font(.custom("Phosphate-Inline", fixedSize: 74)).lineLimit(0).offset(x: 3.5, y: 3.5)
                             ).shadow(color: Color(red: 86/255, green: 164/255, blue: 108/255).opacity(0.5), radius: 0, y: 1)
                             Image("GKAliasTexture").resizable(capInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0), resizingMode: .tile).frame(width:geometry.size.width, height: 74).mask(
-                                Text("\(friend.alias)").font(.custom("Phosphate-Inline", size: 74))).lineLimit(0)
+                                Text("\(friend.alias)").font(.custom("Phosphate-Inline", fixedSize: 74))).lineLimit(0)
                         }
                         Spacer().frame(height: 30)
                         HStack {
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonRed", text: "1")
-                                Text("FRIEND") .font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                Text("FRIEND") .font(.custom("Helvetica Neue Bold", fixedSize: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                             }.frame(width:geometry.size.width/3-20)
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonYellow", text: "1")
-                                Text("GAME") .font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                Text("GAME") .font(.custom("Helvetica Neue Bold", fixedSize: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                             }.frame(width:geometry.size.width/3-20)
                             VStack(spacing: 1) {
                                 ribbon_view(ribbon: "GKRibbonBlue", text: "1")
-                                Text("ACHIEVEMENT") .font(.custom("Helvetica Neue Bold", size: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                Text("ACHIEVEMENT") .font(.custom("Helvetica Neue Bold", fixedSize: 11.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                             }.frame(width:geometry.size.width/3-20)
                         }.clipped()
                         Spacer().frame(height:15)
@@ -345,7 +345,7 @@ struct game_center_friends_destination: View {
                         Spacer()
                             Image("GKSectionHeaderLeftArrow")
                             Image("GKCellBorderTexture").resizable(capInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0), resizingMode: .tile).frame(width: 180, height: 50).mask(
-                        Text("Games in Common") .font(.custom("Superclarendon Bold", size: 16)))
+                        Text("Games in Common") .font(.custom("Superclarendon Bold", fixedSize: 16)))
                             Image("GKSectionHeaderRightArrow")
                             Spacer()
                         }.shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
@@ -363,9 +363,9 @@ struct game_center_friends_destination: View {
                                     HStack {
                                         Image("OS_Icon_WIP15").resizable().frame(width:45, height: 45).cornerRadius(45*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                                         VStack(alignment: .leading, spacing: 1) {
-                                            Text("1 of 1 achievements") .font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
-                                            Text("OldOS").font(.custom("Superclarendon Bold", size: 15)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
-                                            Text("Ranked higher than me") .font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
+                                            Text("1 of 1 achievements") .font(.custom("Helvetica Neue Bold", fixedSize: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
+                                            Text("OldOS").font(.custom("Superclarendon Bold", fixedSize: 15)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                            Text("Ranked higher than me") .font(.custom("Helvetica Neue Bold", fixedSize: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
                                         }
                                         Spacer()
                                         Image("GKDisclosureIndicator").padding([.trailing], 12).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
@@ -441,9 +441,9 @@ struct game_center_games_view: View {
                                     HStack {
                                         Image("OS_Icon_WIP15").resizable().frame(width:45, height: 45).cornerRadius(45*90/512).padding(.leading, 12).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                                         VStack(alignment: .leading, spacing: 1) {
-                                            Text("1 of 1 achievements") .font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
-                                            Text("OldOS").font(.custom("Superclarendon Bold", size: 15)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
-                                            Text("#1 of 10,000") .font(.custom("Helvetica Neue Bold", size: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
+                                            Text("1 of 1 achievements") .font(.custom("Helvetica Neue Bold", fixedSize: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
+                                            Text("OldOS").font(.custom("Superclarendon Bold", fixedSize: 15)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                                            Text("#1 of 10,000") .font(.custom("Helvetica Neue Bold", fixedSize: 12)).foregroundColor(Color(red: 29/255, green: 54/255, blue: 37/255)).shadow(color: Color(red: 105/255, green: 194/255, blue: 132/255).opacity(0.80), radius: 0, y: 1)
                                         }
                                         Spacer()
                                         Image("GKDisclosureIndicator").padding([.trailing], 12).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
@@ -508,7 +508,7 @@ struct game_center_requests_view: View {
                         Spacer()
                         HStack {
                             Spacer()
-                            Text("No Friend Requests") .font(.custom("Superclarendon Bold", size: 14)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
+                            Text("No Friend Requests") .font(.custom("Superclarendon Bold", fixedSize: 14)).foregroundColor(.white).shadow(color: Color.black.opacity(0.2), radius: 0.5, x: 0, y: 1)
                             Spacer()
                         }
                         Spacer()
@@ -565,7 +565,7 @@ struct ribbon_view: View {
     var body: some View {
         ZStack {
             Image(ribbon)
-            Text(text).font(.custom("Superclarendon Bold", size: 18)).lineLimit(0).foregroundColor(.white).offset(y:3.5).overlay(
+            Text(text).font(.custom("Superclarendon Bold", fixedSize: 18)).lineLimit(0).foregroundColor(.white).offset(y:3.5).overlay(
                 GeometryReader { proxy in
                     Color.clear.hidden().onAppear() {
                         self.proxy = proxy
@@ -584,7 +584,7 @@ struct large_ribbon_button: View {
         ZStack {
             Image(ribbon)
             Image("GKCellBackgroundShowMoreGreen").resizable(capInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0), resizingMode: .tile).brightness(-0.08).mask(
-                Text(text).font(.custom("Superclarendon Bold", size: 16)).foregroundColor(.white).lineLimit(0).offset(y:4.5).overlay(
+                Text(text).font(.custom("Superclarendon Bold", fixedSize: 16)).foregroundColor(.white).lineLimit(0).offset(y:4.5).overlay(
                     GeometryReader { proxy in
                         Color.clear.hidden().onAppear() {
                             self.proxy = proxy
@@ -615,7 +615,7 @@ struct TabButtonGameCenter : View {
                         }
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }
@@ -624,7 +624,7 @@ struct TabButtonGameCenter : View {
                         Image("GKTabbarIcon\(image)Inactive").resizable().aspectRatio(contentMode: .fit).frame(width: image == "Games" ? 35 : image == "Friends" ? 45.5 : 30, height: 30)
                         HStack {
                             Spacer()
-                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", size: 11))
+                            Text(image).foregroundColor(.white).font(.custom("Helvetica Neue Bold", fixedSize: 11))
                             Spacer()
                         }
                     }
@@ -650,7 +650,7 @@ struct game_center_title_bar : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title).animation(instant_multitasking_change == true ? .default : .none).frame(maxWidth: (selectedTab == "Friends" && show_back == true) ? 200 : .infinity)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title).animation(instant_multitasking_change == true ? .default : .none).frame(maxWidth: (selectedTab == "Friends" && show_back == true) ? 200 : .infinity)
                     Spacer()
                 }
                 Spacer()
@@ -663,7 +663,7 @@ struct game_center_title_bar : View {
                     ZStack {
                         Image("GKNavbarBackButtonNormal").frame(width: 70, height: 33).scaledToFill()
                         HStack(alignment: .center) {
-                            Text("Friends").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                            Text("Friends").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                         }
                     }.padding(.leading, 50)
                     }
