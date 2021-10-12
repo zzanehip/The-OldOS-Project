@@ -4,7 +4,6 @@
 //
 //  Created by Zane Kleinberg on 5/24/21.
 //
-
 import Foundation
 import SwiftUI
 import Alamofire
@@ -69,177 +68,11 @@ struct Youtube: View {
         }.onAppear() {
             UIScrollView.appearance().bounces = true
         }.onDisappear() {
-            player.pause();
+            UIScrollView.appearance().bounces = false
         }
         
     }
 }
-
-class VPUtility: NSObject {
-    
-    private static var timeHMSFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .positional
-        formatter.allowedUnits = [.minute, .second]
-        formatter.zeroFormattingBehavior = [.pad]
-        return formatter
-    }()
-    
-    static func formatSecondsToHMS(_ seconds: Double) -> String {
-        guard !seconds.isNaN,
-              let text = timeHMSFormatter.string(from: seconds) else {
-            return "00:00"
-        }
-        
-        return text
-    }
-    
-}
-
-struct video_player_footer: View {
-    @Binding var player: AVPlayer
-    @ObservedObject private var volObserver = VolumeObserver()
-    @ObservedObject var playerObserver: PlayerItemObserver
-    public var back_action: (() -> Void)?
-    var body: some View {
-        GeometryReader {geometry in
-            ZStack {
-                RoundedRectangle(cornerRadius: 8).fill(LinearGradient([(Color(red: 191/255, green: 191/255, blue: 191/255), location: 0), (Color(red: 64/255, green: 64/255, blue: 64/255), location: 0.50), (Color(red: 0/255, green: 0/255, blue: 0/255), location: 0.50), (Color(red: 0/255, green: 0/255, blue: 0/255), location: 1)], from: .top, to: .bottom)).opacity(0.6).strokeRoundedRectangle(8, LinearGradient([(Color(red: 212/255, green: 212/255, blue: 212/255), location: 0), (Color(red: 179/255, green: 179/255, blue: 179/255), location: 0.04), (Color(red: 155/255, green: 155/255, blue: 155/255), location: 1)], from: .top, to: .bottom), lineWidth: 2)
-                VStack(spacing: 0) {
-                    HStack {
-                        Image("mp_addbookmark").padding(.leading, 12)
-                        Spacer()
-                        Button(action: {
-                            if playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false {
-                                back_action?()
-                            }
-                        }) {
-                            Image("mp_prevtrack")
-                        }.opacity(playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false ? 1 : 0.6)
-                        Spacer()
-                        Button(action: {
-                            if playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false {
-                                if playerObserver.currentStatus != .playing {
-                                    player.play()
-                                } else {
-                                    player.pause()
-                                }
-                            }
-                        }) {
-                            Image(playerObserver.currentStatus != .playing ? "mp_play" : "mp_pause")
-                        }.frame(width: 40).opacity(playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false ? 1 : 0.6)
-                        Spacer()
-                        Button(action: {
-                            if playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false {
-                                back_action?()
-                            }
-                        }) {
-                            Image("mp_nexttrack")
-                        }.opacity(playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false ? 1 : 0.6)
-                        Spacer()
-                        Image("mp_email").padding(.trailing, 12)
-                    }.frame(width: geometry.size.width).padding(.top, 10)
-                    CustomSliderVideo(player: $player, type: "Volume", value: $volObserver.volume.double,  range: (0, 100)) { modifiers in
-                        ZStack {
-                            
-                            LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 205/255, green: 220/255, blue: 241/255), location: 0), .init(color: Color(red: 125/255, green: 174/255, blue: 245/255), location: 0.5), .init(color: Color(red: 45/255, green: 111/255, blue: 198/255), location: 0.5), .init(color: Color(red: 50/255, green: 151/255, blue: 236/255), location: 1)]), startPoint: .top, endPoint: .bottom).frame(height: 8.5).cornerRadius(4.25).padding(.leading, 4).modifier(modifiers.barLeft)
-                            
-                            LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 218/255, green: 218/255, blue: 218/255), location: 0), .init(color: Color(red: 166/255, green: 166/255, blue: 166/255), location: 0.19), .init(color: Color(red: 204/255, green: 204/255, blue: 204/255), location: 0.5), .init(color: Color(red: 255/255, green: 255/255, blue: 255/255), location: 0.5), .init(color: Color(red: 255/255, green: 255/255, blue: 255/255), location: 1)]), startPoint: .top, endPoint: .bottom).frame(height: 8.5).cornerRadius(4.25).padding(.trailing, 4).modifier(modifiers.barRight)
-                            ZStack {
-                                Image("volume-slider-fat-knob").resizable().scaledToFill()
-                                
-                            }.modifier(modifiers.knob)
-                        }
-                    }.frame(height: 25).padding([.top, .bottom]).padding([.leading, .trailing], 30)
-                }.frame(height: geometry.size.height)
-            }
-        }
-    }
-}
-
-struct video_player_title_bar : View {
-    @Binding var player: AVPlayer
-    @Binding var gravity: PlayerGravity
-    @ObservedObject var playerObserver: PlayerItemObserver
-    var title: String
-    var is_loading: Bool
-    public var back_action: (() -> Void)?
-    public var gravity_action: (() -> Void)?
-    var shows_back: Bool?
-    var body :some View {
-        ZStack {
-            LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 0, green: 0, blue: 0), location: 0), .init(color: Color(red: 84/255, green: 84/255, blue: 84/255), location: 0.005), .init(color: Color(red: 59/255, green: 59/255, blue: 59/255), location: 0.04), .init(color: Color(red: 29/255, green: 29/255, blue: 29/255), location: 0.5), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 0.51), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 1)]), startPoint: .top, endPoint: .bottom).border_bottom(width: 0.95, edges: [.bottom], color: Color(red: 45/255, green: 48/255, blue: 51/255)).innerShadowBottom(color: Color(red: 230/255, green: 230/255, blue: 230/255), radius: 0.025).opacity(0.65).shadow(color: Color.black.opacity(0.25), radius: 0.25, x: 0, y: -0.5) //Correct border width for added shadow
-            VStack {
-                Spacer()
-                if is_loading {
-                    ZStack {
-                        HStack {
-                            Text("Loading...").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.white)
-                            Spacer().frame(width: 8)
-                            ProgressView().progressViewStyle(CircularProgressViewStyle(tint: Color.white))
-                        }
-                        HStack {
-                            tool_bar_rectangle_button(action: {back_action?()}, button_type: .blue, content: "Done").padding(.leading, 5)
-                            Spacer()
-                        }
-                    }
-                } else {
-                    HStack(spacing: 0) {
-                        tool_bar_rectangle_button(action: {back_action?()}, button_type: .blue, content: "Done").padding(.leading, 5)
-                        Spacer()
-                        Text("\(VPUtility.formatSecondsToHMS(playerObserver.seekPos * (player.currentItem?.duration.seconds ?? 0)))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).padding([.leading], 15)
-                        CustomSliderVideo(player: $player, type: "Video", value: $playerObserver.seekPos,  range: (0, 1)) { modifiers in
-                            ZStack {
-                                ZStack {
-                                    LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 205/255, green: 220/255, blue: 241/255), location: 0), .init(color: Color(red: 125/255, green: 174/255, blue: 245/255), location: 0.5), .init(color: Color(red: 45/255, green: 111/255, blue: 198/255), location: 0.5), .init(color: Color(red: 50/255, green: 151/255, blue: 236/255), location: 1)]), startPoint: .top, endPoint: .bottom).frame(height: 9).cornerRadius(4.25).padding(.leading, 4).modifier(modifiers.barLeft)
-                                    
-                                    LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 218/255, green: 218/255, blue: 218/255), location: 0), .init(color: Color(red: 166/255, green: 166/255, blue: 166/255), location: 0.19), .init(color: Color(red: 204/255, green: 204/255, blue: 204/255), location: 0.5), .init(color: Color(red: 255/255, green: 255/255, blue: 255/255), location: 0.5), .init(color: Color(red: 255/255, green: 255/255, blue: 255/255), location: 1)]), startPoint: .top, endPoint: .bottom).frame(height: 9).cornerRadius(4.25).padding(.trailing, 4).modifier(modifiers.barRight)
-                                }.overlay(LinearGradient([Color(red: 48/255, green: 50/255, blue: 53/255), Color(red: 87/255, green: 93/255, blue: 97/255)], from: .top, to: .bottom).mask(LinearGradient([(Color.black, location: 0), (Color.black, location: playerObserver.buffer/(player.currentItem?.duration.seconds ?? 1)), (Color.white, location: playerObserver.buffer/(player.currentItem?.duration.seconds ?? 1))], from: .leading, to: .trailing).frame(height: 4.5).cornerRadius(4.25/8.5*4.5).luminanceToAlpha()).frame(height: 4.5).cornerRadius(4.25/8.5*4.5).padding([.leading, .trailing], 7).offset(y: 0.25))
-                                ZStack {
-                                    Image("volume-slider-fat-knob").resizable().scaledToFill()
-                                    
-                                }.modifier(modifiers.knob)
-                            }
-                        }.frame(height: 25)
-                        Text("-\(VPUtility.formatSecondsToHMS((player.currentItem?.duration.seconds ?? 0) - playerObserver.seekPos * (player.currentItem?.duration.seconds ?? 0)))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).padding([.trailing], 15)
-                        Spacer()
-                        tool_bar_rectangle_button_image_done_size(action: {gravity_action?()}, button_type: .black, content: gravity == .fit ? "mp_zoomout" : "mp_zoomin", use_image: true).padding(.trailing, 5)
-                    }
-                }
-                Spacer()
-            }
-            
-            //            if show_albums_back == true {
-            //                VStack {
-            //                    Spacer()
-            //                    HStack {
-            //                        Button(action:{back_action?()}) {
-            //                            ZStack {
-            //                                Image("UINavigationBarBlackTranslucentBack").frame(width: 70, height: 33).scaledToFill().animation(instant_multitasking_change ? .default : .none)
-            //                                HStack(alignment: .center) {
-            //                                    Text("Albums").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
-            //                                }
-            //                            }.padding(.leading, 8)
-            //                        }
-            //                        Spacer()
-            //                    }
-            //                    Spacer()
-            //                }.animation(instant_multitasking_change ? .default : .none).if(!instant_multitasking_change){$0.animationsDisabled()}
-            //
-            //                VStack {
-            //                    Spacer()
-            //                    HStack {
-            //                        Spacer()
-            //                        tool_bar_rectangle_button_larger_image_wide(button_type: .black, content: "UIButtonBarAction", use_image: true).padding(.trailing, 8)
-            //                    }
-            //                    Spacer()
-            //                }.animation(instant_multitasking_change ? .default : .none).if(!instant_multitasking_change){$0.animationsDisabled()}
-            //
-            //            }
-        }
-    }
-}
-
 
 var youtube_tabs = ["Featured", "Most Viewed", "Search", "Favorites", "More"]
 struct YoutubeTabView : View {
@@ -337,32 +170,32 @@ struct YoutubeVideoInfoView: View {
                         
                         Spacer().frame(height:15)
                         VStack {
-                            Text(current_video?.description ?? "").font(.custom("Helvetica Neue Regular", size: 13)).fixedSize(horizontal: false, vertical: true).padding([.top, .leading, .trailing]).padding(.bottom, 3)
+                            Text(current_video?.description ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 13)).fixedSize(horizontal: false, vertical: true).padding([.top, .leading, .trailing]).padding(.bottom, 3)
                             Rectangle().fill(Color(red: 171/255, green: 171/255, blue: 171/255)).frame(height: 1)
                             HStack(alignment: .top) {
                                 HStack(alignment: .top, spacing: 0) {
                                     Spacer()
-                                    Text("Added").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
+                                    Text("Added").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
                                 }.frame(width: geometry.size.width/5)
-                                Text(current_video?.uploaded?.text ?? "").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(.black)
+                                Text(current_video?.uploaded?.text ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)
                                 Spacer()
                             }.padding([.top, .bottom], 3)
                             Rectangle().fill(Color(red: 171/255, green: 171/255, blue: 171/255)).frame(height: 1)
                             HStack(alignment: .top) {
                                 HStack(alignment: .top, spacing: 0) {
                                     Spacer()
-                                    Text("Category").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
+                                    Text("Category").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
                                 }.frame(width: geometry.size.width/5)
-                                Text(current_video?.category ?? "").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(.black)//fix to formated current release version
+                                Text(current_video?.category ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)//fix to formated current release version
                                 Spacer()
                             }.padding([.top, .bottom], 3)
                             Rectangle().fill(Color(red: 171/255, green: 171/255, blue: 171/255)).frame(height: 1)
                             HStack(alignment: .top) {
                                 HStack(alignment: .top, spacing: 0) {
                                     Spacer()
-                                    Text("Tags").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
+                                    Text("Tags").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
                                 }.frame(width: geometry.size.width/5)
-                                Text((current_video?.keywords ?? []).map{String($0)}.joined(separator: ", ")).font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(.black)//fix to formated current release version
+                                Text((current_video?.keywords ?? []).map{String($0)}.joined(separator: ", ")).font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)//fix to formated current release version
                                 Spacer()
                             }.padding([.top], 3).padding(.bottom)
                         }.background(Color.white.cornerRadius(10)).cornerRadius(10).strokeRoundedRectangle(10, Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1).padding([.leading, .trailing], 12)
@@ -370,7 +203,7 @@ struct YoutubeVideoInfoView: View {
                         Spacer().frame(height: 15)
                         HStack {
                             Spacer()
-                            Text("Rate, Comment or Flag").foregroundColor(.black).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                            Text("Rate, Comment or Flag").foregroundColor(.black).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                             Spacer()
                         }.frame(height: 50).background(Color.white.cornerRadius(10)).cornerRadius(10).strokeRoundedRectangle(10, Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1).padding([.leading, .trailing], 12)
                         Spacer().frame(height: 10)
@@ -382,12 +215,12 @@ struct YoutubeVideoInfoView: View {
                                     VStack(spacing: 0) {
                                         Spacer()
                                         HStack {
-                                            Text(comment.author ?? "").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 165/255, green: 65/255, blue: 35/255)).padding([.leading, .trailing])
+                                            Text(comment.author ?? "").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 165/255, green: 65/255, blue: 35/255)).padding([.leading, .trailing])
                                             Spacer()
-                                            Text((comment.time ?? "").startcased()).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).padding([.leading, .trailing])
+                                            Text((comment.time ?? "").startcased()).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255)).padding([.leading, .trailing])
                                         }
                                         Spacer().frame(height: 10)
-                                        Text(comment.text ?? "").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(.black).padding([.leading, .trailing])
+                                        Text(comment.text ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black).padding([.leading, .trailing])
                                         Spacer()
                                         if comment.commentID != (comments?.comments ?? []).last?.commentID {
                                             Rectangle().fill(Color(red: 171/255, green: 171/255, blue: 171/255)).frame(height: 1)
@@ -439,11 +272,11 @@ struct YoutubeDetailView: View {
                                     Image("DefaultThumbnail")
                                 }.aspectRatio(contentMode: .fit).frame(width:geometry.size.width/3.75, height: 60).background(Color.black).padding(.leading, 6).cornerRadius(4)
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(current_video?.title ?? "---").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                                    Text(current_video?.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                                     HStack(alignment: .top, spacing: 2.5) {
                                         Image("thumbsUp").offset(y: -4.5)
-                                        Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
-                                        Text(view_count + " views").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
+                                        Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                        Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
                                         
                                         
                                         Spacer()
@@ -452,11 +285,11 @@ struct YoutubeDetailView: View {
                                       
                                         
                                         
-                                        Text(duration.asString(style: .positional)).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
+                                        Text(duration.asString(style: .positional)).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
                              
                                         }
                                       
-                                        Text(current_video?.channel?.name ?? "---").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
+                                        Text(current_video?.channel?.name ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
                                     }
                                 }
                                 Spacer()
@@ -483,13 +316,13 @@ struct YoutubeDetailView: View {
                         }
                         Spacer().frame(height: 20)
                         HStack {
-                            Text("Related Videos").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", size: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Text("Related Videos").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
                             Spacer()
                         }
                         Spacer().frame(height: 10)
                         HStack {
                             Spacer()
-                            Text("No Related Videos").foregroundColor(Color(red: 56/255, green: 95/255, blue: 210/255)).font(.custom("Helvetica Neue Bold", size: 17))
+                            Text("No Related Videos").foregroundColor(Color(red: 56/255, green: 95/255, blue: 210/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17))
                             Spacer()
                         }.frame(height: 90).background(Color.white.cornerRadius(10)).cornerRadius(10).strokeRoundedRectangle(10, Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1).padding([.leading, .trailing], 12)
                         Spacer()
@@ -523,7 +356,7 @@ struct YoutubeFeaturedView: View {
                                     Spacer()
                                     ProgressView().progressViewStyle(CircularProgressViewStyle())
                                     Spacer().frame(width: 8)
-                                    Text("Loading...").font(.custom("Helvetica Neue Regular", size: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                                    Text("Loading...").font(.custom("Helvetica Neue Regular", fixedSize: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                                     Spacer()
                                     
                                 }.frame(width: geometry.size.width, height: geometry.size.height)
@@ -549,11 +382,11 @@ struct YoutubeFeaturedView: View {
                                                         Image("DefaultThumbnail")
                                                     }.aspectRatio(contentMode: .fit).frame(width:geometry.size.width/3, height: 89).background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text(video.snippet.title ?? "---").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                                                        Text(video.snippet.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                                                         HStack(alignment: .top, spacing: 2.5) {
                                                             Image("thumbsUp").offset(y: -4.5)
-                                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
-                                                            Text(view_count + " views").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
+                                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                                            Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
                                                             
                                                             
                                                             Spacer()
@@ -562,11 +395,11 @@ struct YoutubeFeaturedView: View {
                                           
                                                             
                                                             
-                                                            Text(duration.getYoutubeFormattedDuration()).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
+                                                            Text(duration.getYoutubeFormattedDuration()).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
                                                           
                                                             }
                                           
-                                                            Text(video.snippet.channelTitle ?? "---").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
+                                                            Text(video.snippet.channelTitle ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
                                                         }
                                                     }
                                                     Spacer()
@@ -628,7 +461,7 @@ struct YoutubeMostViewedView: View {
                                 Spacer()
                                 ProgressView().progressViewStyle(CircularProgressViewStyle())
                                 Spacer().frame(width: 8)
-                                Text("Loading...").font(.custom("Helvetica Neue Regular", size: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                                Text("Loading...").font(.custom("Helvetica Neue Regular", fixedSize: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                                 Spacer()
                                 
                             }.frame(width: geometry.size.width, height: geometry.size.height)
@@ -670,14 +503,14 @@ struct YoutubeSearchView: View {
                                     Spacer()
                                     ProgressView().progressViewStyle(CircularProgressViewStyle())
                                     Spacer().frame(width: 8)
-                                    Text("Loading...").font(.custom("Helvetica Neue Regular", size: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                                    Text("Loading...").font(.custom("Helvetica Neue Regular", fixedSize: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                                     Spacer()
                                     
                                 }.frame(width: geometry.size.width, height: geometry.size.height)
                             } else {
                                 HStack {
                                     Spacer()
-                                    Text("No Videos").font(.custom("Helvetica Neue Regular", size: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                                    Text("No Videos").font(.custom("Helvetica Neue Regular", fixedSize: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                                     Spacer()
                                     
                                 }.frame(width: geometry.size.width, height: geometry.size.height)
@@ -744,11 +577,11 @@ struct result_content_view<PlaceholderContent: View>: View {
                                         Image("DefaultThumbnail")
                                     }.aspectRatio(contentMode: .fit).frame(width:geometry.size.width/3, height: 89).background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(video.title ?? "---").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                                        Text(video.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                                         HStack(alignment: .top, spacing: 2.5) {
                                             Image("thumbsUp").offset(y: -4.5)
-                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
-                                            Text(view_count + " views").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
+                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                            Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
                                             
                                             
                                             Spacer()
@@ -757,11 +590,11 @@ struct result_content_view<PlaceholderContent: View>: View {
                                        
                                             
                                             
-                                            Text(duration.asString(style: .positional)).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
+                                            Text(duration.asString(style: .positional)).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
                                                
                                             }
                                             
-                                            Text(video.channel?.name ?? "---").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
+                                            Text(video.channel?.name ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
                                         }
                                     }
                                     Spacer()
@@ -859,11 +692,11 @@ struct result_content_view_favorites<PlaceholderContent: View>: View {
                                         Image("DefaultThumbnail")
                                     }.aspectRatio(contentMode: .fit).frame(width:geometry.size.width/3, height: 89).background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(video.title ?? "---").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                                        Text(video.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                                         HStack(alignment: .top, spacing: 2.5) {
                                             Image("thumbsUp").offset(y: -4.5)
-                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
-                                            Text(view_count + " views").font(.custom("Helvetica Neue Regular", size: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(0)
+                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                            Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(0)
                                             
                                             
                                             Spacer()
@@ -872,11 +705,11 @@ struct result_content_view_favorites<PlaceholderContent: View>: View {
                            
                                             
                                             
-                                            Text(duration.asString(style: .positional)).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
+                                            Text(duration.asString(style: .positional)).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
                                  
                                             }
                                           
-                                            Text(video.channel?.name ?? "---").font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
+                                            Text(video.channel?.name ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
                                         }
                                     }
                                     Spacer()
@@ -939,7 +772,7 @@ struct YoutubeFavoriteView: View {
                         result_content_view_favorites(favorite_observer: _favorite_observer, is_editing_favorites: $is_editing_favorites, current_nav_view: $fv_current_nav_view, current_video: $fv_current_video, forward_or_backward: $forward_or_backward, show_video_player: $show_video_player, instant_video_change: $instant_video_change, selected_video_player: $selected_video_player, content: favorite_observer.videos, geometry: geometry, placeholder_content: {
                             HStack {
                                 Spacer()
-                                Text("No Videos").font(.custom("Helvetica Neue Regular", size: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                                Text("No Videos").font(.custom("Helvetica Neue Regular", fixedSize: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                                 Spacer()
                                 
                             }.frame(width: geometry.size.width, height: geometry.size.height)
@@ -1003,7 +836,7 @@ struct youtube_more: View {
                     HStack(alignment: .center) {
                         Spacer().frame(width:1, height: 44-0.95)
                         Image(item.image).frame(width:25, height: 44-0.95)
-                        Text(item.name).font(.custom("Helvetica Neue Bold", size: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                        Text(item.name).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
                         Spacer()
                         Image("UITableNext").padding(.trailing, 12)
                     }.padding(.leading, 15)
@@ -1210,7 +1043,7 @@ struct video_player_title_bar : View {
                 if is_loading {
                     ZStack {
                         HStack {
-                            Text("Loading...").font(.custom("Helvetica Neue Bold", size: 16)).foregroundColor(.white)
+                            Text("Loading...").font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.white)
                             Spacer().frame(width: 8)
                             ProgressView().progressViewStyle(CircularProgressViewStyle(tint: Color.white))
                         }
@@ -1223,7 +1056,7 @@ struct video_player_title_bar : View {
                     HStack(spacing: 0) {
                         tool_bar_rectangle_button(action: {back_action?()}, button_type: .blue, content: "Done").padding(.leading, 5)
                         Spacer()
-                        Text("\(VPUtility.formatSecondsToHMS(playerObserver.seekPos * (player.currentItem?.duration.seconds ?? 0)))").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.white).padding([.leading], 15)
+                        Text("\(VPUtility.formatSecondsToHMS(playerObserver.seekPos * (player.currentItem?.duration.seconds ?? 0)))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).padding([.leading], 15)
                         CustomSliderVideo(player: $player, type: "Video", value: $playerObserver.seekPos,  range: (0, 1)) { modifiers in
                             ZStack {
                                 ZStack {
@@ -1237,7 +1070,7 @@ struct video_player_title_bar : View {
                                 }.modifier(modifiers.knob)
                             }
                         }.frame(height: 25)
-                        Text("-\(VPUtility.formatSecondsToHMS((player.currentItem?.duration.seconds ?? 0) - playerObserver.seekPos * (player.currentItem?.duration.seconds ?? 0)))").font(.custom("Helvetica Neue Bold", size: 14)).foregroundColor(.white).padding([.trailing], 15)
+                        Text("-\(VPUtility.formatSecondsToHMS((player.currentItem?.duration.seconds ?? 0) - playerObserver.seekPos * (player.currentItem?.duration.seconds ?? 0)))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).padding([.trailing], 15)
                         Spacer()
                         tool_bar_rectangle_button_image_done_size(action: {gravity_action?()}, button_type: .black, content: gravity == .fit ? "mp_zoomout" : "mp_zoomin", use_image: true).padding(.trailing, 5)
                     }
@@ -1352,7 +1185,7 @@ struct youtube_title_bar : View {
                     HStack {
                         Spacer()
                         if (selectedTab != "Most Viewed" || mv_current_nav_view != "Main"), (selectedTab != "Search" || search_current_nav_view != "Main") {
-                            Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", size: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title).frame(maxWidth: selectedTab == "Most Viewed" ? 145 : 180)
+                            Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title).frame(maxWidth: selectedTab == "Most Viewed" ? 145 : 180)
                         } else if selectedTab == "Most Viewed" {
                             tri_segmented_control_youtube(selected: $selected_segment, instant_multitasking_change: $instant_multitasking_change, first_text: "Today", second_text: "This week", third_text: "All", should_animate: instant_video_change).frame(width: geometry.size.width-24, height: 30)
                         } else if selectedTab == "Search" {
@@ -1457,7 +1290,7 @@ struct youtube_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Search").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Search").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1477,7 +1310,7 @@ struct youtube_title_bar : View {
                                 ZStack {
                                     Image("Button_wp5").resizable().scaledToFit().frame(width:200*84/162*(33/34.33783783783784), height: 33)
                                     HStack(alignment: .center) {
-                                        Text("Most Viewed").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1)
+                                        Text("Most Viewed").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1).offset(x: 1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1497,7 +1330,7 @@ struct youtube_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Search").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Search").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1517,7 +1350,7 @@ struct youtube_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Favorites").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", size: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Favorites").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -2529,5 +2362,4 @@ struct BlankButtonStyle: ButtonStyle {
         configuration.label
             .background(Color.white)
     }
-    
 }

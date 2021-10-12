@@ -653,7 +653,7 @@ struct status_bar_in_app: View {
                     Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadowStyle().mask( Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadowStyle().innerShadow2(color: Color.black.opacity(0.8), radius: 1))//Is it messy, yes, does it work, yes
                 }
                 Spacer()
-                Text("\(Int(battery_level))%").foregroundColor(Color.init(red: 74/255, green: 74/255, blue: 74/255)).font(.custom("Helvetica Neue Bold", size: 15)).shadowStyle().offset(x: 10).isHidden(charging)
+                Text("\(Int(battery_level))%").foregroundColor(Color.init(red: 74/255, green: 74/255, blue: 74/255)).font(.custom("Helvetica Neue Bold", fixedSize: 15)).shadowStyle().offset(x: 10).isHidden(charging)
                 battery_in_app(battery: Float(battery_level/100), charging: charging)
                     .onReceive(timer) { input in
                         if (UIDevice.current.batteryState != .unplugged) {
@@ -1024,13 +1024,13 @@ struct tri_segmented_control_youtube: View {
         GeometryReader{ geometry in
             HStack(spacing: 0) {
                 Button(action:{selected = 0}) {
-                    Text(first_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                    Text(first_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners(selected == 0 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 1}) {
-                    Text(second_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                    Text(second_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangle(selected == 1 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
                 Button(action:{selected = 2}) {
-                    Text(third_text).font(.custom("Helvetica Neue Bold", size: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                    Text(third_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
                 }.frame(width: geometry.size.width/3, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight(selected == 2 ? selected_gradient: unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
             }.overlay(
                 ZStack {
@@ -1766,7 +1766,7 @@ struct tool_bar_rectangle_button_image_done_size: View { //Is this a bad solutio
             ZStack {
                     Image(content).resizable().scaledToFit().frame(width: 30)
 
-                Text("Done").font(.custom("Helvetica Neue Bold", size: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11).opacity(0)
+                Text("Done").font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11).opacity(0)
                 
             }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(5.5, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
         }.frame(height: 32 + (height_modifier ?? 0))

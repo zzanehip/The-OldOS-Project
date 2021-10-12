@@ -92,7 +92,6 @@
 		0DC40DEE2715DA7600BE910C /* ReflectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DC40DE92715DA7600BE910C /* ReflectionView.m */; };
 		0DD19EEF2675418600A3EEF8 /* unlock.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 0DD19EEE2675418600A3EEF8 /* unlock.aiff */; };
 		0DDBD2142624FF6600106345 /* cities.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DDBD2132624FF6600106345 /* cities.json */; };
-		0DEE57402707D79C005B0F09 /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEE573F2707D79C005B0F09 /* Crypto.swift */; };
 		0DEF66F6260CFBF800341037 /* iTunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF66F5260CFBF800341037 /* iTunes.swift */; };
 		0DEF66FB2610240F00341037 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 0DEF66FA2610240F00341037 /* style.css */; };
 		0DEF67072610F50500341037 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 0DEF67062610F50500341037 /* Alamofire */; };
@@ -217,7 +216,6 @@
 		0DD19EEE2675418600A3EEF8 /* unlock.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = unlock.aiff; sourceTree = "<group>"; };
 		0DDBD2132624FF6600106345 /* cities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cities.json; sourceTree = "<group>"; };
 		0DE37D4B267058C9001196E3 /* Camera-SwiftUI-main */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Camera-SwiftUI-main"; sourceTree = "<group>"; };
-		0DEE573F2707D79C005B0F09 /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
 		0DEF66F5260CFBF800341037 /* iTunes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunes.swift; sourceTree = "<group>"; };
 		0DEF66FA2610240F00341037 /* style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		0DEF670F261101AE00341037 /* SearchPlistCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPlistCodable.swift; sourceTree = "<group>"; };
@@ -348,7 +346,6 @@
 				0D371FD525AB7B6D00E4D723 /* LockScreen.swift */,
 				0D4BBF5225B2105000FCFB2E /* Settings.swift */,
 				0D289FB625B2030900B242EF /* Common.swift */,
-				0DEE573F2707D79C005B0F09 /* Crypto.swift */,
 				0D2D5CBE25C9C48500286707 /* iPod.swift */,
 				0D11D84D25E19F9400AB2F2B /* Safari.swift */,
 				0D11D88225EC009B00AB2F2B /* Mail.swift */,
@@ -668,7 +665,6 @@
 				0DC40DEC2715DA7600BE910C /* UIView+FlipTransition.m in Sources */,
 				0D80443E265C4CC500000171 /* Camera.swift in Sources */,
 				0D0FB49C262A427A008AE4C5 /* Maps.swift in Sources */,
-				0DEE57402707D79C005B0F09 /* Crypto.swift in Sources */,
 				0D0FB4F0262A75EB008AE4C5 /* XBPageCurlView.m in Sources */,
 				0D11D88325EC009B00AB2F2B /* Mail.swift in Sources */,
 				0D371FD625AB7B6D00E4D723 /* LockScreen.swift in Sources */,
