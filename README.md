@@ -12,7 +12,7 @@
 <td align="center">
 <img width="2000" height="0"><br>
 <b>Updates: Version 1.0 is currently available 🎉</b><br>
-<small>While I work on fixing an issue in Xcode 12.5+ with LazyVGrid, I recommend you build using Xcode 12.4 and below.</small>
+<small>This build can be built using any version of Xcode 12.5.x and below. Please do not build with Xcode 13.</small>
 <img width="2000" height="0">
 </td>
 </tbody>
