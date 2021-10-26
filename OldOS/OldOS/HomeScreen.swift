@@ -938,6 +938,13 @@ struct app: View {
                 }
                 Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
             }
+        }.background(returnedBK(for: app_name != "Phone" && app_name != "Mail" && app_name != "Safari" && app_name != "iPod" ? true : false))
+    }
+    private func returnedBK(for app: Bool) -> some View {
+        if app {
+            return AnyView(Image("WallpaperIconShadow").resizable().scaledToFit().frame(width:UIScreen.main.bounds.width/(390/104)).offset(y:6))
+        } else {
+            return AnyView(EmptyView())
         }
     }
 }
@@ -979,7 +986,7 @@ struct app_calendar: View {
                 }
                 Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
             }
-        }
+        }.background(Image("WallpaperIconShadow").resizable().scaledToFit().frame(width:UIScreen.main.bounds.width/(390/104)).offset(y:6))
     }
     func timeString(date: Date) -> String {
         let time = timeFormat.string(from: date)

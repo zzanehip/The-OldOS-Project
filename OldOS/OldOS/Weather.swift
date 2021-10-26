@@ -83,9 +83,9 @@ struct Weather: View, Equatable {
                                 }
                             }
                            VStack(spacing: 0) {
-                                if index.current_data?.weather?[0].icon != "" {
+                            if !(index.current_data?.weather?[0].icon?.isEmpty ?? false) {
                                 Spacer().frame(height:30 + json_iconography_to_offset(index.current_data?.weather?[0].icon ?? ""))
-                                Image(json_iconography_to_image(index.current_data?.weather?[0].icon ?? "", is_mini: false)).animationsDisabled()
+                                    Image(json_iconography_to_image(weather_data.array[optional: page.index]?.current_data?.weather?[0].icon ?? "", is_mini: false)).animationsDisabled()
                                 }
                                 Spacer()
                             }.animationsDisabled()
@@ -104,7 +104,9 @@ struct Weather: View, Equatable {
                     }.frame(width:geometry.size.width, height:geometry.size.height).rotation3DEffect(.degrees(switch_to_settings == true ? -90 : 0), axis: (x: 0, y:1, z: 0), anchor: UnitPoint(1, 0.5)).offset(x:switch_to_settings == true ? -geometry.size.width/2 : 0).opacity(switch_to_settings == true ? 0 : 1).isHidden(hide_weather)
             }
         }.compositingGroup()
-        }.background(Color.black)
+        }.background(Color.black).onAppear() {
+            print(json_iconography_to_image(weather_data.array[optional: page.index]?.current_data?.weather?[0].icon ?? "", is_mini: false))
+        }
     }
 }
 
@@ -240,21 +242,23 @@ struct weather_settings: View {
 struct new_location_search: View {
     @State var search: String = ""
     @State var is_validating: Bool = false
-    @State var results = [Weather_City]()
-    @State var city_list = [Weather_City]()
+    @State var city_list = [WeatherSearch.List]()
+    @State var should_perform_search: Bool = true
     @ObservedObject var keyboard = KeyboardResponder()
     @Binding var show_add_location: Bool
     @ObservedObject var weather_data: ObservableArray<WeatherObserver>
+    @State var timer: Timer.TimerPublisher = Timer.publish (every: 0.25, on: .main, in: .common)
+    @State var timer_elapsed: Float = 0.0
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 VStack(spacing: 0) {
                     search_text_title_bar(search: $search, top_text:is_validating ? "Validating City..." : "Type the City, State, or ZIP code:", cancel_action: {withAnimation(){show_add_location.toggle()}}, show_cancel: true).frame(minHeight: 90, maxHeight: 90)
                     NoSepratorList_NonLazy {
-                        ForEach(results, id: \.id) { index in
+                        ForEach(city_list, id: \.id) { index in
                             Button(action: {
                                 if weather_data.array.count < 9 {
-                                    weather_data.array.append(WeatherObserver(location: "\(index.name ?? ""),\(index.country ?? "")", mode:  UserDefaults.standard.object(forKey: "weather_mode") as? String ?? "imperial"))
+                                    weather_data.array.append(WeatherObserver(location: "\(index.name ?? ""),\(index.sys?.country ?? "")", mode:  UserDefaults.standard.object(forKey: "weather_mode") as? String ?? "imperial"))
                                 let userDefaults = UserDefaults.standard
                                 var weather_dict = [String:String]()
                                     var i = 0
@@ -273,7 +277,7 @@ struct new_location_search: View {
                                 HStack(alignment: .center) {
                                     Spacer().frame(width:1, height: 44-0.95)
                                     
-                                    Text("\(index.name ?? ""), \(index.country ?? "")").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.black).lineLimit(1).padding(.trailing, 12)
+                                    Text("\(index.name ?? ""), \(index.sys?.country ?? "")").font(.custom("Helvetica Neue Bold", fixedSize: 20)).foregroundColor(.black).lineLimit(1).padding(.trailing, 12)
                                 }.padding([.leading], 8)
                                 Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
                                 
@@ -284,35 +288,62 @@ struct new_location_search: View {
                     }.padding(.bottom, keyboard.currentHeight).edgesIgnoringSafeArea(.bottom).compositingGroup()
                 }.background(Color.white)
             }
-        }.onAppear() {
-            DispatchQueue.global(qos: .background).async {
-            do {
-                let p_data = readLocalFile(name: "cities")
-                let decodedData = try JSONDecoder().decode([Weather_City].self,
-                                                           from: p_data ?? Data())
-            city_list = decodedData
-            } catch {
-                print(error)
+        }.onReceive(timer, perform: {_ in
+            timer_elapsed += 0.25
+            if timer_elapsed >= 1 && !search.isEmpty && should_perform_search {
+                parse_search_data(search: search)
+                should_perform_search = false
             }
-            }
-
-        }.onChange(of: search, perform: {_ in
+        })
+        
+        .onChange(of: search, perform: {_ in
+            timer_elapsed = 0
             is_validating = true
-            DispatchQueue.global(qos: .background).async {
-                guard search.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { results.removeAll(); return }
-            let searchText = search.lowercased()
-            let searchResults = city_list.filter { ($0.name?.lowercased().contains(searchText) ?? false) }.prefix(50)
-           results = Array(searchResults)
-                if results == Array(searchResults), !city_list.isEmpty {
-                is_validating = false
-                }
-            }
+            should_perform_search = true
         }).onAppear() {
+            self.timer.connect()
             UIScrollView.appearance().bounces = true
         }.onDisappear() {
             UIScrollView.appearance().bounces = false
+            self.timer.connect().cancel()
         }
     }
+
+    func parse_search_data(search: String) {
+        guard let find_search = search.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
+        let developed_string = "https://api.openweathermap.org/data/2.5/find?q=\(find_search)&appid=a287713003f81bf6e2f8a73fe70a5f6b"
+        let search_url = URL(string: developed_string)!
+        let request = URLRequest(url: search_url)
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+            
+            if let error = error {
+                print(error, "failed search")
+                is_validating = false
+                return
+            }
+            
+            // Parse JSON data
+            if let data = data {
+                let decoder = JSONDecoder()
+                
+                do {
+                    let loanDataStore = try decoder.decode(WeatherSearch.self, from: data)
+                    DispatchQueue.main.async {
+                        self.city_list = loanDataStore.list ?? []
+                        is_validating = false
+                    }
+                    
+                } catch {
+                    is_validating = false
+                  //  self.last_updated_text = "Update failed"
+                    print(error, "failed search")
+                }
+            }
+        })
+        
+        task.resume()
+    }
+    
 }
 
 func readLocalFile(name: String) -> Data? {
@@ -668,13 +699,13 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
     }()
     func parse_forcast_data(location: String, mode: String) {
         guard let location_string = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
-        let developed_string = "https://api.openweathermap.org/data/2.5/forecast/daily?q=\(location_string),us&appid=a0bf715940b65a3c9874e2127ec00ed4&units=\(mode)&cnt=6"
+        let developed_string = "https://api.openweathermap.org/data/2.5/forecast/daily?q=\(location_string),us&appid=a287713003f81bf6e2f8a73fe70a5f6b&units=\(mode)&cnt=6"
         let forcast_url = URL(string: developed_string)!
         let request = URLRequest(url: forcast_url)
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
             
             if let error = error {
-                print(error)
+                print(error, "failed update")
                 self.last_updated_text = "Update failed"
                 return
             }
@@ -691,7 +722,7 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
                     
                 } catch {
                     self.last_updated_text = "Update failed"
-                    print(error)
+                    print(error, "failed update")
                 }
             }
         })
@@ -702,7 +733,7 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
     func parse_current_data(location: String, mode: String) {
         guard let location_string = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
         //There's a very odd SwiftUI bug where if we properly format the url, it will fail to update our image header. This url will essentially be (location),(country),(country), instead of (location),(country). Why this happens is beyond me.
-        let developed_string = "https://api.openweathermap.org/data/2.5/weather?q=\(location_string),us&appid=a0bf715940b65a3c9874e2127ec00ed4&units=\(mode)"
+        let developed_string = "https://api.openweathermap.org/data/2.5/weather?q=\(location_string),us&appid=a287713003f81bf6e2f8a73fe70a5f6b&units=\(mode)"
         let current_url = URL(string: developed_string)!
         print(current_url)
         let request = URLRequest(url: current_url)
@@ -738,7 +769,6 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
     }
     
 }
-
 
 struct WeatherForecast: Codable {
     struct City: Codable {
@@ -811,8 +841,8 @@ struct WeatherForecast: Codable {
     }
     
     let city: City?
-    let cod: String?
-    let message: Double?
+  let cod: String?
+let message: Double?
     let cnt: Int?
     let list: [List]?
 }
@@ -889,6 +919,74 @@ struct CurrentWeather: Codable {
     let id: Int?
     let name: String?
     let cod: Int?
+}
+
+struct WeatherSearch: Codable {
+  struct List: Codable {
+    struct Coord: Codable {
+      let lat: Double?
+      let lon: Double?
+    }
+
+    struct Main: Codable {
+      let temp: Double?
+      let feelsLike: Double?
+      let tempMin: Double?
+      let tempMax: Double?
+      let pressure: Int?
+      let humidity: Int?
+      let seaLevel: Int?
+      let grndLevel: Int?
+
+      private enum CodingKeys: String, CodingKey {
+        case temp
+        case feelsLike = "feels_like"
+        case tempMin = "temp_min"
+        case tempMax = "temp_max"
+        case pressure
+        case humidity
+        case seaLevel = "sea_level"
+        case grndLevel = "grnd_level"
+      }
+    }
+
+    struct Wind: Codable {
+      let speed: Double?
+      let deg: Int?
+    }
+
+    struct Sys: Codable {
+      let country: String?
+    }
+
+    struct Clouds: Codable {
+      let all: Int?
+    }
+
+    struct Weather: Codable {
+      let id: Int?
+      let main: String?
+      let description: String?
+      let icon: String?
+    }
+
+    let id: Int?
+    let name: String?
+    let coord: Coord?
+    let main: Main?
+    let dt: Date?
+    let wind: Wind?
+    let sys: Sys?
+   // let rain: Any?
+  //  let snow: Any?
+    let clouds: Clouds?
+    let weather: [Weather]?
+  }
+
+  let message: String?
+  let cod: String?
+  let count: Int?
+  let list: [List]?
 }
 
 func json_iconography_to_image(_ input: String, is_mini: Bool) -> String {
