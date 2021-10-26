@@ -1,0 +1,8 @@
+app_identifier("com.zurac.OldOS") # The bundle identifier of your app
+apple_id("adeutch@mac.com") # Your Apple email address
+
+itc_team_id("1676744") # App Store Connect Team ID
+team_id("5YJG9SCLDH") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

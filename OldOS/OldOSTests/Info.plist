@@ -19,7 +19,7 @@
 	<key>com.apple.developer.networking.wifi-info</key>
 	<string>Just showing you info in Settings.</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>18</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Just showing you info in Settings.</string>
 </dict>

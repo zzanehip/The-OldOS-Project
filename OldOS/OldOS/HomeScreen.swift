@@ -480,10 +480,10 @@ struct HomeScreen: View {
                             }
                         )
                         apps_second(apps_scale:$apps_scale, apps_scale_height: $apps_scale_height, show_searchField: $show_searchField, icon_scaler: $icon_scaler, current_view: $current_view, dock_offset: $dock_offset, width: geometry.size.width, height: geometry.size.height).frame(maxWidth: geometry.size.width, maxHeight:geometry.size.height).zIndex(0).clipped().tag(2).frame(width:search_width, height: search_height)
-                    }.scale(apps_scale).tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)).onAppear() {
+                    }.layoutPriority(1).scale(apps_scale).tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)).onAppear() {
                         UIScrollView.appearance().bounces = false
                     }.opacity(1/(Double(dock_offset) + 1)).clipped().grayscale(show_multitasking == true ? 0.99 : 0).opacity(show_multitasking == true ? 0.3 : 1)
-                    
+                    //added layout up there
                     dock2(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset, show_multitasking: $show_multitasking).frame(width:geometry.size.width).offset(y:dock_offset).clipped()
                 }
                 VStack {
@@ -617,7 +617,7 @@ struct search_results_view: View {
                             
                         }
                     }
-                }.frame(height: geometry.size.height).background(Color(red: 228/255, green: 229/255, blue: 230/255)).cornerRadius(12)
+                }.frame(height: geometry.size.height - 40).background(Color(red: 228/255, green: 229/255, blue: 230/255)).cornerRadius(12)
             }
         }.onAppear() {
             //UIScrollView.appearance().bounces = true -> There's something weird going on where we can't readily modify the bounce value of our scrollviews in the TabView. Therefore, our app pages bounce, when they shouldn't. For now, we'll compromise and have the search not bounce, instead of the apps bouncing.
@@ -708,9 +708,10 @@ struct apps: View {
                 
                 
             }
+            Spacer()
         }.onAppear() {
             UIApplication.shared.endEditing()
-        }
+        }//.offset(y:-15)
     }
 }
 
@@ -937,6 +938,13 @@ struct app: View {
                 }
                 Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
             }
+        }.background(returnedBK(for: app_name != "Phone" && app_name != "Mail" && app_name != "Safari" && app_name != "iPod" ? true : false))
+    }
+    private func returnedBK(for app: Bool) -> some View {
+        if app {
+            return AnyView(Image("WallpaperIconShadow").resizable().scaledToFit().frame(width:UIScreen.main.bounds.width/(390/104)).offset(y:6))
+        } else {
+            return AnyView(EmptyView())
         }
     }
 }
@@ -978,7 +986,7 @@ struct app_calendar: View {
                 }
                 Text(app_name).foregroundColor(.white).font(.custom("Helvetica Neue Medium", fixedSize: 13)).shadow(color: Color.black.opacity(0.9), radius: 0.75, x: 0, y: 1.75).offset(y: -4)
             }
-        }
+        }.background(Image("WallpaperIconShadow").resizable().scaledToFit().frame(width:UIScreen.main.bounds.width/(390/104)).offset(y:6))
     }
     func timeString(date: Date) -> String {
         let time = timeFormat.string(from: date)
