@@ -45,7 +45,7 @@ The project is logically structured in files by app. Inside each app file, you'l
 For reasons unclear to me, Mac OS Moneterey <em>officially</em> drops support for Xcode 12. However, OldOS, for now, is only supported on Xcode 12. Fortunately for us we can get around this with a few easy steps.
 
 	* Step 1: Open a terminal window.
-	* Step 2: Type in <path to Xcode 12.5>/Contents/MacOS/Xcode and press enter. Xcoode 12.5 should launch.
+	* Step 2: Type in <path to Xcode 12.5>/Contents/MacOS/Xcode and press enter. Xcode 12.5 should launch.
 	* Step 3: Open OldOS via File->Open->OldOS.
 	* That's it!
 	
