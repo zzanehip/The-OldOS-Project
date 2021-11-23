@@ -2,7 +2,7 @@
 <p align="center">
         <img src="https://img.shields.io/badge/Language-SwiftUI-orange" alt="alternatetext">
 	<img src="https://img.shields.io/badge/Sprinkles%20of-Swift%2C%20Objective--C-red" alt="alternatetext">
-	<img src="https://img.shields.io/badge/Version-1.0%20(17)-blue" alt="alternatetext">
+	<img src="https://img.shields.io/badge/Version-1.0%20(18)-blue" alt="alternatetext">
 	<img src="https://img.shields.io/badge/Who%3F-%40zzanehip%20(Zane)-yellowgreen" alt="alternatetext">
 </p>
 
