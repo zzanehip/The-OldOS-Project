@@ -29,6 +29,24 @@
         }
       },
       {
+        "package": "MailCore2",
+        "repositoryURL": "https://github.com/MailCore/mailcore2",
+        "state": {
+          "branch": "master",
+          "revision": "1434761709b4d9dd5acc5b7185a3b32aa4845ba8",
+          "version": null
+        }
+      },
+      {
+        "package": "OAuth2",
+        "repositoryURL": "https://github.com/p2/OAuth2.git",
+        "state": {
+          "branch": null,
+          "revision": "30f46ad74bcbe7013fb340e54f41bc9e6d2ce994",
+          "version": "5.3.2"
+        }
+      },
+      {
         "package": "PureSwiftUI",
         "repositoryURL": "https://github.com/CodeSlicing/pure-swift-ui.git",
         "state": {
@@ -62,6 +80,15 @@
           "branch": null,
           "revision": "cd8625b7cf11a97698e180d28bb7d5d357196678",
           "version": "2.0.2"
+        }
+      },
+      {
+        "package": "SwiftKeychainWrapper",
+        "repositoryURL": "https://github.com/jrendel/SwiftKeychainWrapper",
+        "state": {
+          "branch": null,
+          "revision": "185a3165346a03767101c4f62e9a545a0fe0530f",
+          "version": "4.0.1"
         }
       },
       {

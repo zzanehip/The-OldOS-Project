@@ -56,7 +56,7 @@ struct Controller: View {
     @State var should_update: Bool = false
     @State var show_remove: Bool = false
     @EnvironmentObject var MusicObserver: MusicObserver
-    
+    @EnvironmentObject var EmailManager: EmailManager
     var body: some View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
@@ -73,7 +73,7 @@ struct Controller: View {
                                 HomeScreen(apps_scale: $apps_scale, apps_scale_height: $apps_scale_height, dock_offset: $dock_offset, selectedPage: $selected_page, search_width: $search_width, search_height:$search_height, current_view: $current_view, show_multitasking: $show_multitasking, instant_multitasking_change: $instant_multitasking_change).padding([.leading, .trailing]).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "HS") //.compositingGroup() -> maybe
                             case "Settings":
                                 multitasking_controller(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset, multitasking_apps: $multitasking_apps, instant_multitasking_change: $instant_multitasking_change, current_multitasking_app: $current_multitasking_app, should_update: $should_update, show_remove: $show_remove, show_multitasking: $show_multitasking, relative_app: "Settings")
-                                Settings(show_multitasking: $instant_multitasking_change).equatable().padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Settings")
+                                Settings(show_multitasking: $instant_multitasking_change).equatable().padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Settings").environmentObject(EmailManager)
                             case "iPod":
                                 multitasking_controller(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset, multitasking_apps: $multitasking_apps, instant_multitasking_change: $instant_multitasking_change, current_multitasking_app: $current_multitasking_app, should_update: $should_update, show_remove: $show_remove, show_multitasking: $show_multitasking, relative_app: "iPod")
                                 iPod().padding([.leading, .trailing]).transition(.scale).environmentObject(MusicObserver).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "iPod")
@@ -82,7 +82,7 @@ struct Controller: View {
                                 Safari(instant_multitasking_change: $instant_multitasking_change).padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Safari")
                             case "Mail":
                                 multitasking_controller(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset, multitasking_apps: $multitasking_apps, instant_multitasking_change: $instant_multitasking_change, current_multitasking_app: $current_multitasking_app, should_update: $should_update, show_remove: $show_remove, show_multitasking: $show_multitasking, relative_app: "Mail")
-                                Mail().padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Mail")
+                                Mail().padding([.leading, .trailing]).transition(.scale).environmentObject(EmailManager).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Mail")
                             case "Phone":
                                 multitasking_controller(current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset, multitasking_apps: $multitasking_apps, instant_multitasking_change: $instant_multitasking_change, current_multitasking_app: $current_multitasking_app, should_update: $should_update, show_remove: $show_remove, show_multitasking: $show_multitasking, relative_app: "Phone")
                                 Phone(instant_multitasking_change: $instant_multitasking_change).padding([.leading, .trailing]).transition(.scale).modifiedForMultitasking2(show_multitasking, instant_multitasking_change, current_multitasking_app == "Phone")

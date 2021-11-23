@@ -1016,7 +1016,7 @@ class TopPaidAndFreeApplicationsObserver: ObservableObject { //<-
     func parse_data() {
         print("parsing data")
         //Top Free
-        let free_url = URL(string: "https://rss.itunes.apple.com/api/v1/us/ios-apps/top-free/all/25/explicit.rss?at=10laCr")!
+        let free_url = URL(string: "https://rss.applemarketingtools.com/api/v2/us/apps/top-free/25/apps.rss")!
         let free_parser = FeedParser(URL: free_url)
         free_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
@@ -1039,7 +1039,7 @@ class TopPaidAndFreeApplicationsObserver: ObservableObject { //<-
             }
         }
         //Top Paid
-        let paid_url = URL(string: "https://rss.itunes.apple.com/api/v1/us/ios-apps/top-paid/all/25/explicit.rss?at=10laCr")!
+        let paid_url = URL(string: "https://rss.applemarketingtools.com/api/v2/us/apps/top-paid/25/apps.rss")!
         let paid_parser = FeedParser(URL: paid_url)
         paid_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
@@ -1062,7 +1062,7 @@ class TopPaidAndFreeApplicationsObserver: ObservableObject { //<-
             }
         }
         //Top Grossing
-        let grossing_url = URL(string: "https://rss.itunes.apple.com/api/v1/us/ios-apps/top-grossing/all/25/explicit.rss?at=10laCr")!
+        let grossing_url = URL(string: "https://rss.applemarketingtools.com/api/v2/us/apps/top-grossing/25/apps.rss")!
         let grossing_parser = FeedParser(URL: grossing_url)
         grossing_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
@@ -1100,7 +1100,7 @@ class FeaturedApplicationsObserver: ObservableObject {
     }
     func parse_data() {
         print("parsing data")
-        let url = URL(string: "https://rss.itunes.apple.com/api/v1/us/ios-apps/new-apps-we-love/all/25/explicit.rss?at=10laCr")! //If it continues to not work switch to 10
+        let url = URL(string: "https://rss.applemarketingtools.com/api/v2/new-apps-we-love/25/apps.rss")! //If it continues to not work switch to 10
         let parser = FeedParser(URL: url)
         parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {

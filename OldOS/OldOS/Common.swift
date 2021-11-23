@@ -219,6 +219,41 @@ struct generic_title_bar_cancel_save : View {
         }
     }
 }
+struct generic_title_bar_cancel_next : View {
+    var title:String
+    public var cancel_action: (() -> Void)?
+    public var save_action: (() -> Void)?
+    var show_cancel: Bool?
+    var show_save: Bool?
+    var switch_to_done: Bool?
+    var body :some View {
+        ZStack {
+            LinearGradient(gradient: Gradient(stops: [.init(color:Color(red: 180/255, green: 191/255, blue: 205/255), location: 0.0), .init(color:Color(red: 136/255, green: 155/255, blue: 179/255), location: 0.49), .init(color:Color(red: 128/255, green: 149/255, blue: 175/255), location: 0.49), .init(color:Color(red: 110/255, green: 133/255, blue: 162/255), location: 1.0)]), startPoint: .top, endPoint: .bottom).border_bottom(width: 1, edges: [.bottom], color: Color(red: 45/255, green: 48/255, blue: 51/255)).innerShadowBottom(color: Color(red: 230/255, green: 230/255, blue: 230/255), radius: 0.025)
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).id(title)
+                    Spacer()
+                }
+                Spacer()
+            }
+            if show_save == true {
+            HStack {
+                Spacer()
+                tool_bar_rectangle_button(action: {save_action?()}, button_type: .blue_gray, content: switch_to_done == true ? "Done" : "Next").padding(.trailing, 5)
+            }
+            }
+            if show_cancel == true {
+                HStack {
+                    tool_bar_rectangle_button(action: {cancel_action?()}, button_type: .blue_gray, content: "Cancel").padding(.leading, 5)
+                    Spacer()
+                }
+                
+            }
+        }
+    }
+}
 
 struct toggle: View {
     @State var offset = CGPoint(x: -53.6666666667, y: 0)
@@ -617,6 +652,23 @@ struct title_bar : View {
                 Spacer()
             }
             }
+            if  current_nav_view == "MCC_Action" {
+            VStack {
+                Spacer()
+                HStack {
+                    Button(action:{forward_or_backward = true; withAnimation(.linear(duration: 0.28)){current_nav_view = "Mail, Contacts, Calendars" }}) {
+                    ZStack {
+                        Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
+                        HStack(alignment: .center) {
+                            Text("Mail...").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                        }
+                    }.padding(.leading, 6)
+                    }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: AnyTransition.opacity))
+                    Spacer()
+                }
+                Spacer()
+            }
+            }
         }
     }
 }
@@ -848,6 +900,58 @@ struct dual_segmented_control: View {
                     HStack {
                         Spacer()
                         Rectangle().fill(middle_gradient).frame(width: 1)
+                        Spacer()
+                    }
+                }
+            )
+        }.animation((should_animate == true || instant_multitasking_change == true) ? .default : .none).transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge: .leading)))
+    }
+}
+
+struct dual_segmented_control_image_button: View {
+    @State var selected: Int = 12 //either 0 or 1
+    @Binding var instant_multitasking_change: Bool
+    var first_action: (() -> Void)?
+    var second_action: (() -> Void)?
+    var first_text: String
+    var second_text: String
+    var should_animate:Bool?
+    private let unselected_gradient = LinearGradient([(color: Color(red: 158/255, green: 173/255, blue: 191/255), location: 0), (color: Color(red: 137/255, green: 155/255, blue: 178/255), location: 0.51), (color: Color(red: 127/255, green: 148/255, blue: 176/255), location: 0.51), (color: Color(red: 126/255, green: 148/255, blue: 178/255), location: 1)], from: .top, to: .bottom)
+    private let selected_gradient = LinearGradient([(color: Color(red: 136/255, green: 160/255, blue: 190/255), location: 0), (color: Color(red: 88/255, green: 119/255, blue: 162/255), location: 0.51), (color: Color(red: 71/255, green: 105/255, blue: 153/255), location: 0.51), (color: Color(red: 74/255, green: 108/255, blue: 154/255), location: 1)], from: .top, to: .bottom)
+    private let middle_gradient = LinearGradient([(color: Color(red: 73/255, green: 85/255, blue: 98/255), location: 0), (color: Color(red: 92/255, green: 118/255, blue: 156/255), location: 0.04), (color: Color(red: 58/255, green: 90/255, blue: 136/255), location: 0.51), (color: Color(red: 51/255, green: 84/255, blue: 131/255), location: 0.51), (color: Color(red: 37/255, green: 72/255, blue: 120/255), location: 1)], from: .top, to: .bottom)
+    var body: some View {
+        GeometryReader{ geometry in
+            HStack(spacing: 0) {
+                Button(action:{first_action?()}) {
+                    Image(first_text)
+                    //Text(first_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white)//.shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                }.frame(width: geometry.size.width/2, height: geometry.size.height).ps_innerShadow(.rectangleCustomCorners(unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
+                Button(action:{second_action?()}) {
+                    Image(second_text)
+                  //  Text(second_text).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0, y: -0.66)
+                }.frame(width: geometry.size.width/2, height: geometry.size.height).ps_innerShadow(.rectangleCustomCornersRight(unselected_gradient), radius:0.82, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
+            }.overlay(
+                ZStack {
+                    HStack(spacing:0) {
+                        Spacer()
+                        Rectangle().fill(unselected_gradient).frame(width: 2).mask(
+                            VStack(spacing:0) {
+                                Rectangle().fill(LinearGradient([.clear, .white], from: .top, to: .bottom)).frame(height:4.5)
+                                Rectangle()
+                                Rectangle().fill(LinearGradient([.white, .clear], from: .top, to: .bottom)).frame(height: 1.5)
+                            })
+                        Rectangle().fill(unselected_gradient).frame(width: 2).mask(
+                            VStack(spacing:0) {
+                                Rectangle().fill(LinearGradient([.clear, .white], from: .top, to: .bottom)).frame(height:4.5)
+                                Rectangle()
+                                Rectangle().fill(LinearGradient([.white, .clear], from: .top, to: .bottom)).frame(height: 1.5)
+                                
+                            })
+                        Spacer()
+                    }
+                    HStack {
+                        Spacer()
+                        Rectangle().fill(Color(red: 119/255, green: 128/255, blue: 144/255)).frame(width: 1)
                         Spacer()
                     }
                 }
@@ -1747,6 +1851,27 @@ struct tool_bar_rectangle_button: View {
                     Image(content).resizable().scaledToFit().frame(width: 13).padding([.leading, .trailing], 11)
                 } else {
                 Text(content).font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(.white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
+                }
+            }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(5.5, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
+        }.frame(height: 32 + (height_modifier ?? 0))
+    }
+}
+struct tool_bar_rectangle_button_gray_out: View {
+    public var action: (() -> Void)?
+    var button_type: tool_bar_button_type
+    var content: String
+    var use_image: Bool?
+    var height_modifier: CGFloat? = 0
+    var gray_out: Bool
+    private let gray_gradient = LinearGradient([(color: Color(red: 164/255, green: 175/255, blue:191/255), location: 0), (color: Color(red: 124/255, green: 141/255, blue:164/255), location: 0.51), (color: Color(red: 113/255, green: 131/255, blue:156/255), location: 0.51), (color: Color(red: 112/255, green: 130/255, blue:155/255), location: 1)], from: .top, to: .bottom)
+    private let blue_gradient = LinearGradient([(color: Color(red: 120/255, green: 158/255, blue:237/255), location: 0), (color: Color(red: 55/255, green: 110/255, blue:224/255), location: 0.51), (color: Color(red: 34/255, green: 96/255, blue:221/255), location: 0.52), (color: Color(red: 36/255, green: 100/255, blue:224/255), location: 1)], from: .top, to: .bottom)
+    var body: some View {
+        Button(action:{action?()}) {
+            ZStack {
+                if use_image == true {
+                    Image(content).resizable().scaledToFit().frame(width: 13).padding([.leading, .trailing], 11)
+                } else {
+                    Text(content).font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).foregroundColor(gray_out ? Color(red: 197/255, green: 202/255, blue: 210/255): .white).shadow(color: Color.black.opacity(0.75), radius: 1, x: 0, y: -0.25).lineLimit(0).padding([.leading, .trailing], 11)
                 }
             }.frame(height: 32 + (height_modifier ?? 0)).ps_innerShadow(.roundedRectangle(5.5, returnLinearGradient(button_type)), radius:0.8, offset: CGPoint(0, 0.6), intensity: 0.7).shadow(color: Color.white.opacity(0.28), radius: 0, x: 0, y: 0.8)
         }.frame(height: 32 + (height_modifier ?? 0))

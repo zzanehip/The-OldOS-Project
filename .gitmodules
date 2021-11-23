@@ -1,0 +1,3 @@
+[submodule "Postal"]
+	path = Postal
+	url = https://github.com/snipsco/Postal.git

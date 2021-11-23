@@ -8,10 +8,16 @@
 import UIKit
 import SwiftUI
 import CoreData
-
+import OAuth2
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url {
+            oauth2.handleRedirectURL(url)
+            print(url, "ZK")
+        }
+    }
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -26,7 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let context = persistentContainer.viewContext
-            window.rootViewController = HostingController(rootView: contentView.environmentObject(MusicObserver()).environment(\.managedObjectContext, context))
+            window.rootViewController = HostingController(rootView: contentView.environmentObject(MusicObserver()).environmentObject(EmailManager()).environment(\.managedObjectContext, context))
             self.window = window
             window.makeKeyAndVisible()
         }
@@ -82,6 +88,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
       }
     }
+    
+    
+    //emails
+
+//    func saveEmailContext() {
+//      let context = persistentContainer.viewContext
+//      if context.hasChanges {
+//        do {
+//          try context.save()
+//        } catch {
+//          let nserror = error as NSError
+//          fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+//        }
+//      }
+//    }
+    
 
 }
 

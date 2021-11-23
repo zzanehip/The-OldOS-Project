@@ -43,12 +43,13 @@ struct Settings: View, Equatable {
     var nike_section = [list_row(title: "Nike + iPod", image: "Settings-Nike", content: AnyView(general_content()), destination: "General")]
     @State var current_nav_view: String = "Settings"
     @State var forward_or_backward = false
+    @EnvironmentObject var EmailManager: EmailManager
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 VStack(spacing:0) {
                     status_bar_in_app(selected_page:selectedPage).frame(minHeight: 24, maxHeight:24).zIndex(1)
-                    title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, title: current_nav_view == "Location Services" ? "  \(current_nav_view)" : current_nav_view == "Wallpaper_Select" ? "" : current_nav_view == "Wallpaper_Grid" ? "Wallpaper" : current_nav_view == "Wallpaper_Grid_Camera_Roll" ? "Camera Roll" : current_nav_view.contains("General_") ? current_nav_view.replacingOccurrences(of: "General_", with: "") : current_nav_view == "Mail, Contacts, Calendars" ? "           Mail, Contacts, Calen..." : current_nav_view).frame(minHeight: 60, maxHeight: 60).zIndex(1) //For lo
+                    title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, title: current_nav_view == "Location Services" ? "  \(current_nav_view)" : current_nav_view == "Wallpaper_Select" ? "" : current_nav_view == "Wallpaper_Grid" ? "Wallpaper" : current_nav_view == "Wallpaper_Grid_Camera_Roll" ? "Camera Roll" : current_nav_view.contains("General_") ? current_nav_view.replacingOccurrences(of: "General_", with: "") : current_nav_view == "Mail, Contacts, Calendars" ? "           Mail, Contacts, Calen..." : current_nav_view == "MCC_Action" ? EmailManager.account_name : current_nav_view).frame(minHeight: 60, maxHeight: 60).zIndex(1) //For lo
                     switch current_nav_view {
                     case "Settings":
                         settings_home(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, usage_section: usage_section, display_section: display_section, apps_section: apps_section).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
@@ -94,6 +95,8 @@ struct Settings: View, Equatable {
                         general_accessibility_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "Mail, Contacts, Calendars":
                         mcc_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                    case "MCC_Action":
+                        mail_account_action_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "Phone":
                         phone_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "Safari":
@@ -1764,9 +1767,10 @@ struct modem_content: View {
 
 
 struct mcc_view: View {
+    @EnvironmentObject var EmailManager: EmailManager
     @Binding var current_nav_view: String
     @Binding var forward_or_backward: Bool
-    var acount = [list_row(title: "Add Account...", content: AnyView(general_content()), destination: nil)]
+    @State var acount = [list_row(title: "Add Account...", content: AnyView(general_content()), destination: nil)]
     var new_data = [list_row(title: "Fetch New Data", content: AnyView(mcc_content(text: "Push")), destination: nil)]
     var show_organize = [list_row(title: "Show", content: AnyView(mcc_content(text: "50 Recent Messages")), destination: nil), list_row(title: "Preview", content: AnyView(mcc_content(text: "2 Lines")), destination: nil), list_row(title: "Minimum Font Size", content: AnyView(mcc_content(text: "Medium")), destination: nil), list_row(title: "Show to/Cc Label", content: AnyView(mcc_content_toggle(on:false)), destination: nil), list_row(title: "Ask Before Deleting", content: AnyView(mcc_content_toggle(on: false)), destination: nil), list_row(title: "Load Remote Images", content: AnyView(mcc_content_toggle(on:true)), destination: nil),list_row(title: "Organize by Thread", content: AnyView(mcc_content_toggle(on: true)), destination: nil)]
     var bss_sig = [list_row(title: "Always Bcc Myself", content: AnyView(mcc_content_toggle(on: false)), destination: nil), list_row(title: "Signature", content: AnyView(mcc_content(text: "Sent from my iPhone")), destination: nil)]
@@ -1818,6 +1822,70 @@ struct mcc_view: View {
                 }
                 
             }
+        }.onAppear() {
+            if EmailManager.account_email != "" {
+                var account_row = list_row(title: EmailManager.account_name, content: AnyView(general_content()), destination: "MCC_Action")
+                acount.insert(account_row, at: 0)
+            }
+        }
+    }
+}
+
+struct mail_account_action_view: View {
+    @EnvironmentObject var EmailManager: EmailManager
+    @Binding var current_nav_view: String
+    @Binding var forward_or_backward: Bool
+    @State var account_content: [list_row] = []
+    var configs = [list_row(title: "Mail", image: "Settings-MCC", content: AnyView(mcc_content_toggle(on: true))), list_row(title: "Notes", image: "Settings-Notes", content: AnyView(mcc_content_toggle(on: false)))]
+    var body: some View {
+        VStack(spacing:0) {
+        
+            ZStack {
+                settings_main_list()
+                ScrollView {
+                    VStack() {
+                        Spacer().frame(height: 15)
+                        HStack {
+                            Text("IMAP").foregroundColor(Color(red: 76/255, green: 86/255, blue: 108/255)).font(.custom("Helvetica Neue Bold", fixedSize: 17)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9).padding([.leading, .trailing], 24)
+                            Spacer()
+                        }
+                        list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: account_content)
+                        Spacer().frame(height: 15)
+                       list_section(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, content: configs)
+                        Spacer().frame(height: 15)
+                        Button(action: {
+                            DispatchQueue.global(qos: .background).async {
+                                do {
+                                    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("emails")
+                                    // let x = message.header.extraHeaderValue(forName: "body") == "" ? body_placeholder.value : message.header.extraHeaderValue(forName: "body")
+                                    let key_archive = try NSKeyedArchiver.archivedData(withRootObject: [], requiringSecureCoding: false) // this is not working...using suffix
+                                    try key_archive.write(to: path)
+                                    oauth2.forgetTokens()
+                                    oauth2.forgetClient()
+                                    withAnimation() {
+                                        forward_or_backward = true; withAnimation(.linear(duration: 0.28)){current_nav_view = "Mail, Contacts, Calendars"}
+                                    }
+                                } catch {
+                                    print(error)
+                                }
+                            }
+                            EmailManager.account_description = ""
+                            EmailManager.account_name = ""
+                            EmailManager.account_email = ""
+                        }) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 9.15).fill(LinearGradient(gradient: Gradient(colors: [Color.init(red: 3/255, green: 3/255, blue: 3/255), Color.init(red: 21/255, green: 21/255, blue: 21/255), Color.init(red: 32/255, green: 32/255, blue: 32/255)]), startPoint: .top, endPoint: .bottom)).overlay(RoundedRectangle(cornerRadius: 9.15).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).padding(2.65).offset(y: -0.25)
+                            RoundedRectangle(cornerRadius: 9).fill(returnLinearGradient(.red)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.white.opacity(0.9), Color.white.opacity(0.25)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3)
+                            Text("Delete Account").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.6), radius: 0, x: 0.0, y: -0.6)
+                        }.padding([.leading, .trailing], 9.35).frame(minHeight: 50, maxHeight:50)
+                        }
+                    }
+                    Spacer().frame(height: 15)
+                }
+                
+            }
+        }.onAppear() {
+            account_content = [list_row(title: "Account", content: AnyView(mcc_action_content(text: EmailManager.account_email)), destination: nil)]
         }
     }
 }
@@ -1826,6 +1894,14 @@ struct mcc_content: View {
     var text: String
     var body: some View {
         Text(text).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255))
+        Image("UITableNext").padding(.trailing, 12)
+    }
+}
+
+struct mcc_action_content: View {
+    var text: String
+    var body: some View {
+        Text(text).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).lineLimit(0)
         Image("UITableNext").padding(.trailing, 12)
     }
 }
