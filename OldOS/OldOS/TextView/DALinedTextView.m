@@ -3,7 +3,9 @@
 //  DALinedTextView
 //
 
-//Years ago, I built a Notes app and found this library "DALinedTextView." The chief reason I use it was as I struggled to properly get lines working. When I was building OldOS, I wondered if this could be of any use. And the answer is yes. Full credit goes to whomever built this great piece of work...still lives on years later. 
+//Years ago, I built a Notes app and found this library "DALinedTextView." The chief reason I use it was as I struggled to properly get lines working.
+//When I was building OldOS, I wondered if this could be of any use. And the answer is yes.
+//Full credit goes to Daniel Amitay, who built this great piece of work...still lives on years later.
 
 #import "DALinedTextView.h"
 
