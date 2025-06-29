@@ -196,7 +196,7 @@ struct clear_recents_view: View {
                     }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
-                            RoundedRectangle(cornerRadius: 9).fill(LinearGradient([(color: Color(red: 107/255, green: 113/255, blue:119/255), location: 0), (color: Color(red: 53/255, green: 62/255, blue:69/255), location: 0.50), (color: Color(red: 41/255, green: 48/255, blue:57/255), location: 0.50), (color: Color(red: 56/255, green: 62/255, blue:71/255), location: 1)], from: .top, to: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
+                            RoundedRectangle(cornerRadius: 9).fill(LinearGradient([(color: Color(red: 107/255, green: 113/255, blue:119/255), location: 0), (color: Color(red: 53/255, green: 62/255, blue:69/255), location: 0.50), (color: Color(red: 41/255, green: 48/255, blue:57/255), location: 0.50), (color: Color(red: 56/255, green: 62/255, blue: 71/255), location: 1)], from: .top, to: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
                             Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 25)
@@ -672,7 +672,7 @@ struct add_contact_view: View{
                                         }
                                     }.frame(height: 50)
                                     ZStack {
-                                        Rectangle().fill(Color.clear).frame(height:50)
+                                        Rectangle().fill(Color.clear).frame(height: 50)
                                         HStack(spacing: 5) {
                                             Text("text tone").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color.clear).frame(width: 1, height: 50)
@@ -874,7 +874,7 @@ struct SkeuomorphicList_Contacts: View {
                         ForEach(contacts_observer.contacts.filter({(contact: CNContact) -> Bool in
                             String(alphabet.contains(String((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "")) ? ((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "") : "#") == letter
                             
-                        }), id: \.self.name) { (contact: CNContact) in
+                        }), id: \.identifier) { (contact: CNContact) in
                             Button(action:{
                                 current_contact = contact
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -902,7 +902,7 @@ struct SkeuomorphicList_Contacts: View {
                     Text("\(contacts_observer.contacts.count) Contacts").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
                     Spacer()
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            }
+            }.skeuomorphicStyleList()
             
             
         }
@@ -913,7 +913,7 @@ struct SkeuomorphicList_Contacts: View {
             Color.white.edgesIgnoringSafeArea(.all).offset(y: 44)
             List {
                 if contacts_observer.contacts.filter {(contact: CNContact) in contact.name.localizedCaseInsensitiveContains(search)}.count != 0 {
-                    ForEach(contacts_observer.contacts.filter {(contact: CNContact) in contact.name.localizedCaseInsensitiveContains(search) }, id: \.self.name) { (contact: CNContact) in
+                    ForEach(contacts_observer.contacts.filter {(contact: CNContact) in contact.name.localizedCaseInsensitiveContains(search) }, id: \.identifier) { (contact: CNContact) in
                             Button(action:{
                                 current_contact = contact
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -955,7 +955,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                         ForEach(contacts_observer.contacts.filter({(contact: CNContact) -> Bool in
                             String(alphabet.contains(String((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "")) ? ((contact.familyName.prefix(1) ?? "") != "" ? (contact.familyName.prefix(1) ?? "") : contact.name.prefix(1) ?? "") : "#") == letter
                             
-                        }), id: \.self.name) { (contact: CNContact) in
+                        }), id: \.identifier) { (contact: CNContact) in
                             Button(action:{
                                 if !contact.phoneNumbers.isEmpty {
                                 withAnimation(.linear(duration:0.35)) {
@@ -985,7 +985,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                     Text("\(contacts_observer.contacts.count) Contacts").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
                     Spacer()
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            }
+            }.skeuomorphicStyleList()
             
             
         }
@@ -996,7 +996,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
             Color.white.edgesIgnoringSafeArea(.all).offset(y: 44)
             List {
                 if contacts_observer.contacts.filter {(contact: CNContact) in contact.name.localizedCaseInsensitiveContains(search)}.count != 0 {
-                    ForEach(contacts_observer.contacts.filter {(contact: CNContact) in contact.name.localizedCaseInsensitiveContains(search) }, id: \.self.name) { (contact: CNContact) in
+                    ForEach(contacts_observer.contacts.filter {(contact: CNContact) in contact.name.localizedCaseInsensitiveContains(search) }, id: \.identifier) { (contact: CNContact) in
                             Button(action:{
                                 if !contact.phoneNumbers.isEmpty {
                                 withAnimation(.linear(duration:0.35)) {
@@ -1018,7 +1018,7 @@ struct SkeuomorphicList_Contacts_Add_To_Favorites: View {
                             }
                         }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 44).drawingGroup()
                 }
-            }.offset(y: 44)
+            }.skeuomorphicStyleList().offset(y: 44)
         }
     }
 }
@@ -1068,12 +1068,13 @@ class ContactStore: ObservableObject {
     }
 }
 
-extension CNContact: Identifiable {
+// Removed the Identifiable conformance extension for CNContact
+
+extension CNContact {
     var name: String {
-        return [givenName, middleName, familyName].filter{ $0.count > 0}.joined(separator: " ")
+        [givenName, middleName, familyName].filter { !$0.isEmpty }.joined(separator: " ")
     }
 }
-
 
 struct blank:View {
     var body: some View {
@@ -1332,7 +1333,7 @@ struct numberpad_rectangle_green: View {
     @Binding var currently_pressed_button: String
     var current_button: String
     var body: some View {
-        Rectangle().fill(LinearGradient([(color: Color(red: 154/255, green: 206/255, blue: 150/255), location:0), (color: Color(red: 64/255, green: 178/255, blue: 59/255), location:0.50), (color: Color(red: 33/255, green: 161/255, blue: 26/255), location:0.50), (color: Color(red: 39/255, green: 170/255, blue: 30/255), location:1)], from: .top, to: .bottom)).border_top(width: 1, edges: [.top], color: Color(red: 171/255, green: 228/255, blue: 160/255)).border_top(width: 0.5, edges: [.top], color: Color(red: 226/255, green: 246/255, blue: 223/255)).border_top(width: 1, edges: [.bottom], color: Color(red: 131/255, green: 203/255, blue: 96/255)).border_top(width: 1, edges: [.leading], color: Color(red: 145/255, green: 222/255, blue: 112/255)).frame(width:geometry.size.width/3, height: geometry.size.height/5).brightness(highlight == false  ? 0 : current_button == currently_pressed_button ? 0.1 : 0).animationsDisabled()
+        Rectangle().fill(LinearGradient([(color: Color(red: 154/255, green: 206/255, blue: 150/255), location:0), (color: Color(red: 64/255, green: 178/255, blue: 59/255), location:0.50), (color: Color(red: 33/255, green: 161/255, blue: 26/255), location: 0.50), (color: Color(red: 39/255, green: 170/255, blue: 30/255), location:1)], from: .top, to: .bottom)).border_top(width: 1, edges: [.top], color: Color(red: 171/255, green: 228/255, blue: 160/255)).border_top(width: 0.5, edges: [.top], color: Color(red: 226/255, green: 246/255, blue: 223/255)).border_top(width: 1, edges: [.bottom], color: Color(red: 131/255, green: 203/255, blue: 96/255)).border_top(width: 1, edges: [.leading], color: Color(red: 145/255, green: 222/255, blue: 112/255)).frame(width:geometry.size.width/3, height: geometry.size.height/5).brightness(highlight == false  ? 0 : current_button == currently_pressed_button ? 0.1 : 0).animationsDisabled()
     }
 }
 
@@ -1463,3 +1464,4 @@ struct TabButton_Phone : View {
         }
     }
 }
+

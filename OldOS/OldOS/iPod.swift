@@ -388,7 +388,7 @@ struct now_playing_tracks: View {
                     rating_view(rating: $current_track_rating)
                 }.background(LinearGradient(gradient:Gradient(stops: [.init(color: Color(red: 0/255, green: 0/255, blue: 0/255).opacity(1.0), location:0), .init(color: Color(red: 0/255, green: 0/255, blue: 0/255).opacity(1.0), location: 0.35), .init(color: Color(red: 26/255, green: 26/255, blue: 26/255), location:1)]), startPoint: .top, endPoint: .bottom).frame(width: geometry.size.width, height:44)).frame(width: geometry.size.width, height:44)
                 ScrollView(showsIndicators: false) {
-                    LazyVStack {
+                    LazyVStack(spacing: 0) {
                         ForEach(removeDuplicates(tracks), id: \.persistentID) { track in
                             Button(action:{
                                 if new_track_delay == false {
@@ -439,7 +439,7 @@ struct now_playing_tracks: View {
                                 ).background((removeDuplicates(tracks).firstIndex(of: track) ?? 0) % 2  == 0 ? Color.clear : Color.black.opacity(0.2))
                             }.frame(height: 44)
                         }
-                    }
+                    }.skeuomorphicStyleList()
                 }.onReceive(song_publisher) { (output) in
                     let music_player = MPMusicPlayerController.systemMusicPlayer
                     let current = music_player.nowPlayingItem
@@ -714,7 +714,8 @@ struct SkeuomorphicList_Playlists: View {
                         }
                     }.padding(.top, playlist == MusicObserver.playists.first ? 2.5 : 0)
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
-            }
+            }.skeuomorphicStyleList()
+                .background(Color.white)
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -790,7 +791,8 @@ struct SkeuomorphicList_Playlists: View {
                             }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
                         }
                     }
-                }.offset(y: 44)
+                }.skeuomorphicStyleList()
+                    .background(Color.white).offset(y: 44)
             }
         }
     }
@@ -955,7 +957,8 @@ struct SkeuomorphicList_Playlists_Destination: View {
                         
                     }.padding(.top, song == (playlist.items ?? []).first ? 2.5 : 0)
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).drawingGroup()
-            }
+            }.skeuomorphicStyleList()
+                .background(Color.white)
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -1031,7 +1034,7 @@ struct SkeuomorphicList_Playlists_Destination: View {
                             }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
                         }
                     }
-                }.offset(y: 44)
+                }.skeuomorphicStyleList().offset(y: 44)
             }
             
         }
@@ -1176,7 +1179,20 @@ struct SkeuomorphicList_Artists: View {
     var body: some View {
         ZStack(alignment: .top) {
             List {
-                ipod_search(search: $search, no_right_padding: editing_state != "None" ? true : false, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
+                Section(header: EmptyView().frame(height: 0), footer: EmptyView().frame(height: 0)) {
+                    ipod_search(
+                        search: $search,
+                        no_right_padding: editing_state != "None",
+                        editing_state: $editing_state
+                    )
+                    .id("Search")
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .padding(.top, 0)
+                    .frame(height: 44)
+                    .hideRowSeparator()
+
+        
+                } //Ok so this is a little bit of a whacky fix, but we need to suppress the pixelish of height added to the top of this
                 ForEach(indexes, id: \.self) { letter in
                     Section(header: alpha_list_header(letter: letter).id(letter) .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
                         ForEach(MusicObserver.artists.filter({(artist) -> Bool in
@@ -1216,7 +1232,7 @@ struct SkeuomorphicList_Artists: View {
                     Text("\(MusicObserver.artists.count) Artists").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
                     Spacer()
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            }
+            }.skeuomorphicStyleList()
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -1293,7 +1309,7 @@ struct SkeuomorphicList_Artists: View {
                             }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
                         }
                     }
-                }.offset(y: 44)
+                }.skeuomorphicStyleList().offset(y: 44)
             }
             
         }
@@ -1351,7 +1367,8 @@ struct SkeuomorphicList_Artists_Destination: View {
                         }
                     }//.padding(.top, album == albums.first ? 2.5 : 0)
                 }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
-            }.background(Color.white)
+            }.skeuomorphicStyleList()
+                .background(Color.white)
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -1431,7 +1448,7 @@ struct SkeuomorphicList_Artists_Destination: View {
                             }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
                         }
                     }
-                }.offset(y: 44)
+                }.skeuomorphicStyleList().offset(y: 44)
             }
             
         }
@@ -1570,7 +1587,8 @@ struct ipod_songs: View {
                 }
                 return $0 < $1
                 
-            })).modifier(VerticalIndex(indexableList: alphabet, indexes: Array(Set(MusicObserver.songs.compactMap({
+            }))
+            .modifier(VerticalIndex(indexableList: alphabet, indexes: Array(Set(MusicObserver.songs.compactMap({
                 
                 String(alphabet.contains(String($0.title?.prefix(1) ?? "")) ? ($0.title?.prefix(1) ?? "") : "#")
                 
@@ -1589,8 +1607,19 @@ struct SkeuomorphicList_Songs: View {
     var body: some View {
         ZStack(alignment:.top) {
             List {
-                ipod_search(search: $search, no_right_padding: editing_state != "None" ? true : false, editing_state:$editing_state).id("Search").listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
-                shuffle(songs: MusicObserver.songs, forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).hideRowSeparator()
+                Section(header: EmptyView().frame(height: 0), footer: EmptyView().frame(height: 0)) {
+                    ipod_search(
+                        search: $search,
+                        no_right_padding: editing_state != "None",
+                        editing_state: $editing_state
+                    )
+                    .id("Search")
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .padding(.top, 0)
+                    .frame(height: 44)
+                    .hideRowSeparator()
+                } //Ok so this is a little bit of a whacky fix, but we need to suppress the added pixelish of height added to the top of this
+                shuffle(songs: MusicObserver.songs, forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height:44).hideRowSeparator()
                 ForEach(indexes, id: \.self) { letter in
                     Section(header: alpha_list_header(letter: letter).id(letter) .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))) {
                         ForEach(MusicObserver.songs.filter({(song) -> Bool in
@@ -1655,7 +1684,7 @@ struct SkeuomorphicList_Songs: View {
                     Text("\(MusicObserver.songs.count) Songs").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
                     Spacer()
                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            }
+            }.skeuomorphicStyleList()
             if editing_state == "Active_Empty" {
                 Color.black.opacity(0.9).edgesIgnoringSafeArea(.all).offset(y: 44)
             }
@@ -1731,7 +1760,7 @@ struct SkeuomorphicList_Songs: View {
                             }.hideRowSeparator_larger().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
                         }
                     }
-                }.offset(y: 44)
+                }.skeuomorphicStyleList().offset(y: 44)
             }
             
         }
@@ -2276,6 +2305,30 @@ func resizeCoverFlowImage(image: UIImage, newWidth: CGFloat) -> UIImage {
 }
 
 
+struct skeuomorphicStyleListModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 17.0, *) {
+            content
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Color.clear)
+                .listSectionSpacing(0)
+                .environment(\.defaultMinListRowHeight, 44)
+        } else {
+            content
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Color.white)
+                .environment(\.defaultMinListRowHeight, 44)
+        }
+    }
+}
+
+extension View {
+    func skeuomorphicStyleList() -> some View {
+        self.modifier(skeuomorphicStyleListModifier())
+    }
+}
 
 
 //**MARK: Common
@@ -2382,6 +2435,7 @@ struct HideRowSeparatorModifier: ViewModifier {
                 alignment: .leading
             )
             .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
             .background(background)
     }
 }
@@ -2411,6 +2465,7 @@ struct HideRowSeparatorModifier_Larger: ViewModifier {
                 alignment: .leading
             )
             .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
             .background(background)
     }
 }
@@ -2457,83 +2512,87 @@ struct HideRowSeparator_Previews: PreviewProvider {
 struct VerticalIndex: ViewModifier {
     let indexableList: [String]
     var indexes: [String]
-    @State var selected: Bool = false
-    @State var offset = CGSize.zero
-    @State var offset_h: CGFloat = 0.0
+    
+    @State private var selected: Bool = false
+    @State private var offsetHeight: CGFloat = 0.0
     @Binding var editing_state: String
+
     func body(content: Content) -> some View {
-        var body: some View {
+        GeometryReader { outerGeo in
             ScrollViewReader { scrollProxy in
-                ZStack {
+                ZStack(alignment: .topTrailing) {
                     content
+
                     if selected {
-                        HStack {
-                            Spacer()
-                            RoundedRectangle(cornerRadius: 24/2).fill(Color(red: 106/255, green: 115/255, blue: 125/255).opacity(0.5)).frame(width:24).padding(.trailing, 12-5).padding([.top], 13).padding(.bottom, 30)
-                        }
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(red: 106/255, green: 115/255, blue: 125/255).opacity(0.5))
+                            .frame(width: 24)
+                            .padding(.trailing, 7)
+                            .padding([.top, .bottom], 2)
+//                            .padding(.bottom, 10)
                     }
-                    VStack {
+
+                    VStack(spacing: 2) {
                         ForEach(indexableList, id: \.self) { letter in
                             HStack {
                                 Spacer()
-                                if letter == "Search" {
-                                    Button(action: {
+                                Button(action: {
+                                    if indexes.contains(letter) || letter == "Search" {
                                         scrollProxy.scrollTo(letter, anchor: .top)
-                                        if let index = indexableList.firstIndex(of: letter) {
-                                            print(index)
+                                    }
+                                }) {
+                                    Group {
+                                        if letter == "Search" {
+                                            Image(systemName: "magnifyingglass")
+                                                .font(.custom("Helvetica Neue Bold", fixedSize: 13.25))
+                                                .frame(width: 14, height: 16.5)
+                                        } else {
+                                            Text(letter)
+                                                .font(.custom("Helvetica Neue Bold", fixedSize: 13.25))
+                                                .frame(width: 14, height: 16.5)
                                         }
-                                    }, label: {
-                                        Image(systemName: "magnifyingglass")
-                                            .font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).frame(width:14, height: 16.5)
-                                            .foregroundColor(Color(red: 106/255, green: 115/255, blue: 125/255))
-                                            .padding(.trailing, 12)
-                                    })
-                                } else {
-                                    Button(action: {
-                                        if indexes.contains(letter) {
-                                            scrollProxy.scrollTo(letter, anchor: .top)
-                                            if let index = indexableList.firstIndex(of: letter) {
-                                                print(index)
-                                            }
-                                        }
-                                    }, label: {
-                                        Text(letter)
-                                            .font(.custom("Helvetica Neue Bold", fixedSize: 13.25)).frame(width:14, height: 16.5)
-                                            .foregroundColor(Color(red: 106/255, green: 115/255, blue: 125/255))
-                                            .padding(.trailing, 12)
-                                    })
+                                    }
+                                    .foregroundColor(Color(red: 106/255, green: 115/255, blue: 125/255))
+                                    .padding(.trailing, 12)
                                 }
                             }
                         }
-                    }.padding(.bottom, 17).onLongPressGesture(minimumDuration: 0, pressing: { inProgress in
+                    }
+                    .frame(height: offsetHeight) // Force index bar height
+                    .onLongPressGesture(minimumDuration: 0, pressing: { inProgress in
                         selected = inProgress
                     }) {
                         selected = false
-                    }.simultaneousGesture(
+                    }
+                    .simultaneousGesture(
                         DragGesture()
                             .onChanged { gesture in
-                                if gesture.location.y/((offset_h-17)/CGFloat(indexableList.count)) > 0, gesture.location.y/((offset_h-17)/CGFloat(indexableList.count)) <= 28 {
-                                    let location = gesture.location.y/((offset_h-17)/CGFloat(indexableList.count))
-                                    if indexes.contains(indexableList[Int(location)]) || indexableList[Int(location)] == "Search" {
-                                        // Here's essentially what we're doing here. Our goal is to convert our sliding location to an integer value that corresponds to a letter. What we do is divide our current location by the size of each letter section. This number should be 16.5, what we set above. We still, reguardless, calculate it. For example, if our location is 200, this would equate to nearly 12 letters (12.12). We round this down to 12 and arrive at the letter M -> M is 13th letter in alphabet and array.count-1 = M. This works as 0 <= x < 1 equals A.
-                                        scrollProxy.scrollTo(indexableList[Int(location)], anchor: .top)
+                                guard offsetHeight > 0 else { return }
+                                let sectionHeight = (offsetHeight - 17) / CGFloat(indexableList.count)
+                                let index = Int(gesture.location.y / sectionHeight)
+                                if index >= 0 && index < indexableList.count {
+                                    let letter = indexableList[index]
+                                    if indexes.contains(letter) || letter == "Search" {
+                                        scrollProxy.scrollTo(letter, anchor: .top)
                                     }
                                 }
                             }
-                    ).overlay(
-                        GeometryReader { proxy in
-                            Color.clear.hidden().onAppear() {
-                                offset_h = proxy.size.height
-                                print(offset_h, (offset_h-17)/CGFloat(indexableList.count))
-                            }
-                        }
-                    ).isHidden(editing_state != "None" ? true : false)
+                    )
+                    .onAppear {
+                        offsetHeight = outerGeo.size.height
+                        print("Visible height: \(offsetHeight)")
+                    }
+                    .isHidden(editing_state != "None" ? true : false)
                 }
+                // Force height of the ZStack to match outer geo height
+                .frame(height: outerGeo.size.height)
+//                .opacity(editing_state == "None" ? 1 : 0)
+                
             }
         }
-        return body
     }
 }
+
 
 
 struct TabButton : View {
@@ -2602,7 +2661,7 @@ struct alpha_list_header: View {
                 Text(letter).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color(red: 94/255, green: 90/255, blue: 90/255).opacity(0.75), radius: 0, x: 0, y: 1.2).padding(.leading, 12)
                 Spacer()
             }
-        }
+        }.clipped()
     }
 }
 

@@ -320,7 +320,7 @@ struct home_bar: View {
                             withAnimation(.linear(duration: 0.35)) {
                                 self.current_view = "HS"
                             }
-                            DispatchQueue.main.asyncAfter(deadline:.now()+0.01) {
+                            DispatchQueue.global().asyncAfter(deadline:.now()+0.01) { //I wish I knew why, but we can no longer render this on main, it needs to be on global to avoid LazyVGrid rendering errors
                                 withAnimation(.linear(duration: 0.42)) {
                                     apps_scale = 1
                                     dock_offset = 0
@@ -677,11 +677,11 @@ struct apps: View {
     var body: some View {
         VStack {
             LazyVGrid(columns: [
-                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
-                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
-                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
-                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1)
-            ], alignment: .center, spacing: UIScreen.main.bounds.height/(844/40)*icon_scaler) {
+                GridItem(.fixed(UIScreen.main.bounds.width / (390/85)), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width / (390/85)), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width / (390/85)), spacing: 1),
+                GridItem(.fixed(UIScreen.main.bounds.width / (390/85)), spacing: 1)
+            ], spacing: UIScreen.main.bounds.height / (844 / 40) * icon_scaler) {
                 app(image_name: "Messages", app_name: "Messages", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app_calendar(image_name: "Calendar", app_name: "Calendar", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app(image_name: "Photos", app_name: "Photos", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
@@ -690,23 +690,12 @@ struct apps: View {
                 app(image_name: "Stocks", app_name: "Stocks", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app(image_name: "Maps", app_name: "Maps", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app(image_name: "Weather Fahrenheit", app_name: "Weather", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
-                
-            }
-            Spacer().frame(height:UIScreen.main.bounds.height/(844/40)*icon_scaler)
-            LazyVGrid(columns: [
-                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
-                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
-                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1),
-                GridItem(.fixed(UIScreen.main.bounds.width/(390/85)), spacing: 1)
-            ], alignment: .center, spacing: UIScreen.main.bounds.height/(844/40)*icon_scaler) {
                 app(image_name: "Notes", app_name: "Notes", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app(image_name: "Utilities", app_name: "Utilities", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app(image_name: "iTunes", app_name: "iTunes", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app(image_name: "App Store", app_name: "App Store", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app(image_name: "Game Center", app_name: "Game Center", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
                 app(image_name: "Settings", app_name: "Settings", current_view: $current_view, apps_scale: $apps_scale, dock_offset: $dock_offset)
-                
-                
             }
             Spacer()
         }.onAppear() {
@@ -1050,7 +1039,7 @@ struct status_bar: View {
         ZStack {
             Color.black.opacity(0.65)
             HStack {
-                Text(carrier_id == "" ? "No SIM" : carrier_id).foregroundColor(Color.init(red: 200/255, green: 200/255, blue: 200/255)).font(.custom("Helvetica Neue Medium", fixedSize: 15)).onAppear() {
+                Text(carrier_id == "" ? "No SIM" : carrier_id == "--" ? "eSIM" : carrier_id).foregroundColor(Color.init(red: 200/255, green: 200/255, blue: 200/255)).font(.custom("Helvetica Neue Medium", fixedSize: 15)).onAppear() {
                     let networkInfo = CTTelephonyNetworkInfo()
                     let carrier = networkInfo.serviceSubscriberCellularProviders?.first?.value
                     
@@ -1095,11 +1084,15 @@ struct status_bar: View {
                 Spacer()
             }
         }.onAppear() {
+            print(CTTelephonyNetworkInfo().serviceSubscriberCellularProviders) //CTCarrier has been depricated. As a result, for now, we will say something generic like "ESIM". I'm optimistic that this change is largely due to iPhones replacing physical SIMS with ESIMS, hence the introduction of CTCellularPlanProperties with iOS 26, which could provide a gateway back into this.
             if carrier_id == "" {
                 let networkInfo = CTTelephonyNetworkInfo()
                 let carrier = networkInfo.serviceSubscriberCellularProviders?.first?.value
                 let carrierName = carrier?.carrierName
                 carrier_id = carrierName ?? ""
+                if carrier_id == "--" {
+                    carrier_id = "ESIM"
+                }
             }
             configureNetworkMonitor(completion: {result in
                 wifi_connected = result

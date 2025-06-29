@@ -33,6 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let window = UIWindow(windowScene: windowScene)
             let context = persistentContainer.viewContext
             window.rootViewController = HostingController(rootView: contentView.environmentObject(MusicObserver()).environmentObject(EmailManager()).environment(\.managedObjectContext, context))
+            window.rootViewController?.accessibilityElementsHidden = true
             self.window = window
             window.makeKeyAndVisible()
         }

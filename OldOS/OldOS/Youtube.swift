@@ -10,6 +10,8 @@ import Alamofire
 import SDWebImageSwiftUI
 import Combine
 
+//I'll re-enable youtube at somepoint when I get the google cloud billing figured out...
+
 struct Youtube: View {
     @StateObject var youtube_observer: YoutubeObserver = YoutubeObserver()
     @StateObject var most_viewed_observer: MostViewedObserver = MostViewedObserver()
@@ -254,20 +256,40 @@ struct YoutubeDetailView: View {
     @Binding var current_nav_view: String
     @Binding var forward_or_backward: Bool
     var current_video: YouTubeVideoData?
+
+    private var likeCount: Int {
+        let likeText = current_video?.ratings?.likes?.text ?? ""
+        let likeFiltered = likeText.filter("0123456789.".contains)
+        return Int(likeFiltered) ?? 1
+    }
+    private var dislikeCount: Int {
+        let dislikeText = current_video?.ratings?.dislikes?.text ?? ""
+        let dislikeFiltered = dislikeText.filter("0123456789.".contains)
+        return Int(dislikeFiltered) ?? 1
+    }
+    private var viewCount: String {
+        let viewText = current_video?.views?.text ?? ""
+        return viewText.filter("0123456789.".contains)
+    }
+    private var videoDuration: Double {
+        let durationText = current_video?.duration?.lengthSec ?? ""
+        let durationFiltered = durationText.filter("0123456789.".contains)
+        return Double(durationFiltered) ?? 0
+    }
+
     var body: some View {
         GeometryReader { geometry in
+            let like_count = likeCount
+            let dislike_count = dislikeCount
+            let view_count = viewCount
+            let duration = videoDuration
             ZStack {
                 settings_main_list()
                 ScrollView(showsIndicators: true) {
                     VStack {
                         Spacer().frame(height: 20)
                         VStack(spacing: 0) {
-                            let like_count = Int((current_video?.ratings?.likes?.text ?? "").filter("0123456789.".contains)) ?? 1
-                            let dislike_count = Int((current_video?.ratings?.dislikes?.text ?? "").filter("0123456789.".contains)) ?? 1
-                            let view_count = (current_video?.views?.text ?? "").filter("0123456789.".contains) ?? ""
-                            let duration = Double((current_video?.duration?.lengthSec ?? "").filter("0123456789.".contains) ?? "") ?? 0
                             HStack {
-                                
                                 WebImage(url: current_video?.thumbnails?[optional: 0]?.url).resizable().placeholder {
                                     Image("DefaultThumbnail")
                                 }.aspectRatio(contentMode: .fit).frame(width:geometry.size.width/3.75, height: 60).background(Color.black).padding(.leading, 6).cornerRadius(4)
@@ -275,20 +297,21 @@ struct YoutubeDetailView: View {
                                     Text(current_video?.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                                     HStack(alignment: .top, spacing: 2.5) {
                                         Image("thumbsUp").offset(y: -4.5)
-                                        Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                        let percent: Int = {
+                                            let like = Float(like_count)
+                                            let dislike = Float(dislike_count)
+                                            let total = like + dislike
+                                            return total > 0 ? Int((like / total) * 100) : 0
+                                        }()
+                                        Text("\(percent)%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
                                         Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
-                                        
-                                        
+
+
                                         Spacer()
                                     }.offset(y: 4).padding(.bottom, 4)
                                     HStack() {
-                                      
-                                        
-                                        
                                         Text(duration.asString(style: .positional)).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
-                             
                                         }
-                                      
                                         Text(current_video?.channel?.name ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
                                     }
                                 }
@@ -361,67 +384,8 @@ struct YoutubeFeaturedView: View {
                                     
                                 }.frame(width: geometry.size.width, height: geometry.size.height)
                             } else {
-                                VStack(spacing:0){
-                                    ForEach(youtube_observer.featured, id:\.id) { video in
-                                        let like_count = Int(youtube_observer.featured_stats[optional: youtube_observer.featured_stats.firstIndex(where: {$0.id == video.id}) ?? 0]?.statistics.likeCount ?? "") ?? 1
-                                        let dislike_count = Int(youtube_observer.featured_stats[optional: youtube_observer.featured_stats.firstIndex(where: {$0.id == video.id}) ?? 0]?.statistics.dislikeCount ?? "") ?? 1
-                                        let view_count = youtube_observer.featured_stats[optional: youtube_observer.featured_stats.firstIndex(where: {$0.id == video.id}) ?? 0]?.statistics.viewCount ?? ""
-                                        let duration = youtube_observer.featured_details[optional: youtube_observer.featured_details.firstIndex(where: {$0.id == video.id}) ?? 0]?.contentDetails.duration ?? ""
-                                        Button(action:{
-                                            fetch_searched_video(id: video.id, completion: {result in
-                                                let url = result.streams?.formats?.first?.url
-                                                selected_video_player = AVPlayer(url: result.streams?.formats?.first?.url ?? URL(string: "google.com")!)
-                                                instant_video_change = true; withAnimation(.linear(duration: 0.4)) {show_video_player = true}
-                                            })
-                                            
-                                            
-                                        }) {
-                                            VStack(spacing: 0) {
-                                                HStack {
-                                                    WebImage(url: video.snippet.thumbnails.medium.url).resizable().placeholder {
-                                                        Image("DefaultThumbnail")
-                                                    }.aspectRatio(contentMode: .fit).frame(width:geometry.size.width/3, height: 89).background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
-                                                    VStack(alignment: .leading, spacing: 4) {
-                                                        Text(video.snippet.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
-                                                        HStack(alignment: .top, spacing: 2.5) {
-                                                            Image("thumbsUp").offset(y: -4.5)
-                                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
-                                                            Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
-                                                            
-                                                            
-                                                            Spacer()
-                                                        }.offset(y: 4).padding(.bottom, 4)
-                                                        HStack() {
-                                          
-                                                            
-                                                            
-                                                            Text(duration.getYoutubeFormattedDuration()).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
-                                                          
-                                                            }
-                                          
-                                                            Text(video.snippet.channelTitle ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
-                                                        }
-                                                    }
-                                                    Spacer()
-                                                    Button(action: {
-                                                        fetch_searched_video(id: video.id, completion: {result in
-                                                            featured_current_video = result
-                                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                                                                forward_or_backward = false; withAnimation(.linear(duration: 0.28)){featured_current_nav_view = "Video_Destination"}
-                                                            }
-                                                        })
-                                                    }) {
-                                                        Image("ABTableNextButton").padding(.trailing, 12)
-                                                    }
-                                                }
-                                    
-                                                Rectangle().fill(Color(red: 171/255, green: 171/255, blue: 171/255)).frame(height: 1)
-
-                                            }.frame(height: 90)
-                                        }.frame(height: 90).buttonStyle(BlankButtonStyle())
-                                    }
-                                }.background(Color.white)
-                              
+                                YoutubeFeaturedVideoList(youtube_observer: youtube_observer, favorite_observer: favorite_observer, forward_or_backward: $forward_or_backward, featured_current_nav_view: $featured_current_nav_view, featured_current_video: $featured_current_video, show_video_player: $show_video_player, instant_video_change: $instant_video_change, selected_video_player: $selected_video_player, geometry: geometry)
+                                Spacer()
                             }
                           
                         }
@@ -434,6 +398,81 @@ struct YoutubeFeaturedView: View {
                 YoutubeVideoInfoView(current_nav_view: $featured_current_nav_view, forward_or_backward: $forward_or_backward, current_video: featured_current_video).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
             default:
                 Spacer()
+            }
+        }.background(Color.white)
+    }
+}
+
+private struct YoutubeFeaturedVideoList: View {
+    @ObservedObject var youtube_observer: YoutubeObserver
+    @ObservedObject var favorite_observer: favorite_videos_observer
+    @Binding var forward_or_backward: Bool
+    @Binding var featured_current_nav_view: String
+    @Binding var featured_current_video: YouTubeVideoData?
+    @Binding var show_video_player: Bool
+    @Binding var instant_video_change: Bool
+    @Binding var selected_video_player: AVPlayer
+    var geometry: GeometryProxy
+
+    var body: some View {
+        VStack(spacing:0){
+            ForEach(youtube_observer.featured, id:\.id) { video in
+                let like_count = Int(youtube_observer.featured_stats[optional: youtube_observer.featured_stats.firstIndex(where: {$0.id == video.id}) ?? 0]?.statistics.likeCount ?? "") ?? 1
+                let dislike_count = Int(youtube_observer.featured_stats[optional: youtube_observer.featured_stats.firstIndex(where: {$0.id == video.id}) ?? 0]?.statistics.dislikeCount ?? "") ?? 1
+                let view_count = youtube_observer.featured_stats[optional: youtube_observer.featured_stats.firstIndex(where: {$0.id == video.id}) ?? 0]?.statistics.viewCount ?? ""
+                let duration = youtube_observer.featured_details[optional: youtube_observer.featured_details.firstIndex(where: {$0.id == video.id}) ?? 0]?.contentDetails.duration ?? ""
+                Button(action:{
+                    fetch_searched_video(id: video.id, completion: {result in
+                        let url = result.streams?.formats?.first?.url
+                        selected_video_player = AVPlayer(url: result.streams?.formats?.first?.url ?? URL(string: "google.com")!)
+                        instant_video_change = true; withAnimation(.linear(duration: 0.4)) {show_video_player = true}
+                    })
+
+
+                }) {
+                    VStack(spacing: 0) {
+                        HStack {
+                            WebImage(url: video.snippet.thumbnails.medium.url).resizable().placeholder {
+                                Image("DefaultThumbnail")
+                            }.aspectRatio(contentMode: .fit).frame(width:geometry.size.width/3, height: 89).background(Color.black).border_top(width: 1, edges:[.trailing], color: Color(red: 217/255, green: 217/255, blue: 217/255))
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(video.snippet.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                                HStack(alignment: .top, spacing: 2.5) {
+                                    Image("thumbsUp").offset(y: -4.5)
+                                    Text("\(Int(like_count/(like_count + dislike_count)*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                    Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
+
+
+                                    Spacer()
+                                }.offset(y: 4).padding(.bottom, 4)
+                                HStack() {
+
+
+
+                                    Text(duration.getYoutubeFormattedDuration()).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(1).onAppear() {
+
+                                    }
+
+                                    Text(video.snippet.channelTitle ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(1)
+                                }
+                            }
+                            Spacer()
+                            Button(action: {
+                                fetch_searched_video(id: video.id, completion: {result in
+                                    featured_current_video = result
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                        forward_or_backward = false; withAnimation(.linear(duration: 0.28)){featured_current_nav_view = "Video_Destination"}
+                                    }
+                                })
+                            }) {
+                                Image("ABTableNextButton").padding(.trailing, 12)
+                            }
+                        }
+
+                        Rectangle().fill(Color(red: 171/255, green: 171/255, blue: 171/255)).frame(height: 1)
+
+                    }.frame(height: 90)
+                }.frame(height: 90).buttonStyle(BlankButtonStyle())
             }
         }.background(Color.white)
     }
@@ -466,6 +505,7 @@ struct YoutubeMostViewedView: View {
                                 
                             }.frame(width: geometry.size.width, height: geometry.size.height)
                         })
+                        Spacer()
                     }
                     
                 }.background(Color.white).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
@@ -516,6 +556,7 @@ struct YoutubeSearchView: View {
                                 }.frame(width: geometry.size.width, height: geometry.size.height)
                             }
                         })
+                        Spacer()
                     }
                 }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
             case "Video_Destination":
@@ -539,7 +580,7 @@ struct result_content_view<PlaceholderContent: View>: View {
     @Binding var selected_video_player: AVPlayer
     var content: [YouTubeVideoData]
     var geometry: GeometryProxy
-    var placeholder_content: PlaceholderContent
+    var placeholder_content: () -> PlaceholderContent
     init(current_nav_view: Binding<String>, current_video: Binding<YouTubeVideoData?>, forward_or_backward: Binding<Bool>, show_video_player: Binding<Bool>, instant_video_change: Binding<Bool>, selected_video_player: Binding<AVPlayer>, content:  [YouTubeVideoData], geometry: GeometryProxy, @ViewBuilder placeholder_content: @escaping () -> PlaceholderContent) {
         _current_nav_view = current_nav_view
         _current_video = current_video
@@ -547,7 +588,7 @@ struct result_content_view<PlaceholderContent: View>: View {
         _show_video_player = show_video_player
         _instant_video_change = instant_video_change
         _selected_video_player = selected_video_player
-        self.placeholder_content = placeholder_content()
+        self.placeholder_content = placeholder_content
         self.content = content
         self.geometry = geometry
     }
@@ -555,15 +596,22 @@ struct result_content_view<PlaceholderContent: View>: View {
         VStack {
             if content.isEmpty {
                
-                placeholder_content
+                placeholder_content()
           
             } else {
                 VStack(spacing:0){
                     ForEach(content, id:\.id) { video in
-                        let like_count = Int((content[optional: content.firstIndex(where: {$0.id == video.id}) ?? 0]?.ratings?.likes?.text ?? "").filter("0123456789.".contains)) ?? 1
-                        let dislike_count = Int((content[optional: content.firstIndex(where: {$0.id == video.id}) ?? 0]?.ratings?.dislikes?.text ?? "").filter("0123456789.".contains)) ?? 1
-                        let view_count = (content[optional: content.firstIndex(where: {$0.id == video.id}) ?? 0]?.views?.text ?? "").filter("0123456789.".contains) ?? ""
-                        let duration = Double((content[optional: content.firstIndex(where: {$0.id == video.id}) ?? 0]?.duration?.lengthSec ?? "").filter("0123456789.".contains) ?? "") ?? 0
+                        let index = content.firstIndex(where: { $0.id == video.id }) ?? 0
+                        let videoData = content[optional: index]
+                        let likeText = videoData?.ratings?.likes?.text ?? ""
+                        let dislikeText = videoData?.ratings?.dislikes?.text ?? ""
+                        let like_count = Int(likeText.filter("0123456789.".contains)) ?? 1
+                        let dislike_count = Int(dislikeText.filter("0123456789.".contains)) ?? 1
+                        let view_count = (videoData?.views?.text ?? "").filter("0123456789.".contains)
+                        let durationRaw = videoData?.duration?.lengthSec ?? ""
+                        let duration = Double(durationRaw.filter("0123456789.".contains) ?? "") ?? 0
+                        let percentage = Int(like_count/(like_count + dislike_count)*100)
+
                         Button(action:{
                             let url = video.streams?.formats?.first?.url
                             selected_video_player = AVPlayer(url: video.streams?.formats?.first?.url ?? URL(string: "google.com")!)
@@ -580,7 +628,7 @@ struct result_content_view<PlaceholderContent: View>: View {
                                         Text(video.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                                         HStack(alignment: .top, spacing: 2.5) {
                                             Image("thumbsUp").offset(y: -4.5)
-                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                            Text("\(percentage)%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
                                             Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255))
                                             
                                             
@@ -695,7 +743,7 @@ struct result_content_view_favorites<PlaceholderContent: View>: View {
                                         Text(video.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                                         HStack(alignment: .top, spacing: 2.5) {
                                             Image("thumbsUp").offset(y: -4.5)
-                                            Text("\(Int(Float(like_count)/(Float(like_count) + Float(dislike_count))*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                            Text("\(Int(like_count/(like_count + dislike_count)*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
                                             Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(0)
                                             
                                             
@@ -777,6 +825,7 @@ struct YoutubeFavoriteView: View {
                                 
                             }.frame(width: geometry.size.width, height: geometry.size.height)
                         })
+                        Spacer()
                     }
                     
                 }.background(Color.white).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
@@ -1330,7 +1379,7 @@ struct youtube_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Search").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Search").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading, 5).offset(y: -1.1)
                                     }
                                 }.padding(.leading, 6)
                             }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
@@ -1350,14 +1399,14 @@ struct youtube_title_bar : View {
                                 ZStack {
                                     Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
                                     HStack(alignment: .center) {
-                                        Text("Favorites").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                                        Text("Favorites").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading, 5).offset(y: -1.1)
                                     }
                                 }.padding(.leading, 6)
-                            }.transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge: .trailing)))
+                            }.transition(AnyTransition.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .trailing)))
                             Spacer()
                         }
                         Spacer()
-                    }.offset(y:-0.5)
+                    }.offset(y: -0.5)
                     
                 }
                 if selectedTab == "Favorites", fv_current_nav_view == "Main" { //, featured_show_application == true
@@ -1610,6 +1659,7 @@ func fetch_most_viewed_video(id: String?, completion: @escaping (YouTubeVideoDat
 func fetch_searched_video(id: String?, completion: @escaping (YouTubeVideoData) -> Void) {
     //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
     let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/video-info?query=\(id ?? "")")!
+    print(url, "ZKURL")
     var request = URLRequest(url: url)
     request.setValue("sent-from-app", forHTTPHeaderField: "x-oldos-app")
     let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
@@ -2363,3 +2413,8 @@ struct BlankButtonStyle: ButtonStyle {
             .background(Color.white)
     }
 }
+
+
+
+
+

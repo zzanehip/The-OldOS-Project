@@ -178,7 +178,7 @@ struct search_applications: View {
             ZStack {
             VStack(spacing:0) {
                 ScrollView(showsIndicators: true) {
-                        LazyVStack {
+                        LazyVStack(spacing: 0) {
                             ForEach(search_results, id:\.trackID) { application in
                                 Button(action:{search_selected_application = application;forward_or_backward = false; withAnimation(.linear(duration: 0.28)) {search_show_application = true}}) {
                                     VStack(spacing: 0) {
@@ -291,7 +291,7 @@ struct app_store_categories: View {
         GeometryReader { geometry in
             VStack(spacing:0) {
                 ScrollView(showsIndicators: true) {
-                    LazyVStack {
+                    LazyVStack(spacing: 0) {
                         ForEach(categories_obs.categories) { category in
                             Button(action:{
                                 selected_category = category; forward_or_backward = false; withAnimation(.linear(duration: 0.28)) {if selected_category.genre_id == category.genre_id {categories_current_view = "Category"}}
@@ -378,7 +378,7 @@ struct category_destination: View {
                 }
                 ScrollView(showsIndicators: true) {
                     if selected_segment_25 == 0 {
-                        LazyVStack {
+                        LazyVStack(spacing: 0) {
                             if top_paid_applications.isEmpty {
                                 Spacer().frame(height:geometry.size.height)
                             } else {
@@ -427,7 +427,7 @@ struct category_destination: View {
                         Spacer().frame(height: 30)
                         Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 40/255, green: 50/255, blue: 56/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         } } else if selected_segment_25 == 1 {
-                        LazyVStack {
+                        LazyVStack(spacing: 0) {
                             if top_free_applications.isEmpty {
                                 Spacer().frame(height:geometry.size.height)
                             } else {
@@ -476,7 +476,7 @@ struct category_destination: View {
                         Spacer().frame(height: 30)
                         Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 40/255, green: 50/255, blue: 56/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         } }else if selected_segment_25 == 2 {
-                        LazyVStack {
+                        LazyVStack(spacing: 0) {
                             if new_applications.isEmpty {
                                 Spacer().frame(height:geometry.size.height)
                             } else {
@@ -615,7 +615,7 @@ struct top_25_applications: View {
             VStack(spacing:0) {
                 ScrollView(showsIndicators: true) {
                     if selected_segment_25 == 0 {
-                        LazyVStack {
+                        LazyVStack(spacing: 0) {
                             if top_paid_and_free_observer.top_paid_applications.isEmpty {
                                 Spacer().frame(height:geometry.size.height)
                             } else {
@@ -664,7 +664,7 @@ struct top_25_applications: View {
                         Spacer().frame(height: 30)
                         Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 40/255, green: 50/255, blue: 56/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         } } else if selected_segment_25 == 1 {
-                        LazyVStack {
+                        LazyVStack(spacing: 0) {
                             if top_paid_and_free_observer.top_free_applications.isEmpty {
                                 Spacer().frame(height:geometry.size.height)
                             } else {
@@ -713,7 +713,7 @@ struct top_25_applications: View {
                         Spacer().frame(height: 30)
                         Text("iTunes Store Terms and Conditions...").multilineTextAlignment(.center).foregroundColor(Color(red: 40/255, green: 50/255, blue: 56/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.7), radius: 0, x: 0.0, y: 0.9).padding(.bottom, 30)
                         } } else if selected_segment_25 == 2 {
-                        LazyVStack {
+                        LazyVStack(spacing: 0) {
                             if top_paid_and_free_observer.top_grossing_applications.isEmpty {
                                 Spacer().frame(height:geometry.size.height)
                             } else {
@@ -822,7 +822,7 @@ struct app_destination: View {
                                             if let url = URL(string: "itms-apps://apple.com/app/id\(id)") {
                                                 UIApplication.shared.open(url)
                                             }
-                                        }, button_type: .app_store, content: "  \(featured_selected_application?.formattedPrice ?? "")  ", height_modifier: -5, radius: 3.5).textCase(.uppercase).padding(.trailing, 4)
+                                        }, button_type: .app_store, content: "\(featured_selected_application?.formattedPrice ?? "")  ", height_modifier: -5, radius: 3.5).textCase(.uppercase).padding(.trailing, 4)
                                     }
                                 }.frame(height:90)
                                 Spacer()
@@ -939,7 +939,7 @@ struct featured_applications: View {
             VStack(spacing:0) {
                 ScrollView(showsIndicators: true) {
                     if selected_segment == 0 {
-                        LazyVStack {
+                        LazyVStack(spacing: 0) {
                             if featured_observer.featured_applications.isEmpty {
                                 Spacer().frame(height:geometry.size.height)
                             } else {
@@ -1062,15 +1062,15 @@ class TopPaidAndFreeApplicationsObserver: ObservableObject { //<-
             }
         }
         //Top Grossing
-        let grossing_url = URL(string: "https://rss.applemarketingtools.com/api/v2/us/apps/top-grossing/25/apps.rss")!
+        let grossing_url = URL(string: "https://itunes.apple.com/us/rss/topgrossingapplications/limit=25/xml")!
         let grossing_parser = FeedParser(URL: grossing_url)
         grossing_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let feed):
-                    let rssFeed = feed.rssFeed
-                    for item in rssFeed?.items ?? [] {
-                        fetch_application_data(item, completion: { result in
+                    let rssFeed = feed.atomFeed
+                    for item in rssFeed?.entries ?? [] {
+                        fetch_application_data_atom(item, completion: { result in
                             DispatchQueue.main.async {
                                 
                                 self.top_grossing_applications.append(result)
@@ -1092,6 +1092,8 @@ class TopPaidAndFreeApplicationsObserver: ObservableObject { //<-
 
 //Until the Apple RSS feed is back up and running, we will use a feed stored on the Internet Archive.
 //EDIT as of 3/19 this is live again, who knows what the deal was, but keep an eye out for if it stops working.
+//EDIT as of 6/28/25 the old Apple marketing tools RSS feeds have been taken down. Luckily, the iTunes feeds are still live. Woohoo! The only change is the feed type is atom...good thing we were smart (or perhaps not smart) coders 4 years ago and already have everything built out to handle that
+//https://web.archive.org/web/20130707162817/itunes.apple.com/us/rss/ This archive link comes in very handy for this
 class FeaturedApplicationsObserver: ObservableObject {
     @Published var featured_applications = [Application_Data.Results]()
     
@@ -1099,16 +1101,16 @@ class FeaturedApplicationsObserver: ObservableObject {
         parse_data()
     }
     func parse_data() {
-        print("parsing data")
-        let url = URL(string: "https://rss.applemarketingtools.com/api/v2/new-apps-we-love/25/apps.rss")! //If it continues to not work switch to 10
+        print("parsing data Featured")
+        let url = URL(string: "https://itunes.apple.com/us/rss/newapplications/limit=25/xml")! //If it continues to not work switch to 10
         let parser = FeedParser(URL: url)
         parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let feed):
-                    let rssFeed = feed.rssFeed
-                    for item in rssFeed?.items ?? [] {
-                        fetch_application_data(item, completion: { result in
+                    let rssFeed = feed.atomFeed
+                    for item in rssFeed?.entries ?? [] {
+                        fetch_application_data_atom(item, completion: { result in
                             DispatchQueue.main.async {
                                 
                                 self.featured_applications.append(result)

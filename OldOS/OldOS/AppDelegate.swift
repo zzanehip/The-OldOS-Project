@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 "weather_cities": ["0":"Cupertino,us", "1": "New York,us"],
                 "weather_mode": "imperial",
                 "stock_mode": "Price",
-                "stocks": ["AAPL", "GOOG", "YHOO", "TSLA", "T","MSFT", "AMZN", "NFLX", "FB", "INTC", "ORCL"]
+                "stocks": ["AAPL", "GOOG", "NVDA", "TSLA", "T","MSFT", "AMZN", "NFLX", "META", "INTC", "ORCL"]
             ]
         )
         UIDevice.current.isBatteryMonitoringEnabled = true

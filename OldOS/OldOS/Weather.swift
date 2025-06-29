@@ -311,7 +311,7 @@ struct new_location_search: View {
 
     func parse_search_data(search: String) {
         guard let find_search = search.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
-        let developed_string = "https://api.openweathermap.org/data/2.5/find?q=\(find_search)&appid=a287713003f81bf6e2f8a73fe70a5f6b"
+        let developed_string = "https://api.openweathermap.org/data/2.5/find?q=\(find_search)&appid=bd5e378503939ddaee76f12ad7a97608"
         let search_url = URL(string: developed_string)!
         let request = URLRequest(url: search_url)
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
@@ -699,7 +699,7 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
     }()
     func parse_forcast_data(location: String, mode: String) {
         guard let location_string = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
-        let developed_string = "https://api.openweathermap.org/data/2.5/forecast/daily?q=\(location_string),us&appid=a287713003f81bf6e2f8a73fe70a5f6b&units=\(mode)&cnt=6"
+        let developed_string = "https://api.openweathermap.org/data/2.5/forecast/daily?q=\(location_string),us&appid=bd5e378503939ddaee76f12ad7a97608&units=\(mode)&cnt=6"
         let forcast_url = URL(string: developed_string)!
         let request = URLRequest(url: forcast_url)
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
@@ -733,14 +733,14 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
     func parse_current_data(location: String, mode: String) {
         guard let location_string = location.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
         //There's a very odd SwiftUI bug where if we properly format the url, it will fail to update our image header. This url will essentially be (location),(country),(country), instead of (location),(country). Why this happens is beyond me.
-        let developed_string = "https://api.openweathermap.org/data/2.5/weather?q=\(location_string),us&appid=a287713003f81bf6e2f8a73fe70a5f6b&units=\(mode)"
+        let developed_string = "https://api.openweathermap.org/data/2.5/weather?q=\(location_string),us&appid=bd5e378503939ddaee76f12ad7a97608&units=\(mode)"
         let current_url = URL(string: developed_string)!
         print(current_url)
         let request = URLRequest(url: current_url)
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
             
             if let error = error {
-                print(error)
+                print("failed update", error)
                 self.last_updated_text = "Update failed"
                 return
             }
@@ -760,7 +760,7 @@ class WeatherObserver: ObservableObject, Identifiable, Equatable {
                     
                 } catch {
                     self.last_updated_text = "Update failed"
-                    print(error)
+                    print("failed update", error)
                 }
             }
         })
@@ -841,10 +841,36 @@ struct WeatherForecast: Codable {
     }
     
     let city: City?
-  let cod: String?
-let message: Double?
+  let cod: StringOrDouble?
+let message: StringOrDouble?
     let cnt: Int?
     let list: [List]?
+}
+
+struct StringOrDouble: Codable {
+    let value: String
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let doubleVal = try? container.decode(Double.self) {
+            self.value = String(doubleVal)
+        } else if let stringVal = try? container.decode(String.self) {
+            self.value = stringVal
+        } else {
+            throw DecodingError.typeMismatch(
+                String.self,
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Expected String or Double for value"
+                )
+            )
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(value)
+    }
 }
 
 import Foundation
@@ -918,7 +944,7 @@ struct CurrentWeather: Codable {
     let timezone: Int?
     let id: Int?
     let name: String?
-    let cod: Int?
+    let cod: StringOrDouble?
 }
 
 struct WeatherSearch: Codable {
@@ -983,8 +1009,8 @@ struct WeatherSearch: Codable {
     let weather: [Weather]?
   }
 
-  let message: String?
-  let cod: String?
+  let message: StringOrDouble?
+  let cod: StringOrDouble?
   let count: Int?
   let list: [List]?
 }

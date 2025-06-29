@@ -64,37 +64,86 @@ struct Safari: View {
                           id: \.id,
                           content: { index in
                             ZStack {
-                                ScrollView([]) {
+                                if !selecting_tab {
+                                    ScrollView([]) {
+                                        VStack {
+                                            Spacer().frame(height:70).offset(y: offset.height < 70 ? -offset.height : -70).drawingGroup()
+                                            Webview(dynamicHeight: $webViewHeight, offset: $offset, selecting_tab:$selecting_tab, webview: index.webView) .disabled(selecting_tab)
+                                                .frame(height:geometry.size.height - (24+45)).offset(y: offset.height < 70 ? -offset.height : -70)
+                                        }
+                                    }
+                                    .disabled(selecting_tab)
+                                    .simultaneousGesture(
+                                        TapGesture()
+                                            .onEnded({
+//                                                if selecting_tab == true, can_tap_view == true {
+//                                                    if views.array.firstIndex(of: index) == page.index {
+//                                                        print(page)
+//                                                        print(page.index, "ZKINDEX1")
+//                                                        if instant_background_change == false {
+//                                                            instant_background_change = true
+//                                                        } else {
+//                                                            DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
+//                                                                instant_background_change = false
+//                                                            }
+//                                                        }
+//                                                        withAnimation(.linear(duration:0.25)) {
+//                                                            print(page.index, "ZKINDEX2")
+//                                                            page.update(.new(index: views.array.firstIndex(of: index) ?? 0))//This page update is ensurance if we get stuck
+//                                                            url_search = index.webView.url?.relativeString ?? ""
+//                                                            selecting_tab.toggle()
+//                                                        }
+//                                                    } else {
+//                                                        withAnimation(.linear(duration:0.25)) {
+//                                                            print(page.index, "ZKINDEX3")
+//                                                            page.update(.new(index: views.array.firstIndex(of: index) ?? 0))
+//                                                        }
+//                                                    }
+//                                                }
+                                            })
+                                    )
+                                    .shadow(color:Color.black.opacity(0.4), radius: 3, x: 0, y:4)
+                                    .opacity(views.array.firstIndex(of: index) == page.index ? 1 : 0.2)
+                                } else {
                                     VStack {
                                         Spacer().frame(height:76).offset(y: offset.height < 76 ? -offset.height : -76).drawingGroup()
-                                        Webview(dynamicHeight: $webViewHeight, offset: $offset, selecting_tab:$selecting_tab, webview: index.webView)
+                                        Webview(dynamicHeight: $webViewHeight, offset: $offset, selecting_tab:$selecting_tab, webview: index.webView) .disabled(selecting_tab)
                                             .frame(height:geometry.size.height - (24+45)).offset(y: offset.height < 76 ? -offset.height : -76)
                                     }
-                                }.disabled(selecting_tab).simultaneousGesture(
-                                    TapGesture()
-                                        .onEnded({
-                                            if selecting_tab == true, can_tap_view == true {
-                                                if views.array.firstIndex(of: index) == page.index {
-                                                    print(page)
-                                                    if instant_background_change == false {
-                                                        instant_background_change = true
+                                    .shadow(color:Color.black.opacity(0.4), radius: 3, x: 0, y:4)
+                                    .opacity(views.array.firstIndex(of: index) == page.index ? 1 : 0.2)
+                                    .contentShape(Rectangle())
+                                    .allowsHitTesting(true)
+                                    .simultaneousGesture(
+                                        TapGesture()
+                                            .onEnded({
+                                                if selecting_tab == true, can_tap_view == true {
+                                                    if views.array.firstIndex(of: index) == page.index {
+                                                        print(page)
+                                                        print(page.index, "ZKINDEX1")
+                                                        if instant_background_change == false {
+                                                            instant_background_change = true
+                                                        } else {
+                                                            DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
+                                                                instant_background_change = false
+                                                            }
+                                                        }
+                                                        withAnimation(.linear(duration:0.25)) {
+                                                            page.update(.new(index: views.array.firstIndex(of: index) ?? 0))//This page update is ensurance if we get stuck
+                                                            print(page.index, "ZKINDEX2")
+                                                            url_search = index.webView.url?.relativeString ?? ""
+                                                            selecting_tab.toggle()
+                                                        }
                                                     } else {
-                                                        DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
-                                                            instant_background_change = false
+                                                        withAnimation(.linear(duration:0.25)) {
+                                                            print(page.index, "ZKINDEX3")
+                                                            page.update(.new(index: views.array.firstIndex(of: index) ?? 0))
                                                         }
                                                     }
-                                                    withAnimation(.linear(duration:0.25)) {
-                                                        page.update(.new(index: views.array.firstIndex(of: index) ?? 0))//This page update is ensurance if we get stuck
-                                                        url_search = index.webView.url?.relativeString ?? ""
-                                                        selecting_tab.toggle()
-                                                    }
-                                                } else {
-                                                    withAnimation(.linear(duration:0.25)) {
-                                                        page.update(.new(index: views.array.firstIndex(of: index) ?? 0))
-                                                    }
                                                 }
-                                            }
-                                        })).shadow(color:Color.black.opacity(0.4), radius: 3, x: 0, y:4).opacity(views.array.firstIndex(of: index) == page.index ? 1 : 0.2)
+                                            })
+                                    )
+                                }
                                 VStack {
                                     HStack {
                                         Button(action:{
@@ -149,7 +198,8 @@ struct Safari: View {
                                     }
                                     Spacer()
                                 }.disabled(!selecting_tab).opacity(selecting_tab == true ? views.array.firstIndex(of: index) == page.index ? views.array.count > 1 ? 1 : 0 : 0 : 0) //The magic of the turnery
-                            }.scaleEffect(selecting_tab == true ? 0.55 : views.array.firstIndex(of: index) == page.index ? 1 : 0.55).zIndex(views.array.firstIndex(of: index) == page.index ? 1 : 0).opacity(will_remove_object == index ? 0 : 1).opacity(did_add_to_end == true ? index == views.array.last ? 0 : 1 : 1)}) .itemSpacing( -geometry.size.width*0.30).onDraggingBegan({
+                            }.scaleEffect(selecting_tab == true ? 0.55 : views.array.firstIndex(of: index) == page.index ? 1 : 0.55).zIndex(views.array.firstIndex(of: index) == page.index ? 1 : 0).opacity(will_remove_object == index ? 0 : 1).opacity(did_add_to_end == true ? index == views.array.last ? 0 : 1 : 1)
+                          }) .itemSpacing( -geometry.size.width*0.30).onDraggingBegan({
                                 can_tap_view = false
                             }).onDraggingEnded({
                                 can_tap_view = true
@@ -185,12 +235,12 @@ struct Safari: View {
                 }.opacity(selecting_tab == true ? 1 : 0)
                 ZStack {
                 if editing_state_url != "None" || editing_state_google != "None" {
-                    Color.black.opacity(0.75)
+                    Color.black.opacity(0.75).allowsHitTesting(false)
                 }
                 }
                 VStack(spacing:0) {
                     status_bar_in_app().frame(minHeight: 24, maxHeight:24).zIndex(2)
-                    safari_title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, url_search: $url_search, google_search: $google_search, editing_state_url: $editing_state_url, editing_state_google: $editing_state_google, webViewStore: views.array[page.index], current_webpage_title: views.array[page.index].webView.title ?? "").frame(minHeight: 60, maxHeight: 60).padding(.bottom, 5).offset(y: offset.height < 76 ? -offset.height : -76).zIndex(1).opacity(selecting_tab == true ? 0 : 1)
+                    safari_title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, url_search: $url_search, google_search: $google_search, editing_state_url: $editing_state_url, editing_state_google: $editing_state_google, webViewStore: views.array[page.index], current_webpage_title: views.array[page.index].webView.title ?? "", views: views, page: page).frame(minHeight: 60, maxHeight: 60).padding(.bottom, 5).offset(y: offset.height < 76 ? -offset.height : -76).zIndex(1).opacity(selecting_tab == true ? 0 : 1)
                     Spacer()
                 }.clipped()
                 if show_bookmarks {
@@ -239,7 +289,7 @@ struct Safari: View {
                 }.zIndex(2)
                 ZStack {
                 if show_share == true {
-                    Color.black.opacity(0.35)
+                    Color.black.opacity(0.35).allowsHitTesting(false)
                     VStack(spacing:0) {
                         Spacer().foregroundColor(.clear).zIndex(0)
                         share_view(cancel_action:{
@@ -300,6 +350,7 @@ struct Safari: View {
             userDefaults.setValue(webpage_dict, forKey: "webpages")
             }
         }.onChange(of: page.index) {_ in
+            print("ZK INDEX", page.index)
             if editing_state_url == "None" {
             url_search = views.array[page.index].webView.url?.relativeString ?? ""
             }
@@ -409,7 +460,7 @@ struct bookmarks_view: View {
                             if to_delete == key {
                                 Spacer()
                                 tool_bar_rectangle_button(action: {withAnimation() {
-                                    bm_observer.bookmarks.removeValue(forKey: key)
+                                    return bm_observer.bookmarks.removeValue(forKey: key)
                                 }}, button_type: .red, content: "Delete").padding(.trailing, 12).transition(AnyTransition.asymmetric(insertion: .move(edge:.trailing), removal: .move(edge:.trailing)).combined(with: .opacity))
                             }
                         }.padding(.leading, 15)
@@ -489,7 +540,7 @@ struct share_view: View {
                     }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 12).fill(Color.clear).overlay(RoundedRectangle(cornerRadius: 12).stroke(LinearGradient(gradient: Gradient(colors:[Color.init(red: 83/255, green: 83/255, blue: 83/255),Color.init(red: 143/255, green: 143/255, blue: 143/255)]), startPoint: .top, endPoint: .bottom), lineWidth: 0.5)).ps_innerShadow(.roundedRectangle(12, background_gradient), radius:5/3, offset: CGPoint(0, 1/3), intensity: 1)
-                            RoundedRectangle(cornerRadius: 9).fill(LinearGradient([(color: Color(red: 107/255, green: 113/255, blue:119/255), location: 0), (color: Color(red: 53/255, green: 62/255, blue:69/255), location: 0.50), (color: Color(red: 41/255, green: 48/255, blue:57/255), location: 0.50), (color: Color(red: 56/255, green: 62/255, blue:71/255), location: 1)], from: .top, to: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
+                            RoundedRectangle(cornerRadius: 9).fill(LinearGradient([(color: Color(red: 107/255, green: 113/255, blue:119/255), location: 0), (color: Color(red: 53/255, green: 62/255, blue:69/255), location: 0.50), (color: Color(red: 41/255, green: 48/255, blue:57/255), location: 0.50), (color: Color(red: 56/255, green: 62/255, blue: 71/255), location: 1)], from: .top, to: .bottom)).addBorder(LinearGradient(gradient: Gradient(colors:[Color.gray.opacity(0.9), Color.gray.opacity(0.35)]), startPoint: .top, endPoint: .bottom), width: 0.4, cornerRadius: 9).padding(3).opacity(0.6)
                             Text("Cancel").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(Color.white).shadow(color: Color.black.opacity(0.9), radius: 0, x: 0.0, y: -0.9)
                         }.padding([.leading, .trailing], 25).frame(minHeight: 50, maxHeight:50)
                     }.padding([.bottom], 25)
@@ -830,6 +881,8 @@ struct safari_title_bar : View {
     var webViewStore: WebViewStore
     var current_webpage_title: String
     var no_right_padding: Bool?
+    var views: ObservableArray<WebViewStore>
+    var page: Page
     private let gradient = LinearGradient([.white, .white], to: .trailing)
     private let cancel_gradient = LinearGradient([(color: Color(red: 164/255, green: 175/255, blue:191/255), location: 0), (color: Color(red: 124/255, green: 141/255, blue:164/255), location: 0.51), (color: Color(red: 113/255, green: 131/255, blue:156/255), location: 0.51), (color: Color(red: 112/255, green: 130/255, blue:155/255), location: 1)], from: .top, to: .bottom)
     var body :some View {
@@ -840,19 +893,19 @@ struct safari_title_bar : View {
                     Spacer()
                     HStack {
                         Spacer()
-                        Text(current_webpage_title != "" ? current_webpage_title : "Untitled").foregroundColor(Color(red: 62/255, green: 69/255, blue: 79/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.51), radius: 0, x: 0.0, y: 2/3).padding([.leading, .trailing], 24)
+                        Text(views.array[page.index].webView.title ?? "" != "" ? views.array[page.index].webView.title ?? "" : "Untitled").foregroundColor(Color(red: 62/255, green: 69/255, blue: 79/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.51), radius: 0, x: 0.0, y: 2/3).padding([.leading, .trailing], 24)
                         Spacer()
                     }
                     HStack {
                         if editing_state_google == "None" {
                             ZStack {
                                 RoundedRectangle(cornerRadius:6).fill(progress == 1.0 ? LinearGradient([(color: Color.white, location: 0)], from: .top, to: .bottom) : progress == 0.0 ? LinearGradient([(color: Color.white, location: 0)], from: .top, to: .bottom) : LinearGradient([(color: Color(red: 129/255, green: 184/255, blue:237/255), location: 0), (color: Color(red: 96/255, green: 168/255, blue:236/255), location: 0.50), (color: Color(red: 71/255, green: 148/255, blue:233/255), location: 0.50), (color: Color(red: 104/255, green: 194/255, blue:233/255), location: 1)], from: .top, to: .bottom)).brightness(0.1).frame(width:editing_state_url == "None" ? geometry.size.width*2/3-18.5 : geometry.size.width - 79.5).padding(.leading, 2.5).padding(.trailing, 1)
-                                url_search_bar(url_search: $url_search, editing_state_url: $editing_state_url, progress: $progress, webViewStore: webViewStore).frame(width:editing_state_url == "None" ? geometry.size.width*2/3-15 : geometry.size.width - 76)
+                                url_search_bar(url_search: $url_search, editing_state_url: $editing_state_url, progress: $progress, currentWebViewStore: { views.array[page.index] }).frame(width:editing_state_url == "None" ? geometry.size.width*2/3-15 : geometry.size.width - 76)
                             }
                         }
                         if editing_state_url == "None" {
                             ZStack {
-                            google_search_bar(google_search: $google_search, url_search: $url_search, editing_state_google: $editing_state_google, webViewStore: webViewStore).frame(width:editing_state_google == "None" ? geometry.size.width*1/3: geometry.size.width - 76)
+                            google_search_bar(google_search: $google_search, url_search: $url_search, editing_state_google: $editing_state_google, currentWebViewStore: { views.array[page.index] }).frame(width:editing_state_google == "None" ? geometry.size.width*1/3: geometry.size.width - 76)
                             }
                         }
                         if editing_state_url != "None" || editing_state_google != "None" {
@@ -887,7 +940,7 @@ struct url_search_bar: View {
     @Binding var url_search: String
     @Binding var editing_state_url: String
     @Binding var progress: Double
-    var webViewStore: WebViewStore
+    var currentWebViewStore: () -> WebViewStore
     private let gradient = LinearGradient([.white, .white], to: .trailing)
     private let cancel_gradient = LinearGradient([(color: Color(red: 164/255, green: 175/255, blue:191/255), location: 0), (color: Color(red: 124/255, green: 141/255, blue:164/255), location: 0.51), (color: Color(red: 113/255, green: 131/255, blue:156/255), location: 0.51), (color: Color(red: 112/255, green: 130/255, blue:155/255), location: 1)], from: .top, to: .bottom)
     var body: some View {
@@ -915,18 +968,18 @@ struct url_search_bar: View {
                     if url_search.hasPrefix("https://") || url_search.hasPrefix("http://") {
                         guard let url = URL(string: "\(url_search)") else { return }
                      //   print("here 1")
-                        self.webViewStore.webView.load(URLRequest(url: url))
-                        url_search = self.webViewStore.webView.url?.relativeString ?? ""
+                        self.currentWebViewStore().webView.load(URLRequest(url: url))
+                        url_search = self.currentWebViewStore().webView.url?.relativeString ?? ""
                     } else if url_search.contains("www") {
                         guard let url = URL(string: "https://\(url_search)") else { return }
                        // print("here 2")
-                        self.webViewStore.webView.load(URLRequest(url: url))
-                        url_search = self.webViewStore.webView.url?.relativeString ?? ""
+                        self.currentWebViewStore().webView.load(URLRequest(url: url))
+                        url_search = self.currentWebViewStore().webView.url?.relativeString ?? ""
                     } else {
                         guard let url = URL(string: "https://\(url_search)") else { return }
                       //  print("here 3")
-                        self.webViewStore.webView.load(URLRequest(url: url))
-                        url_search =  self.webViewStore.webView.url?.relativeString ?? ""
+                        self.currentWebViewStore().webView.load(URLRequest(url: url))
+                        url_search =  self.currentWebViewStore().webView.url?.relativeString ?? ""
                         //searchTextOnGoogle(urlString)
                     }
                     withAnimation() {
@@ -939,7 +992,7 @@ struct url_search_bar: View {
                     }.fixedSize()
                 }
                 if editing_state_url == "None" {
-                    Button(action:{webViewStore.webView.reload()}) {
+                    Button(action:{currentWebViewStore().webView.reload()}) {
                         Image("AddressViewReload")
                     }
                 }
@@ -949,8 +1002,8 @@ struct url_search_bar: View {
             .padding(.leading, 5)
             .cornerRadius(6)
             Spacer(minLength: 8)
-        } .ps_innerShadow(.roundedRectangle(6, LinearGradient([(color: Color.clear, location: progress != 1 ? progress : 0), (color: .white, progress != 1 ? progress : 0)], from: .leading, to: .trailing)), radius:1.8, offset: CGPoint(0, 1), intensity: 0.5).strokeRoundedRectangle(6, Color(red: 84/255, green: 108/255, blue: 138/255), lineWidth: 0.65).padding(.leading, 2.5).padding(.trailing, 1).onReceive(webViewStore.objectWillChange) {_ in
-            progress = webViewStore.webView.estimatedProgress
+        } .ps_innerShadow(.roundedRectangle(6, LinearGradient([(color: Color.clear, location: progress != 1 ? progress : 0), (color: .white, progress != 1 ? progress : 0)], from: .leading, to: .trailing)), radius:1.8, offset: CGPoint(0, 1), intensity: 0.5).strokeRoundedRectangle(6, Color(red: 84/255, green: 108/255, blue: 138/255), lineWidth: 0.65).padding(.leading, 2.5).padding(.trailing, 1).onReceive(currentWebViewStore().objectWillChange) {_ in
+            progress = currentWebViewStore().webView.estimatedProgress
         }
     }
 }
@@ -972,7 +1025,7 @@ struct google_search_bar: View {
     @Binding var google_search: String
     @Binding var url_search: String
     @Binding var editing_state_google: String
-    var webViewStore: WebViewStore
+    var currentWebViewStore: () -> WebViewStore
     private let gradient = LinearGradient([.white, .white], to: .trailing)
     private let cancel_gradient = LinearGradient([(color: Color(red: 164/255, green: 175/255, blue:191/255), location: 0), (color: Color(red: 124/255, green: 141/255, blue:164/255), location: 0.51), (color: Color(red: 113/255, green: 131/255, blue:156/255), location: 0.51), (color: Color(red: 112/255, green: 130/255, blue:155/255), location: 1)], from: .top, to: .bottom)
     var body: some View {
@@ -997,8 +1050,8 @@ struct google_search_bar: View {
                 }) {
                     let link = google_search.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                     guard let url = URL(string: "https://google.com/search?q=\(String(link ?? ""))") else { return }
-                    self.webViewStore.webView.load(URLRequest(url:url))
-                    url_search =  self.webViewStore.webView.url?.relativeString ?? ""
+                    self.currentWebViewStore().webView.load(URLRequest(url:url))
+                    url_search =  self.currentWebViewStore().webView.url?.relativeString ?? ""
                     google_search = ""
                     withAnimation() {
                         editing_state_google = "None"
@@ -1027,3 +1080,5 @@ struct google_search_bar: View {
 //}
 //
 //
+//
+

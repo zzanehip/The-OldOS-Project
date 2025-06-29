@@ -996,7 +996,7 @@ class iTunesMusicObserver: ObservableObject {
     }
     func parse_data() {
         print("parsing data")
-        let url = URL(string: "https://rss.itunes.apple.com/api/v1/us/itunes-music/new-music/all/10/explicit.rss?at=10laCr")!
+        let url = URL(string: "https://rss.marketingtools.apple.com/api/v2/us/music/most-played/10/songs.rss")!
         let parser = FeedParser(URL: url)
         parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
@@ -1097,15 +1097,15 @@ class iTunesMovieVideoObserver: ObservableObject {
     }
     func parse_data() {
         print("parsing data")
-        let url = URL(string: "https://rss.itunes.apple.com/api/v1/us/movies/top-movies/all/10/explicit.rss?at=10laCr")!
+        let url = URL(string: "https://itunes.apple.com/us/rss/topmovies/limit=10/xml")!
         let parser = FeedParser(URL: url)
         parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let feed):
-                    let rssFeed = feed.rssFeed
-                    for item in rssFeed?.items ?? [] {
-                        fetch_movie_data(item, completion: { result in
+                    let rssFeed = feed.atomFeed
+                    for item in rssFeed?.entries ?? [] {
+                        fetch_movie_data_atom(item, completion: { result in
                             DispatchQueue.main.async {
                                 
                                 self.new_movies.append(result)
@@ -1118,15 +1118,15 @@ class iTunesMovieVideoObserver: ObservableObject {
                 }
             }
         }
-        let tv_url = URL(string: "https://rss.itunes.apple.com/api/v1/us/tv-shows/top-tv-seasons/all/10/explicit.rss?at=10laCr")!
+        let tv_url = URL(string: "https://itunes.apple.com/us/rss/toptvepisodes/limit=10/xml")!
         let tv_parser = FeedParser(URL: tv_url)
         tv_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let feed):
-                    let rssFeed = feed.rssFeed
-                    for item in rssFeed?.items ?? [] {
-                        fetch_tv_data(item, completion: { result in
+                    let rssFeed = feed.atomFeed
+                    for item in rssFeed?.entries ?? [] {
+                        fetch_tv_data_atom(item, completion: { result in
                             DispatchQueue.main.async {
                                 
                                 self.new_tv.append(result)
@@ -1139,15 +1139,15 @@ class iTunesMovieVideoObserver: ObservableObject {
                 }
             }
         }
-        let music_url = URL(string: "https://rss.itunes.apple.com/api/v1/us/music-videos/top-music-videos/all/10/explicit.rss?at=10laCr")!
+        let music_url = URL(string: "https://itunes.apple.com/us/rss/topmusicvideos/limit=10/explicit=true/xml")!
         let music_parser = FeedParser(URL: music_url)
         music_parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let feed):
-                    let rssFeed = feed.rssFeed
-                    for item in rssFeed?.items ?? [] {
-                        fetch_musicvideo_data(item, completion: { result in
+                    let rssFeed = feed.atomFeed
+                    for item in rssFeed?.entries ?? [] {
+                        fetch_musicvideo_data_atom(item, completion: { result in
                             DispatchQueue.main.async {
                                 
                                 self.new_music.append(result)
@@ -1173,6 +1173,35 @@ func fetch_movie_data(_ video: RSSFeedItem, completion: @escaping (Music_Data.Re
     var id = ""
     if let id_range = video.link?.range(of: "(?<=id)[^?]+", options: .regularExpression) {
         id = (video.link?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+    }
+    let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
+    let request = URLRequest(url: url)
+    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+        
+        if let error = error {
+            print(error)
+            return
+        }
+        
+        // Parse JSON data
+        if let data = data {
+            guard let compiled_object = parseJsonMusicData(data: data) else {
+                return
+            }
+            if compiled_object.isEmpty == false {
+                completion(compiled_object[0])
+            }
+        }
+    })
+    
+    task.resume()
+}
+
+func fetch_movie_data_atom(_ video: AtomFeedEntry, completion: @escaping (Music_Data.Results) -> Void) {
+    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
+    var id = ""
+    if let id_range = video.id?.range(of: "(?<=id)[^?]+", options: .regularExpression) {
+        id = (video.id?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
     let request = URLRequest(url: url)
@@ -1231,6 +1260,36 @@ func fetch_tv_data(_ video: RSSFeedItem, completion: @escaping (Music_Data.Resul
     task.resume()
 }
 
+func fetch_tv_data_atom(_ video: AtomFeedEntry, completion: @escaping (Music_Data.Results) -> Void) {
+    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
+    var id = ""
+    if let id_range = video.id?.range(of: "(?<=id)[^?]+", options: .regularExpression) {
+        id = (video.id?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+    }
+    let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
+    print(url, id, "ZSK")
+    let request = URLRequest(url: url)
+    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+        
+        if let error = error {
+            print(error)
+            return
+        }
+        
+        // Parse JSON data
+        if let data = data {
+            guard let compiled_object = parseJsonMusicData(data: data) else {
+                return
+            }
+            if compiled_object.isEmpty == false {
+                completion(compiled_object[0])
+            }
+        }
+    })
+    
+    task.resume()
+}
+
 /// A function that takes an RSSFeedItem (an application), fetches its ID, and grabs its parsed JSON data from itunes.apple.com.
 /// - Parameters:
 ///   - application: RSSFeedItem passed to function.
@@ -1240,6 +1299,36 @@ func fetch_musicvideo_data(_ video: RSSFeedItem, completion: @escaping (Music_Da
     var id = ""
     if let id_range = video.link?.range(of: "(?<=\\/)[0-9]+", options: .regularExpression) {
         id = (video.link?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
+    }
+    let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
+    print(url, id, "ZSK")
+    let request = URLRequest(url: url)
+    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+        
+        if let error = error {
+            print(error)
+            return
+        }
+        
+        // Parse JSON data
+        if let data = data {
+            guard let compiled_object = parseJsonMusicData(data: data) else {
+                return
+            }
+            if compiled_object.isEmpty == false {
+                completion(compiled_object[0])
+            }
+        }
+    })
+    
+    task.resume()
+}
+
+func fetch_musicvideo_data_atom(_ video: AtomFeedEntry, completion: @escaping (Music_Data.Results) -> Void) {
+    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
+    var id = ""
+    if let id_range = video.id?.range(of: "(?<=\\/)[0-9]+", options: .regularExpression) {
+        id = (video.id?.substring(with: id_range) ?? "").filter("0123456789.".contains) //We do the filter to make sure we don't get any accidental chars
     }
     let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)")!
     print(url, id, "ZSK")
