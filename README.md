@@ -2,7 +2,7 @@
 <p align="center">
         <img src="https://img.shields.io/badge/Language-SwiftUI-orange" alt="alternatetext">
 	<img src="https://img.shields.io/badge/Sprinkles%20of-Swift%2C%20Objective--C-red" alt="alternatetext">
-	<img src="https://img.shields.io/badge/Version-1.0%20(18)-blue" alt="alternatetext">
+	<img src="https://img.shields.io/badge/Version-2.0%20(1)-blue" alt="alternatetext">
 	<img src="https://img.shields.io/badge/Who%3F-%40zzanehip%20(Zane)-yellowgreen" alt="alternatetext">
 </p>
 
@@ -11,8 +11,8 @@
 <tbody>
 <td align="center">
 <img width="2000" height="0"><br>
-<b>Updates: Version 1.0 is currently available 🎉</b><br>
-<small>This build can be built using any version of Xcode 12.5.x and below. Please do not build with Xcode 13. If you are on Monterey please see the "Building on Monterey" instructions.</small>
+<b>Updates: Version 2.0 is currently available 🎉</b><br>
+<small>Oh boy it's been quite some time hasn't it 😉. I'm so excited to push Version 2.0, which brings the project back, and retools it for modern devices (including iOS 26). For developers, we also resolve compilation issues and support the latest versions of Xcode now.</small>
 <img width="2000" height="0">
 </td>
 </tbody>
@@ -39,15 +39,6 @@
 
 The project is logically structured in files by app. Inside each app file, you'll see code and commentary behind it. Aside from main apps, there is the Common file. My mindset was to build the app in the same way Apple built interface builder — you have a collection of UI elements at your disposal that are bases. You can then make a copy in whatever other file you'd like if you require custom abilities. If you just need the generic version, you can use the generic. Hence, common, containing all your common UI elements. Lastly, there is HomeScreen, and LockScreen — essentially making up the Springboard. Lastly, in Assets.xcassets, you'll find all the image assets structured by app.
 ![](Images/Files.png)
-
-## Building on Monterey
-
-For reasons unclear to me, Mac OS Moneterey <em>officially</em> drops support for Xcode 12. However, OldOS, for now, is only supported on Xcode 12. Fortunately for us we can get around this with a few easy steps.
-
-	* Step 1: Open a terminal window.
-	* Step 2: Type in <path to Xcode 12.5>/Contents/MacOS/Xcode and press enter. Xcode 12.5 should launch.
-	* Step 3: Open OldOS via File->Open->OldOS.
-	* That's it!
 	
 
 ## Imagery
