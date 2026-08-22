@@ -581,7 +581,7 @@ struct add_bookmark_view: View {
                                 HStack {
                                     TextField("Title", text: $bookmark_name){
                                         save_action?()
-                                    }.font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
+                                    }.oldOSKeyboard(.standard).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
                                     if bookmark_name.count != 0 {
                                         Button(action:{bookmark_name = ""}) {
                                             Image("UITextFieldClearButton")
@@ -621,7 +621,7 @@ struct enter_bookmark_title_content: View {
     @Binding var bookmark_name: String
     var body: some View {
         HStack {
-            TextField("Title", text: $bookmark_name).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
+            TextField("Title", text: $bookmark_name).oldOSKeyboard(.standard).font(.custom("Helvetica Neue Regular", fixedSize: 18)).foregroundColor(Color(red: 62/255, green: 83/255, blue: 131/255)).padding(.leading, 12)
         
     }
 }
@@ -669,6 +669,7 @@ extension View {
 }
 
 struct Webview : UIViewRepresentable {
+    @EnvironmentObject private var oldOSKeyboard: OldOSKeyboardController
     @Binding var dynamicHeight: CGFloat
     @Binding var offset: CGPoint
     @Binding var selecting_tab: Bool
@@ -677,6 +678,7 @@ struct Webview : UIViewRepresentable {
     var originalcenter = CGPoint.zero
     class Coordinator: NSObject, WKNavigationDelegate, UIScrollViewDelegate {
         var parent: Webview
+        var keyboardBridge: OldOSWebKitKeyboardBridge?
         
         init(_ parent: Webview) {
             self.parent = parent
@@ -699,6 +701,17 @@ struct Webview : UIViewRepresentable {
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             decisionHandler(WKNavigationActionPolicy(rawValue: WKNavigationActionPolicy.allow.rawValue + 2)!)
         }
+
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+            keyboardBridge?.navigationStarted()
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            // UserScript handles normal navigations at document start. Reinjection
+            // is idempotent and also covers a WKWebView that had already begun
+            // loading before this SwiftUI representable was attached.
+            keyboardBridge?.reinjectCurrentDocument()
+        }
         
     }
     
@@ -712,12 +725,22 @@ struct Webview : UIViewRepresentable {
         webview.scrollView.delegate = context.coordinator
         webview.scrollView.backgroundColor = UIColor(red: 93/255, green: 99/255, blue: 103/255, alpha: 1.0)
         webview.configuration.suppressesIncrementalRendering = true
+        context.coordinator.keyboardBridge = OldOSWebKitKeyboardBridge.install(
+            on: webview,
+            keyboard: oldOSKeyboard
+        )
 //        webview.customUserAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7"
         return webview
     }
     
     func updateUIView(_ uiView: WKWebView, context: Context) {
         webview.scrollView.backgroundColor = UIColor(red: 93/255, green: 99/255, blue: 103/255, alpha: 1.0)
+        // Keep the long-lived bridge pointed at the current shared controller if
+        // SwiftUI reconstructs this representable while preserving the WKWebView.
+        context.coordinator.keyboardBridge = OldOSWebKitKeyboardBridge.install(
+            on: webview,
+            keyboard: oldOSKeyboard
+        )
     }
 }
 
@@ -986,7 +1009,7 @@ struct url_search_bar: View {
                     withAnimation() {
                         editing_state_url = "None"
                     }
-                }.keyboardType(.URL).disableAutocorrection(true).autocapitalization(.none).foregroundColor(editing_state_url == "None" ? Color(red: 102/255, green: 102/255, blue: 102/255) : Color.black)
+                }.keyboardType(.URL).disableAutocorrection(true).autocapitalization(.none).submitLabel(.go).oldOSKeyboard(.url).foregroundColor(editing_state_url == "None" ? Color(red: 102/255, green: 102/255, blue: 102/255) : Color.black)
                 if editing_state_url == "Active",  url_search.count != 0 {
                     Button(action:{url_search = ""}) {
                         Image("UITextFieldClearButton")
@@ -1057,7 +1080,7 @@ struct google_search_bar: View {
                     withAnimation() {
                         editing_state_google = "None"
                     }
-                }.keyboardType(.alphabet).disableAutocorrection(true)
+                }.keyboardType(.alphabet).submitLabel(.search).oldOSKeyboard(.search)
                 if google_search.count != 0, editing_state_google == "Active" {
                     Button(action:{google_search = ""}) {
                         Image("UITextFieldClearButton")

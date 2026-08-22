@@ -79,11 +79,11 @@ struct Weather: View, Equatable {
                             }.overlay(VStack(spacing: 0) {
                                 let iconCode = weather_data.array[optional: page.index]?.currentIconCode ?? ""
 
-                                  Spacer().frame(height: 30 + json_iconography_to_offset(iconCode))
+                                Spacer().frame(height: 15 + json_iconography_to_offset(iconCode))
 
-                                  Image(
-                                      json_iconography_to_image(iconCode, is_mini: false)
-                                  )
+                                Image(
+                                    json_iconography_to_image(iconCode, is_mini: false)
+                                )
 
                                 Spacer()
                             })
@@ -293,7 +293,7 @@ struct new_location_search: View {
     @State var is_validating: Bool = false
     @State var city_list = [OpenMeteoGeocodingResponse.Result]()
     @State var should_perform_search: Bool = true
-    @ObservedObject var keyboard = KeyboardResponder()
+    @EnvironmentObject var keyboard: OldOSKeyboardController
     @Binding var show_add_location: Bool
     @ObservedObject var weather_data: ObservableArray<WeatherObserver>
     @State var timer: Timer.TimerPublisher = Timer.publish (every: 0.25, on: .main, in: .common)
@@ -473,7 +473,7 @@ struct search_text_title_bar: View {
                                                 editing_state = "Active_Empty"
                                             }
                                         }
-                                    }.keyboardType(.alphabet).disableAutocorrection(true)
+                                    }.keyboardType(.alphabet).submitLabel(.search).oldOSKeyboard(.search)
                                     if search.count != 0 {
                                         Button(action:{search = ""}) {
                                             Image("UITextFieldClearButton")

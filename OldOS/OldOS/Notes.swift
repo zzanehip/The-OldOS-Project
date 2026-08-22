@@ -22,7 +22,7 @@ struct Notes: View {
       ]
     ) var notes: FetchedResults<Note>
     @State var selected_note: Note = Note()
-    @ObservedObject var keyboard = KeyboardResponder()
+    @EnvironmentObject var keyboard: OldOSKeyboardController
     @Binding var instant_multitasking_change: Bool
     var body: some View {
         GeometryReader { geometry in
@@ -57,8 +57,8 @@ struct Notes: View {
             UIScrollView.appearance().bounces = true
         }.onDisappear() {
             UIScrollView.appearance().bounces = false
-        }.onChange(of: keyboard.is_editing, perform: {_ in
-            is_editing_note = keyboard.is_editing
+        }.onChange(of: keyboard.isEditing, perform: {_ in
+            is_editing_note = keyboard.isEditing
         })
 
     }
@@ -134,7 +134,7 @@ struct notes_destination_view: View {
     @Binding var forward_or_backward: Bool
     @Binding var added_note: Bool
     @Binding var instant_multitasking_change: Bool
-    @ObservedObject var keyboard: KeyboardResponder
+    @ObservedObject var keyboard: OldOSKeyboardController
     var notes: FetchedResults<Note>
     @Environment(\.managedObjectContext) var managedObjectContext
     var body: some View {
@@ -231,9 +231,9 @@ struct notes_destination_view: View {
                     print("Error saving managed object context: \(error)")
                 }
             }
-        }.onChange(of: keyboard.is_editing, perform: {_ in
+        }.onChange(of: keyboard.isEditing, perform: {_ in
             if content != "" {
-            if keyboard.is_editing == false {
+            if keyboard.isEditing == false {
                 if content != selected_note.content {
                     selected_note.content = content
                     selected_note.last_edited_date = Date()
@@ -309,34 +309,6 @@ extension StringProtocol where Index == String.Index {
     }
 }
 
-final class KeyboardResponder: ObservableObject {
-    @Published private(set) var currentHeight: CGFloat = 0
-    @Published private(set) var keyboardAnimationDuration: Double = 0
-    @Published private(set) var is_editing: Bool = false
-    private var notificationCenter: NotificationCenter
-    init(center: NotificationCenter = .default) {
-       notificationCenter = center
-       notificationCenter.addObserver(self, selector: #selector(keyBoardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-       notificationCenter.addObserver(self, selector: #selector(keyBoardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    deinit {
-       notificationCenter.removeObserver(self)
-    }
-    @objc func keyBoardWillShow(notification: Notification) {
-            is_editing = true
-            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                currentHeight = keyboardSize.height
-                keyboardAnimationDuration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double) ?? 0.25
-            }
-        }
-
-        @objc func keyBoardWillHide(notification: Notification) {
-            is_editing = false
-            currentHeight = 0
-        }
-}
-
-
 struct destination_header: View {
     @Binding var selected_note: Note
     @Binding var last_edited_date: Date?
@@ -358,6 +330,7 @@ struct destination_header: View {
 }
 
 struct MultilineTextView: UIViewRepresentable {
+    @EnvironmentObject private var keyboard: OldOSKeyboardController
     @Binding var text: String
     @Binding var selected_note: Note
     @Binding var last_edited_date: Date?
@@ -373,6 +346,10 @@ struct MultilineTextView: UIViewRepresentable {
         view.backgroundColor = .clear
         view.font = UIFont(name: "Noteworthy-Bold", size: 19)
         view.delegate = context.coordinator
+        OldOSKeyboardInputSuppression.install(on: view)
+        view.autocapitalizationType = .sentences
+        view.autocorrectionType = .yes
+        view.spellCheckingType = .no
         view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.tintColor = UIColor(red: 113/255, green: 93/255, blue: 81/255, alpha: 1)
         let header_hosting_controller = UIHostingController(rootView: destination_header(selected_note: $selected_note, last_edited_date: $last_edited_date))
@@ -391,7 +368,8 @@ struct MultilineTextView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: DALinedTextView, context: Context) {
-        uiView.text = text
+        context.coordinator.parent = self
+        if uiView.text != text { uiView.text = text }
     }
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -403,11 +381,23 @@ struct MultilineTextView: UIViewRepresentable {
         init(_ parent: MultilineTextView) {
             self.parent = parent
         }
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            parent.keyboard.activate(
+                textView: textView,
+                configuration: .standard
+            )
+        }
+
         func textViewDidChange(_ textView: UITextView) {
-                   print("text now: \(String(describing: textView.text!))")
-                   self.parent.text = textView.text
+            print("text now: \(String(describing: textView.text!))")
+            self.parent.text = textView.text
             self.parent.selected_note.title = String(textView.text.prefix(30).filter { !"\n".contains($0)})
-               }
+            parent.keyboard.textDidChange(textView)
+        }
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            parent.keyboard.deactivate(textView: textView)
+        }
     }
     
 }

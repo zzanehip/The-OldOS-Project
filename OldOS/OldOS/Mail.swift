@@ -394,7 +394,7 @@ struct mail_compose_view: View {
     @State var content: String = "\n\nSent from my iPhone"
     @State var show_cc_bcc: Bool = false
     @State var text_height: CGFloat = 0
-    @ObservedObject var keyboard = KeyboardResponder()
+    @EnvironmentObject var keyboard: OldOSKeyboardController
     @Binding var show_compose: Bool
     var body: some View {
         GeometryReader { geometry in
@@ -430,7 +430,7 @@ struct mail_compose_view: View {
                                     }
                                 }
                                 print(focused ? "focused" : "unfocused")
-                            }).keyboardType(.emailAddress).autocapitalization(.none).disableAutocorrection(true).font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color.black)
+                            }).keyboardType(.emailAddress).autocapitalization(.none).disableAutocorrection(true).oldOSKeyboard(.email).font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color.black)
                             Spacer()
                         }.background(Color.white.frame(width: geometry.size.width, height: 50)).frame(width: geometry.size.width, height: 50)
                         Rectangle().fill(Color(red: 230/255,green: 230/255, blue:230/255)).frame(width: geometry.size.width, height: 1)
@@ -443,14 +443,14 @@ struct mail_compose_view: View {
                                     }
                                 }
                                 print(focused ? "focused" : "unfocused")
-                            }).keyboardType(.emailAddress).autocapitalization(.none).disableAutocorrection(true).font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color.black)
+                            }).keyboardType(.emailAddress).autocapitalization(.none).disableAutocorrection(true).oldOSKeyboard(.email).font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color.black)
                             Spacer()
                         }.background(Color.white.frame(width: geometry.size.width, height: 50)).frame(width: geometry.size.width, height: 50)
                         Rectangle().fill(Color(red: 230/255,green: 230/255, blue:230/255)).frame(width: geometry.size.width, height: 1)
                         if show_cc_bcc {
                             HStack {
                                 Text("Bcc:").font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).padding(.leading, 6)
-                                TextField ("", text: $bcc_address).keyboardType(.emailAddress).disableAutocorrection(true).autocapitalization(.none).font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color.black)
+                                TextField ("", text: $bcc_address).keyboardType(.emailAddress).disableAutocorrection(true).autocapitalization(.none).oldOSKeyboard(.email).font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color.black)
                                 Spacer()
                             }.background(Color.white.frame(width: geometry.size.width, height: 50)).frame(width: geometry.size.width, height: show_cc_bcc ? 50 : 0)
                             Rectangle().fill(Color(red: 230/255,green: 230/255, blue:230/255)).frame(width: geometry.size.width, height: 1)
@@ -464,7 +464,7 @@ struct mail_compose_view: View {
                                     }
                                 }
                                 print(focused ? "focused" : "unfocused")
-                            }).keyboardType(.default).font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color.black)
+                            }).keyboardType(.default).oldOSKeyboard(.standard).font(.custom("Helvetica Neue Regular", fixedSize: 15)).foregroundColor(Color.black)
                             Spacer()
                         }.background(Color.white).frame(width: geometry.size.width, height: 50)
                         Rectangle().fill(Color(red: 230/255,green: 230/255, blue:230/255)).frame(width: geometry.size.width, height: 1)
@@ -477,6 +477,7 @@ struct mail_compose_view: View {
 }
 
 struct mail_compose_textview: UIViewRepresentable {
+    @EnvironmentObject private var keyboard: OldOSKeyboardController
     
     @Binding var text: String
     @Binding var text_height: CGFloat
@@ -487,6 +488,10 @@ struct mail_compose_textview: UIViewRepresentable {
         textView.textColor = .black
         textView.isUserInteractionEnabled = true
         textView.delegate = context.coordinator
+        OldOSKeyboardInputSuppression.install(on: textView)
+        textView.autocapitalizationType = .sentences
+        textView.autocorrectionType = .yes
+        textView.spellCheckingType = .no
         textView.isScrollEnabled = false
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.widthAnchor.constraint(equalToConstant: geometry.size.width).isActive = true
@@ -494,8 +499,9 @@ struct mail_compose_textview: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UITextView, context: Context) {
+        context.coordinator.parent = self
         let selectedRange = uiView.selectedRange
-        uiView.text = text
+        if uiView.text != text { uiView.text = text }
         uiView.selectedRange = selectedRange
     }
     func makeCoordinator() -> Coordinator {
@@ -510,9 +516,21 @@ struct mail_compose_textview: UIViewRepresentable {
             self.text = text
         }
         
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            parent.keyboard.activate(
+                textView: textView,
+                configuration: .standard
+            )
+        }
+
         func textViewDidChange(_ textView: UITextView) {
             self.text.wrappedValue = textView.text
             parent.text_height = textView.sizeThatFits(textView.bounds.size).height
+            parent.keyboard.textDidChange(textView)
+        }
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            parent.keyboard.deactivate(textView: textView)
         }
     }
 }

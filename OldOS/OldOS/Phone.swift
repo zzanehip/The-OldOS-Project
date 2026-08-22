@@ -570,7 +570,7 @@ struct add_contact_view: View{
                                             Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                                             HStack {
                                                 TextField("First", text: $first_name){
-                                                }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                }.oldOSKeyboard(.standard).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if first_name.count != 0 {
                                                     Button(action:{first_name = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -582,7 +582,7 @@ struct add_contact_view: View{
                                             Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                                             HStack {
                                                 TextField("Last", text: $last_name){
-                                                }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                }.oldOSKeyboard(.standard).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if last_name.count != 0 {
                                                     Button(action:{last_name = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -594,7 +594,7 @@ struct add_contact_view: View{
                                             Rectangle().fill(Color.clear).frame(height:50)
                                             HStack {
                                                 TextField("Company", text: $company){
-                                                }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
+                                                }.oldOSKeyboard(.standard).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black).padding(.leading, 12)
                                                 if company.count != 0 {
                                                     Button(action:{company = ""}) {
                                                         Image("UITextFieldClearButton")
@@ -618,7 +618,7 @@ struct add_contact_view: View{
                                             Text("mobile").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
                                             TextField("Phone", text: $phone){
-                                            }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
+                                            }.keyboardType(.phonePad).autocapitalization(.none).oldOSKeyboard(OldOSKeyboardConfiguration(keyboardType: .phonePad, autocapitalization: false)).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
                                             if phone.count != 0 {
                                                 Button(action:{phone = ""}) {
                                                     Image("UITextFieldClearButton")
@@ -643,7 +643,7 @@ struct add_contact_view: View{
                                             Text("home").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
                                             TextField("Email", text: $email){
-                                            }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
+                                            }.keyboardType(.emailAddress).autocapitalization(.none).disableAutocorrection(true).oldOSKeyboard(.email).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
                                             if email.count != 0 {
                                                 Button(action:{email = ""}) {
                                                     Image("UITextFieldClearButton")
@@ -697,7 +697,7 @@ struct add_contact_view: View{
                                             Text("home page").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(Color(red: 85/255, green: 101/255, blue: 142/255)).multilineTextAlignment(.trailing).frame(width:75, alignment: .trailing).lineLimit(0).padding(.leading, 5)
                                             Rectangle().fill(Color(red: 191/255, green: 191/255, blue: 191/255)).frame(width: 1, height: 50)
                                             TextField("URL", text: $url){
-                                            }.font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
+                                            }.keyboardType(.URL).autocapitalization(.none).disableAutocorrection(true).submitLabel(.go).oldOSKeyboard(.url).font(.custom("Helvetica Neue Bold", fixedSize: 16)).foregroundColor(.black)
                                             if url.count != 0 {
                                                 Button(action:{url = ""}) {
                                                     Image("UITextFieldClearButton")

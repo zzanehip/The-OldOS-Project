@@ -1731,7 +1731,7 @@ struct itunes_title_bar : View {
                                                         editing_state = "Active_Empty"
                                                     }
                                                 }
-                                            }.keyboardType(.alphabet).disableAutocorrection(true)
+                                            }.keyboardType(.alphabet).submitLabel(.search).oldOSKeyboard(.search)
                                             if search.count != 0 {
                                                 Button(action:{search = ""}) {
                                                     Image("UITextFieldClearButton")

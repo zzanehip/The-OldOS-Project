@@ -750,7 +750,7 @@ struct maps_title_bar : View {
                                                     editing_state = "Active_Empty"
                                                 }
                                             }
-                                        }.keyboardType(.alphabet).disableAutocorrection(true)
+                                        }.keyboardType(.alphabet).submitLabel(.search).oldOSKeyboard(.search)
                                         if search.count != 0, editing_state != "None" {
                                             Button(action:{search = ""}) {
                                                 Image("UITextFieldClearButton").animationsDisabled()
@@ -837,7 +837,7 @@ struct maps_directions_bar : View {
                                                     editing_state = "Active_Empty"
                                                 }
                                             }
-                                        }.keyboardType(.alphabet).disableAutocorrection(true).opacity(0).disabled(true)
+                                        }.keyboardType(.alphabet).submitLabel(.search).oldOSKeyboard(.search).opacity(0).disabled(true)
                                             //I'm too lazy to figure out the proper size of this text field, so let's just leave it here and avoid any unnecesary calculations that will slow down the rendering of the view.
                                             HStack {
                                                 Text("Current Location").foregroundColor(Color(red: 53/255, green: 86/255, blue: 246/255)).font(.custom("Helvetica Neue Regular", fixedSize: 16)).offset(x: -2, y: 0.5)
@@ -890,7 +890,7 @@ struct maps_directions_bar : View {
                                                     editing_state = "Active_Empty"
                                                 }
                                             }
-                                        }.keyboardType(.alphabet).disableAutocorrection(true)
+                                        }.keyboardType(.alphabet).submitLabel(.search).oldOSKeyboard(.search)
                                         if search.count != 0, editing_state != "None" {
                                             Button(action:{search = ""}) {
                                                 Image("UITextFieldClearButton").animationsDisabled()

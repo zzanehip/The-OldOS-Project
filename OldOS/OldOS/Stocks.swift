@@ -95,7 +95,7 @@ class StocksObserver: ObservableObject {
     }
 
     func parse_current_stock_data(ticker: String, completion: @escaping ((CurrentStockData) -> Void)) {
-        let token = "d1gant9r01qmqatu73hgd1gant9r01qmqatu73i0"
+        let token = ""
         let quoteURL = "https://finnhub.io/api/v1/quote?symbol=\(ticker)&token=\(token)"
         let profileURL = "https://finnhub.io/api/v1/stock/profile2?symbol=\(ticker)&token=\(token)"
         let metricsURL = "https://finnhub.io/api/v1/stock/metric?symbol=\(ticker)&metric=all&token=\(token)"

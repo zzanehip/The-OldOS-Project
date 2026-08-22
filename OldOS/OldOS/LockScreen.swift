@@ -279,14 +279,19 @@ struct DraggableView: ViewModifier {
                 withAnimation(.easeIn(duration: 0.15)) {
                     out_slides = 120
                 }
-                DispatchQueue.main.asyncAfter(deadline:.now()+0.17) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.17) {
+                    // HomeScreen must render one frame in its flown-out state
+                    // before SwiftUI can interpolate the icons/dock back in.
+                    apps_scale = 4
+                    dock_offset = 100
                     self.current_view = "HS"
-                }
-                DispatchQueue.main.asyncAfter(deadline:.now()+0.17) {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        apps_scale = 1
-                        dock_offset = 0
-                        apps_scale_height = 1
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            apps_scale = 1
+                            dock_offset = 0
+                            apps_scale_height = 1
+                        }
                     }
                 }
                 print("unlocked")

@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "kb-accent-shell-r-w104-gxm12.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "kb-accent-shell-r-w104-gxm12@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "kb-accent-shell-r-w104-gxm12@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

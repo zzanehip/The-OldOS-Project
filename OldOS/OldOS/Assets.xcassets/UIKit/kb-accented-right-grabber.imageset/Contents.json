@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "kb-accented-right-grabber.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "kb-accented-right-grabber@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "kb-accented-right-grabber@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
