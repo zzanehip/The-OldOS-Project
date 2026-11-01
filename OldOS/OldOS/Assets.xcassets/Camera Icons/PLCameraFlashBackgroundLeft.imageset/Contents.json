@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "PLCameraFlashBackgroundLeft.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "PLCameraFlashBackgroundLeft@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

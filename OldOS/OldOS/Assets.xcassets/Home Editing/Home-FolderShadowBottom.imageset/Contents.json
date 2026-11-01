@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "idiom": "universal",
+      "scale": "1x",
+      "filename": "FolderShadowBottom.png"
+    },
+    {
+      "idiom": "universal",
+      "scale": "2x",
+      "filename": "FolderShadowBottom@2x.png"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

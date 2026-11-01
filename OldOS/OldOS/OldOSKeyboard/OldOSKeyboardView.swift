@@ -62,7 +62,7 @@ public struct OldOSKeyboard: View {
             )
 
             ZStack(alignment: .topLeading) {
-                OldOSKeyboardBackground(scale: scale)
+                OldOSKeyboardBackground(scale: scale,appearance:controller.configuration.appearance)
                     .frame(
                         width: OldOSKeyboardLayout.referenceSize.width * scale,
                         height: OldOSKeyboardLayout.referenceSize.height * scale
@@ -139,6 +139,11 @@ public struct OldOSKeyboard: View {
                 numberPadLabel(for: placed, pressed: pressed, scale: scale)
             } else {
                 switch placed.key.kind {
+                case .returnKey where controller.configuration.returnType == .emergencyCall:
+                    Text("Emergency\nCall").multilineTextAlignment(.center)
+                        .font(.custom("Helvetica-Bold",fixedSize:13*scale)).lineLimit(2).minimumScaleFactor(0.8)
+                        .foregroundColor(visualPressed ? .black : .white)
+                        .shadow(color:visualPressed ? .white.opacity(0.5) : .black.opacity(0.6),radius:0,y:-scale)
                 case .shift:
                     shiftGlyph(pressed: pressed, scale: scale)
                 case .planeChooser:
@@ -196,7 +201,8 @@ public struct OldOSKeyboard: View {
             OldOSKeyCapBackground(
                 treatment: treatment(for: key, pressed: pressed),
                 row: row,
-                scale: scale
+                scale: scale,
+                appearance: controller.configuration.appearance
             )
         }
     }
@@ -1565,6 +1571,8 @@ public struct OldOSKeyboardHostModifier: ViewModifier {
     @ObservedObject var keyboard: OldOSKeyboardController
     let horizontalInset: CGFloat
     let bottomInset: CGFloat
+    var presentationProgress: CGFloat? = nil
+    var departure: CGFloat = 0
 
     public func body(content: Content) -> some View {
         ZStack {
@@ -1584,7 +1592,12 @@ public struct OldOSKeyboardHostModifier: ViewModifier {
 
                     VStack(spacing: 0) {
                     ZStack(alignment: .bottom) {
-                        if keyboard.isVisible {
+                        if let progress = presentationProgress {
+                            OldOSKeyboard(controller:keyboard)
+                                .frame(width:keyboardWidth,height:keyboardHeight)
+                                .offset(y:keyboardHeight*(1-progress)+(keyboardHeight+110)*departure)
+                                .zIndex(1000)
+                        } else if keyboard.isVisible {
                             OldOSKeyboard(controller: keyboard)
                                 .frame(maxWidth: .infinity)
                                 .padding(.horizontal, horizontalInset)
@@ -1625,13 +1638,17 @@ public extension View {
     func oldOSKeyboardHost(
         _ keyboard: OldOSKeyboardController,
         horizontalInset: CGFloat = 0,
-        bottomInset: CGFloat = 0
+        bottomInset: CGFloat = 0,
+        presentationProgress: CGFloat? = nil,
+        departure: CGFloat = 0
     ) -> some View {
         modifier(
             OldOSKeyboardHostModifier(
                 keyboard: keyboard,
                 horizontalInset: horizontalInset,
-                bottomInset: bottomInset
+                bottomInset: bottomInset,
+                presentationProgress: presentationProgress,
+                departure: departure
             )
         )
     }

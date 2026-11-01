@@ -1,0 +1,15 @@
+{
+  "images": [
+    {
+      "idiom": "universal",
+      "filename": "pmhour.pdf"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  },
+  "properties": {
+    "preserves-vector-representation": true
+  }
+}

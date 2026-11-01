@@ -914,6 +914,9 @@ struct PlayerContainerView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: PlayerView, context: Context) {
+        if uiView.player !== player {
+            uiView.player = player
+        }
         uiView.modifyGravity(gravity: gravity)
     }
 }

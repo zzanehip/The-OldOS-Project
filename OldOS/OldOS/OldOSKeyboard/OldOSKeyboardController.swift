@@ -685,6 +685,11 @@ public final class OldOSKeyboardController: ObservableObject {
         onSubmit: (() -> Void)?
     ) {
         guard inputView is UITextInput else { return }
+        if activeInputView === inputView && self.configuration == configuration {
+            submitAction = onSubmit
+            if !isVisible { show() }
+            return
+        }
         clearAutocorrection()
         qualityFilterRememberedCandidate = ""
         currentWordTouchEvidence.removeAll(keepingCapacity: true)
@@ -995,14 +1000,14 @@ public final class OldOSKeyboardController: ObservableObject {
 
     public func updateAutomaticShift() {
         guard configuration.keyboardType.hasAlphabeticPlane else {
-            shiftState = .off
-            shiftOrigin = .manual
+            if shiftState != .off { shiftState = .off }
+            if shiftOrigin != .manual { shiftOrigin = .manual }
             return
         }
         guard configuration.autocapitalization, configuration.keyboardType.allowsAutomaticCapitalization else {
             if shiftState != .locked {
-                shiftState = .off
-                shiftOrigin = .manual
+                if shiftState != .off { shiftState = .off }
+                if shiftOrigin != .manual { shiftOrigin = .manual }
             }
             return
         }
@@ -1018,8 +1023,10 @@ public final class OldOSKeyboardController: ObservableObject {
             before.hasSuffix("! ") ||
             before.hasSuffix("? ")
 
-        shiftState = shouldShift ? .on : .off
-        shiftOrigin = shouldShift ? .automatic : .manual
+        let nextState: OldOSKeyboardShiftState = shouldShift ? .on : .off
+        let nextOrigin: OldOSKeyboardShiftOrigin = shouldShift ? .automatic : .manual
+        if shiftState != nextState { shiftState = nextState }
+        if shiftOrigin != nextOrigin { shiftOrigin = nextOrigin }
     }
 
     private func insert(_ text: String) {
@@ -2812,11 +2819,8 @@ public final class OldOSKeyboardController: ObservableObject {
     }
 
     private func refreshReturnKeyEnabled() {
-        if configuration.enablesReturnKeyAutomatically {
-            returnKeyEnabled = !fieldText.isEmpty
-        } else {
-            returnKeyEnabled = true
-        }
+        let enabled = !configuration.enablesReturnKeyAutomatically || !fieldText.isEmpty
+        if returnKeyEnabled != enabled { returnKeyEnabled = enabled }
     }
 
     private func prepareClickSound() {

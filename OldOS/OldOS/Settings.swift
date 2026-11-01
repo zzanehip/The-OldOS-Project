@@ -19,9 +19,11 @@ struct Settings: View, Equatable {
         return lhs.show_multitasking != rhs.show_multitasking
     }
     
+    @ObservedObject private var passcodeStore = OldOSPasscodeStore.shared
+    @StateObject private var passcodeSession = OldOSPasscodeSettingsSession()
     @State var selectedPage = 1
     @ObservedObject var locationProvider : LocationProvider
-    @ObservedObject var photos_obsever = SettingsPhotosObserver()
+    @StateObject var photos_obsever = SettingsPhotosObserver()
     @State var show_wallpaper_select: Bool = false
     @State var show_wallpaper_select_camera_roll: Bool = false
     @State var wallpaper: String = ""
@@ -49,7 +51,7 @@ struct Settings: View, Equatable {
             ZStack {
                 VStack(spacing:0) {
                     status_bar_in_app(selected_page:selectedPage).frame(minHeight: 24, maxHeight:24).zIndex(1)
-                    title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, title: current_nav_view == "Location Services" ? "  \(current_nav_view)" : current_nav_view == "Wallpaper_Select" ? "" : current_nav_view == "Wallpaper_Grid" ? "Wallpaper" : current_nav_view == "Wallpaper_Grid_Camera_Roll" ? "Camera Roll" : current_nav_view.contains("General_") ? current_nav_view.replacingOccurrences(of: "General_", with: "") : current_nav_view == "Mail, Contacts, Calendars" ? "           Mail, Contacts, Calen..." : current_nav_view == "MCC_Action" ? EmailManager.account_name : current_nav_view).frame(minHeight: 60, maxHeight: 60).zIndex(1) //For lo
+                    title_bar(forward_or_backward: $forward_or_backward, current_nav_view: Binding(get:{ current_nav_view == "General_Passcode Authenticate" ? "General" : current_nav_view },set:{current_nav_view = $0}), title: current_nav_view == "General_Passcode Authenticate" ? "General" : current_nav_view == "General_Passcode Require" ? "Require Passcode" : current_nav_view == "Location Services" ? "  \(current_nav_view)" : current_nav_view == "Wallpaper_Select" ? "" : current_nav_view == "Wallpaper_Grid" ? "Wallpaper" : current_nav_view == "Wallpaper_Grid_Camera_Roll" ? "Camera Roll" : current_nav_view.contains("General_") ? current_nav_view.replacingOccurrences(of: "General_", with: "") : current_nav_view == "Mail, Contacts, Calendars" ? "           Mail, Contacts, Calen..." : current_nav_view == "MCC_Action" ? EmailManager.account_name : current_nav_view, general_back_title:current_nav_view == "General_Passcode Require" ? "Passcode Lock" : "General", general_back_destination:current_nav_view == "General_Passcode Require" ? "General_Passcode Lock" : "General").frame(minHeight: 60, maxHeight: 60).zIndex(1) //For lo
                     switch current_nav_view {
                     case "Settings":
                         settings_home(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, usage_section: usage_section, display_section: display_section, apps_section: apps_section).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
@@ -73,7 +75,7 @@ struct Settings: View, Equatable {
                         wallpaper_grid_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, wallpaper:$wallpaper, show_wallpaper_select: $show_wallpaper_select).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "Wallpaper_Grid_Camera_Roll":
                         wallpaper_grid_view_camera_roll(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, wallpaper_camera_roll: $wallpaper_camera_roll, show_wallpaper_select_camera_roll: $show_wallpaper_select_camera_roll, photos_obsever: photos_obsever).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
-                    case "General":
+                    case "General", "General_Passcode Authenticate":
                         general_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "General_About":
                         general_about_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
@@ -83,6 +85,16 @@ struct Settings: View, Equatable {
                         general_network_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "General_Bluetooth":
                         general_bluetooth_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                    case "General_Passcode Lock":
+                        OldOSPasscodeSettingsView(session:passcodeSession) {
+                            forward_or_backward = false
+                            withAnimation(.linear(duration:0.28)) { current_nav_view = "General_Passcode Require" }
+                        }.transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
+                    case "General_Passcode Require":
+                        OldOSPasscodeGraceView {
+                            forward_or_backward = true
+                            withAnimation(.linear(duration:0.28)) { current_nav_view = "General_Passcode Lock" }
+                        }.transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "General_Autolock":
                         general_autolock_view(current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward).transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     case "General_Date":
@@ -125,10 +137,33 @@ struct Settings: View, Equatable {
                 wallpaper_set_view_camera_roll(wallpaper_camera_roll:$wallpaper_camera_roll, show_wallpaper_select_camera_roll: $show_wallpaper_select_camera_roll).compositingGroup()
                     }.clipped().transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1)
                 }
+            }.overlay {
+                VStack(spacing:0) {
+                    Color.clear.frame(height:24).allowsHitTesting(false)
+                    ZStack {
+                        if let request = passcodeSession.request {
+                            OldOSPasscodeSettingsSheet(session:passcodeSession,request:request,gateAccepted:{
+                                guard current_nav_view == "General_Passcode Authenticate" else { return }
+                                var transaction = Transaction(); transaction.disablesAnimations = true
+                                withTransaction(transaction) { current_nav_view = "General_Passcode Lock" }
+                            }) {
+                                guard current_nav_view == "General_Passcode Authenticate" || current_nav_view == "General_Passcode Lock" else { return }
+                                var transaction = Transaction(); transaction.disablesAnimations = true
+                                withTransaction(transaction) { current_nav_view = "General" }
+                            }.id(request.id).transition(.move(edge:.bottom)).zIndex(10)
+                        }
+                    }.frame(maxWidth:.infinity,maxHeight:.infinity)
+                }.clipped().allowsHitTesting(passcodeSession.request != nil)
+            }.onChange(of:current_nav_view) { route in
+                if route == "General_Passcode Authenticate" { passcodeSession.enter() }
+                else if route != "General_Passcode Lock" && route != "General_Passcode Require" { passcodeSession.reset() }
+            }.onChange(of:passcodeStore.inactive) { inactive in
+                if !inactive && current_nav_view == "General_Passcode Authenticate" { passcodeSession.enter() }
             }.onAppear() {
                 UIScrollView.appearance().bounces = true
                 UITableView.appearance().backgroundColor = .clear
             }.onDisappear() {
+                passcodeSession.reset()
                 UIScrollView.appearance().bounces = false
             }
         }.onAppear() {
@@ -644,7 +679,7 @@ struct wallpaper_view: View {
                 }
             }
         }.onAppear() {
-            if photos_obsever.assets.count == 0 {
+            if photos_obsever.photo_count == 0 {
                 photos_obsever.fetch_photos()
             }
         }
@@ -655,7 +690,6 @@ struct wallpaper_select_view: View {
     @Binding var current_nav_view: String
     @Binding var forward_or_backward: Bool
     @Binding var last_photo: UIImage
-    @ObservedObject var photos_obsever = SettingsPhotosObserver()
     var userDefaults = UserDefaults.standard
     var body: some View {
         VStack(spacing: 0) {
@@ -707,25 +741,152 @@ struct wallpaper_select_view: View {
     }
 }
 
-class SettingsPhotosObserver: ObservableObject {
-    @Published var assets = [PHAsset]()
-    @Published var photo_count: Int = 0
-    func fetch_photos() {
-        DispatchQueue.global(qos: .background).async() {
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            
-            fetchOptions.predicate = NSPredicate(format: "mediaType == %d",
-                                                 PHAssetMediaType.image.rawValue)
-            fetchOptions.fetchLimit = 15000 //Let's try limiting to 15k to avoid crashing...some people have libraries over 100k and that is just somthing we can't handle.
-            let assets = PHAsset.fetchAssets(with: fetchOptions)
-            assets.enumerateObjects({ (object, count, stop) in
-                DispatchQueue.main.async() {
-                    self.assets.append(object)
-                    if object.mediaType == .image { self.photo_count += 1 }
-                }
-            })
+class SettingsPhotosObserver: NSObject, ObservableObject, PHPhotoLibraryChangeObserver {
+    @Published private(set) var photo_count = 0
+    private var isLoadingPage = false
+    private(set) var isLoadingSelection = false
+    private(set) var selectionProgress: Double = 0
+    @Published var message: String?
+    let imageManager = PHCachingImageManager()
+    let thumbnails = NSCache<NSString,UIImage>()
+    private let queue = DispatchQueue(label:"OldOS.Wallpaper.Photos",qos:.userInitiated)
+    private var result: PHFetchResult<PHAsset>?
+    private var fetched = false
+    private var observing = false
+    private var requestingAccess = false
+    private var refreshPending = false
+    private var generation = UUID()
+    private var selectionToken = UUID()
+    private var selectionRequest = PHInvalidImageRequestID
+    override init() {
+        super.init()
+        thumbnails.countLimit = 256; thumbnails.totalCostLimit = 32*1024*1024
+        imageManager.allowsCachingHighQualityImages = false
+    }
+    deinit {
+        if observing { PHPhotoLibrary.shared().unregisterChangeObserver(self) }
+        if selectionRequest != PHInvalidImageRequestID { imageManager.cancelImageRequest(selectionRequest) }
+    }
+    func fetch_photos(force:Bool=false) {
+        if isLoadingPage { refreshPending = refreshPending || force; return }
+        guard force || !fetched else { return }
+        let authorization = PHPhotoLibrary.authorizationStatus(for:.readWrite)
+        if authorization == .notDetermined {
+            guard !requestingAccess else { return }
+            requestingAccess = true
+            PHPhotoLibrary.requestAuthorization(for:.readWrite) { [weak self] _ in
+                DispatchQueue.main.async { self?.requestingAccess = false; self?.fetch_photos(force:true) }
+            }
+            return
         }
+        guard authorization == .authorized || authorization == .limited else {
+            message = "Allow OldOS access to Photos in your iPhone’s Settings to choose a wallpaper."
+            return
+        }
+        if !observing { PHPhotoLibrary.shared().register(self); observing = true }
+        isLoadingPage = true
+        let token = UUID(); generation = token
+        queue.async { [weak self] in
+            let options = PHFetchOptions()
+            options.sortDescriptors = [NSSortDescriptor(key:"creationDate",ascending:true)]
+            let result = PHAsset.fetchAssets(with:.image,options:options)
+            DispatchQueue.main.async {
+                guard let self, self.generation == token else { return }
+                self.result = result; self.photo_count = result.count
+                self.fetched = true; self.isLoadingPage = false
+                if self.refreshPending { self.refreshPending = false; self.fetch_photos(force:true) }
+            }
+        }
+    }
+    func asset(at index:Int) -> PHAsset? {
+        guard let result, index >= 0, index < result.count else { return nil }
+        return result.object(at:index)
+    }
+    func photoLibraryDidChange(_ changeInstance:PHChange) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.thumbnails.removeAllObjects(); self.imageManager.stopCachingImagesForAllAssets()
+            self.fetch_photos(force:true)
+        }
+    }
+    func cancelSelection() {
+        selectionToken = UUID()
+        if selectionRequest != PHInvalidImageRequestID { imageManager.cancelImageRequest(selectionRequest) }
+        selectionRequest = PHInvalidImageRequestID; isLoadingSelection = false; selectionProgress = 0
+    }
+    func select(_ asset:PHAsset,completion:@escaping(UIImage)->Void) {
+        cancelSelection(); message = nil
+        isLoadingSelection = true
+        let token = selectionToken
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true; options.isSynchronous = false
+        options.deliveryMode = .highQualityFormat; options.resizeMode = .exact; options.version = .current
+        options.progressHandler = { [weak self] progress,_,_,_ in
+            DispatchQueue.main.async {
+                guard let self, self.selectionToken == token else { return }
+                self.selectionProgress = progress
+            }
+        }
+        let longest = max(1,max(asset.pixelWidth,asset.pixelHeight))
+        let scale = min(1,4096/Double(longest))
+        let target = CGSize(width:max(1,Double(asset.pixelWidth)*scale),height:max(1,Double(asset.pixelHeight)*scale))
+        selectionRequest = imageManager.requestImage(for:asset,targetSize:target,contentMode:.aspectFit,options:options) { [weak self] image,info in
+            DispatchQueue.main.async {
+                guard let self, self.selectionToken == token else { return }
+                let failed = (info?[PHImageCancelledKey] as? Bool) == true || info?[PHImageErrorKey] != nil
+                guard failed || (info?[PHImageResultIsDegradedKey] as? Bool) != true else { return }
+                self.selectionToken = UUID(); self.selectionRequest = PHInvalidImageRequestID; self.isLoadingSelection = false
+                guard !failed, let image, image.size.width > 0, image.size.height > 0 else {
+                    self.message = "This photo could not be loaded. If it is stored in iCloud, check your connection and try again."
+                    return
+                }
+                completion(image)
+            }
+        }
+    }
+}
+
+private struct SettingsWallpaperThumbnail: View {
+    let asset: PHAsset
+    @ObservedObject var library: SettingsPhotosObserver
+    @State private var image: UIImage?
+    @State private var request = PHInvalidImageRequestID
+    @State private var token = UUID()
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Color(white:0.9)
+                if let image { Image(uiImage:image).resizable().scaledToFill() }
+            }.frame(width:geometry.size.width,height:geometry.size.height).clipped()
+                .onAppear { load(width:geometry.size.width) }
+                .onChange(of:asset.localIdentifier) { _ in cancel(); load(width:geometry.size.width) }
+                .onChange(of:asset.modificationDate) { _ in cancel(); load(width:geometry.size.width) }
+                .onDisappear(perform:cancel)
+        }
+    }
+    private func load(width:CGFloat) {
+        let pixels = min(512,max(48,Int(ceil(width*UIScreen.main.scale))))
+        let key = "\(asset.localIdentifier)-\(asset.modificationDate?.timeIntervalSince1970 ?? 0)-\(pixels)" as NSString
+        if let cached = library.thumbnails.object(forKey:key) { image = cached; return }
+        let activeToken = UUID(); token = activeToken
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true; options.isSynchronous = false
+        options.deliveryMode = .opportunistic; options.resizeMode = .fast
+        request = library.imageManager.requestImage(for:asset,targetSize:CGSize(width:pixels,height:pixels),contentMode:.aspectFill,options:options) { loaded,info in
+            DispatchQueue.main.async {
+                guard token == activeToken, let loaded else { return }
+                image = loaded
+                if (info?[PHImageResultIsDegradedKey] as? Bool) != true {
+                    library.thumbnails.setObject(loaded,forKey:key,cost:loaded.cgImage.map{$0.bytesPerRow*$0.height} ?? pixels*pixels*4)
+                    request = PHInvalidImageRequestID
+                }
+            }
+        }
+    }
+    private func cancel() {
+        token = UUID()
+        if request != PHInvalidImageRequestID { library.imageManager.cancelImageRequest(request) }
+        request = PHInvalidImageRequestID; image = nil
     }
 }
 
@@ -768,56 +929,69 @@ struct wallpaper_grid_view: View {
     }
 }
 
+private struct SettingsWallpaperAssetCell: View {
+    let index: Int
+    @ObservedObject var library: SettingsPhotosObserver
+    let select: (PHAsset)->Void
+    var body: some View {
+        GeometryReader { proxy in
+            if let asset = library.asset(at:index) {
+                Button { select(asset) } label: {
+                    SettingsWallpaperThumbnail(asset:asset,library:library)
+                        .frame(width:proxy.size.width,height:proxy.size.width)
+                        .id(asset.localIdentifier)
+                }.buttonStyle(NoButtonStyle())
+            }
+        }.clipped().innerShadowFull(color:Color.gray.opacity(0.8),radius:0.02)
+            .aspectRatio(1,contentMode:.fit)
+    }
+}
+
 struct wallpaper_grid_view_camera_roll: View {
     @Binding var current_nav_view: String
     @Binding var forward_or_backward: Bool
     @Binding var wallpaper_camera_roll: UIImage?
     @Binding var show_wallpaper_select_camera_roll: Bool
     @ObservedObject var photos_obsever: SettingsPhotosObserver
-    let columns = [
-        GridItem(.flexible(minimum: 60)),
-        GridItem(.flexible(minimum: 60)),
-        GridItem(.flexible(minimum: 60)),
-        GridItem(.flexible(minimum: 60))
-    ]
+    @State private var positionedInitially = false
+    private let columns = Array(repeating:GridItem(.flexible(minimum:60)),count:4)
     var body: some View {
-        VStack(spacing: 0) {
-            ZStack {
-                Color.white.edgesIgnoringSafeArea(.all)
+        ZStack {
+            Color.white.edgesIgnoringSafeArea(.all)
+            ScrollViewReader { reader in
                 ScrollView {
-                    ScrollViewReader { value in
-                        LazyVGrid(columns: columns, spacing: 5) {
-                            ForEach(photos_obsever.assets, id: \.self) { asset in
-                                GeometryReader { proxy in
-                                    Button(action: {
-                                        asset.getMainImage(completionHandler: { image in
-                                            wallpaper_camera_roll = image ?? UIImage()
-                                            if wallpaper_camera_roll == image {
-                                            withAnimation() {
-                                                show_wallpaper_select_camera_roll = true
-                                            }
-                                            }
-                                        })
-                                    }) {
-                                        PhotoLibraryImageView(asset: asset, proxy: proxy)
+                    VStack(spacing:0) {
+                        LazyVGrid(columns:columns,spacing:5) {
+                            ForEach(0..<photos_obsever.photo_count,id:\.self) { index in
+                                SettingsWallpaperAssetCell(index:index,library:photos_obsever) { asset in
+                                    photos_obsever.select(asset) { image in
+                                        wallpaper_camera_roll = image
+                                        withAnimation { show_wallpaper_select_camera_roll = true }
                                     }
-                                } .clipped().innerShadowFull(color: Color.gray.opacity(0.8), radius: 0.02)
-                                .aspectRatio(1, contentMode: .fit).id(asset)
+                                }
                             }
                         }.padding(8)
-                        .onAppear {
-                            value.scrollTo("bottom_info", anchor: .bottom)
-                        }  .onChange(of: photos_obsever.assets.count) { _ in
-                            value.scrollTo("bottom_info")
-                        }
                         HStack {
                             Spacer()
-                            Text("\(photos_obsever.photo_count) Photos").font(.custom("Helvetica Neue Regular", fixedSize: 20)).foregroundColor(.cgLightGray).lineLimit(1)
+                            Text("\(photos_obsever.photo_count) Photos")
+                                .font(.custom("Helvetica Neue Regular",fixedSize:20)).foregroundColor(.cgLightGray).lineLimit(1)
                             Spacer()
-                        }.padding(.bottom, 12).id("bottom_info")
+                        }.padding(.bottom,12).id("wallpaper_camera_roll_bottom")
                     }
                 }
+                .onAppear { positionAtRecentPhotos(reader) }
+                .onChange(of:photos_obsever.photo_count) { _ in positionAtRecentPhotos(reader) }
             }
+        }.onAppear { photos_obsever.fetch_photos() }
+            .onDisappear { photos_obsever.cancelSelection() }
+    }
+    private func positionAtRecentPhotos(_ reader:ScrollViewProxy) {
+        guard !positionedInitially, photos_obsever.photo_count > 0 else { return }
+        DispatchQueue.main.async {
+            guard !positionedInitially, photos_obsever.photo_count > 0 else { return }
+            var transaction = Transaction(); transaction.disablesAnimations = true
+            withTransaction(transaction) { reader.scrollTo("wallpaper_camera_roll_bottom",anchor:.bottom) }
+            positionedInitially = true
         }
     }
 }
@@ -888,11 +1062,12 @@ struct wallpaper_set_view_camera_roll : View {
     @State var show_check: Bool = false
     @State var execute_process: Bool = false
     @State var to_set:[String] = []
+    @State private var saveError: String?
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Color.black.edgesIgnoringSafeArea(.all)
-                ImageMoveAndScale(originalImage: $originalImage, originalPosition: $position, originalZoom: $zoom, processedImage: $finalImage, inputImage: $wallpaper_camera_roll, execute_process: $execute_process, to_set: $to_set, geometryProxy: geometry)
+                ImageMoveAndScale(originalImage: $originalImage, originalPosition: $position, originalZoom: $zoom, processedImage: $finalImage, inputImage: $wallpaper_camera_roll, execute_process: $execute_process, to_set: $to_set, geometryProxy: geometry,onComplete:wallpaperSaved)
                 VStack {
                     Spacer()
                     if wallpaper == "Wallpaper_1" {
@@ -929,6 +1104,22 @@ struct wallpaper_set_view_camera_roll : View {
                     }
                 }
             }.disabled(show_overlay)
+                .overlay {
+                    if let saveError {
+                        ZStack { Color.black.opacity(0.35); skeumorphic_alert(title:"Wallpaper",subtitle:saveError,dismiss_action:{self.saveError=nil}) }
+                    }
+                }
+        }.onDisappear { show_overlay = false; show_check = false; execute_process = false }
+    }
+    private func wallpaperSaved(_ result:Result<Void,Error>) {
+        switch result {
+        case .success:
+            show_check = true
+            DispatchQueue.main.asyncAfter(deadline:.now()+0.35) {
+                withAnimation { show_wallpaper_select_camera_roll = false }
+            }
+        case .failure(let error):
+            show_overlay = false; show_check = false; execute_process = false; saveError = error.localizedDescription
         }
     }
 }
@@ -1129,18 +1320,11 @@ struct wallpaper_select_final_camera_roll: View {
                     Button(action:{
                       //  userDefaults.set(wallpaper, forKey: "Lock_Wallpaper")
                         to_set = ["Lock"]
+                        show_check = false
                         execute_process = true
                         show_overlay = true
                         withAnimation(.linear(duration: 0.4)) {
                             show_select_final = false
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now()+1.25) {
-                            show_check = true
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now()+2) {
-                            withAnimation() {
-                                show_wallpaper_select = false
-                            }
                         }
                     }){
                         ZStack {
@@ -1151,18 +1335,11 @@ struct wallpaper_select_final_camera_roll: View {
                     }.padding([.bottom], 2.5).padding(.top, 28)
                     Button(action:{
                         to_set = ["Home"]
+                        show_check = false
                         execute_process = true
                         show_overlay = true
                         withAnimation(.linear(duration: 0.4)) {
                             show_select_final = false
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now()+1.25) {
-                            show_check = true
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now()+2) {
-                            withAnimation() {
-                                show_wallpaper_select = false
-                            }
                         }
                     }){
                         ZStack {
@@ -1173,18 +1350,11 @@ struct wallpaper_select_final_camera_roll: View {
                     }.padding([.top, .bottom], 2.5)
                     Button(action:{
                         to_set = ["Lock", "Home"]
+                        show_check = false
                         execute_process = true
                         show_overlay = true
                         withAnimation(.linear(duration: 0.4)) {
                             show_select_final = false
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now()+1.25) {
-                            show_check = true
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now()+2) {
-                            withAnimation() {
-                                show_wallpaper_select = false
-                            }
                         }
                     }){
                         ZStack {
@@ -1228,7 +1398,7 @@ struct general_view: View {
     var about_usage = [list_row(title: "About", content: AnyView(general_content()), destination: "General_About"), list_row(title: "Usage", content: AnyView(general_content()), destination: "General_Usage")]
     var network_bluetooth = [list_row(title: "Network", content: AnyView(general_content()), destination: "General_Network"), list_row(title: "Bluetooth", content: AnyView(general_content()), destination: "General_Bluetooth")]
     var spotlight = [list_row(title: "Spotlight Search", content: AnyView(general_content()), destination: nil)]
-    var autolock = [list_row(title: "Auto-Lock", content: AnyView(general_content()), destination: "General_Autolock")]
+    var autolock = [list_row(title: "Auto-Lock", content: AnyView(general_content()), destination: "General_Autolock"), list_row(title: "Passcode Lock", content: AnyView(OldOSPasscodeStatus()), destination: OldOSPasscodeStore.shared.enabled ? "General_Passcode Authenticate" : "General_Passcode Lock")]
     var date_accessibility = [list_row(title: "Date & Time", content: AnyView(general_content()), destination: "General_Date"), list_row(title: "Keyboard", content: AnyView(general_content()), destination: "General_Keyboard"), list_row(title: "International", content: AnyView(general_content()), destination: "General_International"), list_row(title: "Accessibility", content: AnyView(general_content()), destination: "General_Accessibility")]
     var body: some View {
         VStack(spacing:0) {

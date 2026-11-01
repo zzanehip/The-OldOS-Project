@@ -1,0 +1,15 @@
+{
+  "images": [
+    {
+      "idiom": "universal",
+      "filename": "mins.pdf"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  },
+  "properties": {
+    "preserves-vector-representation": true
+  }
+}

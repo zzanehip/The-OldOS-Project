@@ -1,10 +1,10 @@
-//
-//  ImageResizer.swift
-//  Campus
-//
-//  Created by Rolando Rodriguez on 12/21/19.
-//  Copyright © 2019 Rolando Rodriguez. All rights reserved.
-//
+  
+                      
+          
+  
+                                             
+                                                            
+  
 
 import Foundation
 import UIKit
@@ -47,7 +47,7 @@ public struct ImageResizer {
 public struct MemorySizer {
     public static func size(of data: Data) -> String {
         let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useMB] // optional: restricts the units to MB only
+        bcf.allowedUnits = [.useMB]                                            
         bcf.countStyle = .file
         let string = bcf.string(fromByteCount: Int64(data.count))
         return string

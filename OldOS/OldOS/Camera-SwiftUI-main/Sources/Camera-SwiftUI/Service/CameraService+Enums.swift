@@ -1,14 +1,14 @@
-//
-//  CameraService+Enums.swift
-//  Campus
-//
-//  Created by Rolando Rodriguez on 1/11/20.
-//  Copyright © 2020 Rolando Rodriguez. All rights reserved.
-//
+  
+                             
+          
+  
+                                            
+                                                            
+  
 
 import Foundation
 
-//  MARK: CameraService Enums
+                             
 extension CameraService {
     enum LivePhotoMode {
         case on

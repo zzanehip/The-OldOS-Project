@@ -44,7 +44,7 @@ public enum OldOSKeyboardLayout {
             )
 
         case .numberPad:
-            return fixedNumberPad(decimal: false)
+            return fixedNumberPad(decimal:false,showsDelete:configuration.numberPadShowsDelete)
 
         case .decimalPad:
             return fixedNumberPad(decimal: true)
@@ -342,7 +342,7 @@ public enum OldOSKeyboardLayout {
         }
     }
 
-    private static func fixedNumberPad(decimal: Bool) -> [OldOSKeyboardPlacedKey] {
+    private static func fixedNumberPad(decimal: Bool, showsDelete: Bool = false) -> [OldOSKeyboardPlacedKey] {
         var result: [OldOSKeyboardPlacedKey] = []
         let labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
         for index in labels.indices {
@@ -390,14 +390,14 @@ public enum OldOSKeyboardLayout {
         ))
 
         result.append(numberPadKey(
-            id: "numberpad-empty-right",
-            label: "",
+            id: showsDelete ? "numberpad-delete" : "numberpad-empty-right",
+            label: showsDelete ? OldOSKeyboardFont.deleteWide : "",
             output: nil,
-            kind: .empty,
+            kind: showsDelete ? .delete : .empty,
             row: 3,
             col: 2,
             style: .numberPadLight,
-            isEnabled: false
+            isEnabled: showsDelete
         ))
         return result
     }

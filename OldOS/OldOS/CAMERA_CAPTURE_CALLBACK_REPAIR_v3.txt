@@ -1,0 +1,23 @@
+OldOS YouTube v13 / Camera V60.3.44 — capture callback repair v3
+
+Observed failure: photo iris receives AVCapturePhotoOutput willCapture, but
+stays closed and no image bounces into the well. In v2, both reopen and well
+were exclusively dependent on didFinishProcessingPhoto callback, while capture
+delegate cleanup waited for Photo Library authorization and saving.
+
+v3 changes:
+- The terminal AVCapturePhotoOutput didFinishCapture callback always completes
+  the shutter animation (idempotently), including error/missing-data paths.
+- Photo Library saving occurs independently and can never delay restoring
+  the shutter or releasing the in-progress capture delegate.
+- Each capture is keyed by its actual AVCapturePhotoSettings.uniqueID. A 6s
+  watchdog releases an uncompleted shutter with an explicit error; stale photo
+  callbacks cannot affect the next shot.
+- A delayed valid image is still animated into the thumbnail well after the
+  iris has reopened, rather than being silently discarded.
+- Capture callback logs distinguish no capture vs no photo data vs no save.
+- Concurrent shutter presses are suppressed until the delegate returns.
+- YouTube v13 implementation and flip safety preserved unchanged.
+
+On-device result is NOT verified; only source checks are possible on Linux.
+On an iPhone use Console.app / Xcode output and filter for 'CAMERA PHOTO'.

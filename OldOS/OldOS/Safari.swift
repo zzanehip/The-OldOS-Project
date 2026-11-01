@@ -22,11 +22,13 @@ struct Safari: View {
     @State var offset: CGPoint = CGPoint(0,0)
     @State var first_load: Bool = true
     @State var selecting_tab: Bool = false
-    @State var instant_background_change: Bool = false
     @State var can_tap_view: Bool = true
     @StateObject var views: ObservableArray<WebViewStore>
     @StateObject var page: Page = .first()
-    @State var will_remove_object: WebViewStore = WebViewStore()
+    @State var will_remove_object: WebViewStore?
+    @State private var isSafariVisible = false
+    @State private var sessionGeneration = UUID()
+    @Environment(\.scenePhase) private var scenePhase
     @State var did_add_to_end: Bool = false
     @State var show_bookmarks: Bool = false
     @State var show_share:Bool = false
@@ -39,25 +41,34 @@ struct Safari: View {
     
     init(instant_multitasking_change: Binding<Bool>) {
         _instant_multitasking_change = instant_multitasking_change
-        let userDefaults = UserDefaults.standard
-        let webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
+        _views = StateObject(wrappedValue: SafariTabPersistence.restore())
+    }
+    private var safePageIndex: Int { min(max(0, page.index), views.array.count - 1) }
+    private var currentStore: WebViewStore { views.array[safePageIndex] }
 
-        // Build a stable array of WebViewStore instances up-front
-        var stores: [WebViewStore] = []
-        stores.reserveCapacity(max(webpages.count, 1))
-        for _ in 0..<max(webpages.count, 1) {
-            stores.append(WebViewStore())
-        }
-        // Load persisted URLs into the corresponding stores
-        for item in webpages {
-            if let idx = Int(item.key), idx < stores.count, let url = URL(string: item.value) {
-                stores[idx].webView.load(URLRequest(url: url))
+    private func setTabOverview(_ visible: Bool) {
+        guard selecting_tab != visible else { return }
+        offset = .zero
+        withAnimation(.linear(duration: 0.25)) { selecting_tab = visible }
+    }
+
+    private func closeTab(_ store: WebViewStore) {
+        guard views.array.count > 1, will_remove_object == nil else { return }
+        let generation = sessionGeneration
+        withAnimation(.linear(duration: 0.2)) { will_remove_object = store }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.21) {
+            guard isSafariVisible, sessionGeneration == generation, let index = views.array.firstIndex(of: store), views.array.count > 1 else { return }
+            let selected = currentStore
+            store.shutdown()
+            withAnimation {
+                views.array.remove(at: index)
+                let next = views.array.firstIndex(of: selected) ?? min(index, views.array.count - 1)
+                page.update(.new(index: next))
+                will_remove_object = nil
             }
+            SafariTabPersistence.save(views.array)
         }
-        // Initialize the observable array as a StateObject to preserve identity across view updates
-        let observable: ObservableArray<WebViewStore> = ObservableArray(array: stores).observeChildrenChanges()
-        _views = StateObject(wrappedValue: observable)
-   }
+    }
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -68,134 +79,29 @@ struct Safari: View {
                           id: \.id,
                           content: { index in
                             ZStack {
-                                if !selecting_tab {
-                                    ScrollView([]) {
-                                        VStack {
-                                            Spacer().frame(height:70).offset(y: offset.height < 70 ? -offset.height : -70).drawingGroup()
-                                            Webview(dynamicHeight: $webViewHeight, offset: $offset, selecting_tab:$selecting_tab, webview: index.webView).id(index.id) .disabled(selecting_tab)
-                                                .frame(height:geometry.size.height - (24+45)).offset(y: offset.height < 70 ? -offset.height : -70)
-                                        }
-                                    }
-                                    .disabled(selecting_tab)
-                                    .simultaneousGesture(
-                                        TapGesture()
-                                            .onEnded({
-//                                                if selecting_tab == true, can_tap_view == true {
-//                                                    if views.array.firstIndex(of: index) == page.index {
-//                                                        print(page)
-//                                                        print(page.index, "ZKINDEX1")
-//                                                        if instant_background_change == false {
-//                                                            instant_background_change = true
-//                                                        } else {
-//                                                            DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
-//                                                                instant_background_change = false
-//                                                            }
-//                                                        }
-//                                                        withAnimation(.linear(duration:0.25)) {
-//                                                            print(page.index, "ZKINDEX2")
-//                                                            page.update(.new(index: views.array.firstIndex(of: index) ?? 0))//This page update is ensurance if we get stuck
-//                                                            url_search = index.webView.url?.relativeString ?? ""
-//                                                            selecting_tab.toggle()
-//                                                        }
-//                                                    } else {
-//                                                        withAnimation(.linear(duration:0.25)) {
-//                                                            print(page.index, "ZKINDEX3")
-//                                                            page.update(.new(index: views.array.firstIndex(of: index) ?? 0))
-//                                                        }
-//                                                    }
-//                                                }
-                                            })
-                                    )
-                                    .shadow(color:Color.black.opacity(0.4), radius: 3, x: 0, y:4)
-                                    .opacity(views.array.firstIndex(of: index) == page.index ? 1 : 0.2)
-                                } else {
-                                    VStack {
-                                        Spacer().frame(height:76).offset(y: offset.height < 76 ? -offset.height : -76).drawingGroup()
-                                        Webview(dynamicHeight: $webViewHeight, offset: $offset, selecting_tab:$selecting_tab, webview: index.webView).id(index.id) .disabled(selecting_tab)
-                                            .frame(height:geometry.size.height - (24+45)).offset(y: offset.height < 76 ? -offset.height : -76)
-                                    }
-                                    .shadow(color:Color.black.opacity(0.4), radius: 3, x: 0, y:4)
-                                    .opacity(views.array.firstIndex(of: index) == page.index ? 1 : 0.2)
-                                    .contentShape(Rectangle())
-                                    .allowsHitTesting(true)
-                                    .simultaneousGesture(
-                                        TapGesture()
-                                            .onEnded({
-                                                if selecting_tab == true, can_tap_view == true {
-                                                    if views.array.firstIndex(of: index) == page.index {
-                                                        print(page)
-                                                        print(page.index, "ZKINDEX1")
-                                                        if instant_background_change == false {
-                                                            instant_background_change = true
-                                                        } else {
-                                                            DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
-                                                                instant_background_change = false
-                                                            }
-                                                        }
-                                                        withAnimation(.linear(duration:0.25)) {
-                                                            page.update(.new(index: views.array.firstIndex(of: index) ?? 0))//This page update is ensurance if we get stuck
-                                                            print(page.index, "ZKINDEX2")
-                                                            url_search = index.webView.url?.relativeString ?? ""
-                                                            selecting_tab.toggle()
-                                                        }
-                                                    } else {
-                                                        withAnimation(.linear(duration:0.25)) {
-                                                            print(page.index, "ZKINDEX3")
-                                                            page.update(.new(index: views.array.firstIndex(of: index) ?? 0))
-                                                        }
-                                                    }
-                                                }
-                                            })
-                                    )
+                                VStack {
+                                        Spacer().frame(height: views.array.firstIndex(of: index) == safePageIndex && !selecting_tab ? 70 : 76)
+                                            .offset(y: views.array.firstIndex(of: index) == safePageIndex ? -min(offset.height, selecting_tab ? 76 : 70) : 0).drawingGroup()
+                                        Webview(dynamicHeight: $webViewHeight, offset: $offset, selecting_tab: $selecting_tab, webview: index.webView, isCurrent: views.array.firstIndex(of: index) == safePageIndex)
+                                            .id(index.id).disabled(selecting_tab)
+                                            .frame(height: geometry.size.height - (24+45))
+                                            .offset(y: views.array.firstIndex(of: index) == safePageIndex ? -min(offset.height, selecting_tab ? 76 : 70) : 0)
                                 }
+                                .frame(height: views.array.firstIndex(of: index) == safePageIndex && !selecting_tab ? geometry.size.height - (24+45) : geometry.size.height - (24+45) + 76, alignment: .top)
+                                .clipShape(Rectangle().inset(by: views.array.firstIndex(of: index) == safePageIndex && !selecting_tab ? 0 : -8))
+                                .shadow(color: Color.black.opacity(0.4), radius: 3, x: 0, y: 4)
+                                .opacity(views.array.firstIndex(of: index) == safePageIndex ? 1 : 0.2)
+                                .contentShape(Rectangle())
+                                .simultaneousGesture(TapGesture().onEnded {
+                                    guard selecting_tab, can_tap_view, let selected=views.array.firstIndex(of: index) else { return }
+                                    if selected == safePageIndex {
+                                        url_search=index.webView.url?.absoluteString ?? ""
+                                        setTabOverview(false)
+                                    } else { withAnimation(.linear(duration:0.25)) { page.update(.new(index:selected)) } }
+                                })
                                 VStack {
                                     HStack {
-                                        Button(action:{
-                                            if views.array.count > 1 {
-                                                withAnimation(.linear(duration:0.2)) {
-                                                    will_remove_object = index
-                                                }
-                                                DispatchQueue.main.asyncAfter(deadline:.now()+0.21) {
-                                                    if index == views.array.last {
-                                                        withAnimation {
-                                                            page.update(.previous)
-                                                            if let rem_index = views.array.firstIndex(of: index) {
-                                                                views.array.remove(at: rem_index)
-                                                                let userDefaults = UserDefaults.standard
-                                                                var webpage_dict = [String:String]()
-                                                                var i = 0
-                                                                for item in views.array {
-                                                                    webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
-                                                                    i += 1
-                                                                }
-                                                                var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
-                                                                if defaults_webpages != webpage_dict.sorted(by: >) {
-                                                                userDefaults.setValue(webpage_dict, forKey: "webpages")
-                                                                }
-                                                            }
-                                                        }
-                                                    } else {
-                                                        withAnimation {
-                                                            if let rem_index = views.array.firstIndex(of: index) {
-                                                                views.array.remove(at: rem_index)
-                                                                let userDefaults = UserDefaults.standard
-                                                                var webpage_dict = [String:String]()
-                                                                var i = 0
-                                                                for item in views.array {
-                                                                    webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
-                                                                    i += 1
-                                                                }
-                                                                var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
-                                                                if defaults_webpages != webpage_dict.sorted(by: >) {
-                                                                userDefaults.setValue(webpage_dict, forKey: "webpages")
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            
-                                        }) {
+                                        Button(action: { closeTab(index) }) {
                                             Image("closebox").resizable().scaledToFill().frame(width:50, height:50)
                                         }.padding([.top], 80).padding([.trailing], 60).frame(width:60, height:60)
                                         Spacer()
@@ -207,25 +113,12 @@ struct Safari: View {
                                 can_tap_view = false
                             }).onDraggingEnded({
                                 can_tap_view = true
-                            }).alignment(.center).preferredItemSize(CGSize(width: geometry.size.width, height: geometry.size.height - (24+45))).sensitivity(.high).allowsDragging(selecting_tab).multiplePagination().background(instant_background_change == true ? LinearGradient([Color(red: 149/255, green: 161/255, blue: 172/255), Color(red: 85/255, green: 105/255, blue: 121/255)], from: .top, to: .bottom) : LinearGradient([Color.clear], from: .top, to: .bottom))
+                            }).alignment(.center).preferredItemSize(CGSize(width: geometry.size.width, height: geometry.size.height - (24+45))).sensitivity(.high).allowsDragging(selecting_tab).multiplePagination().background(Rectangle().fill(LinearGradient([Color(red: 149/255, green: 161/255, blue: 172/255), Color(red: 85/255, green: 105/255, blue: 121/255)], from: .top, to: .bottom)).opacity(selecting_tab ? 1.0 : 0.0))
                     Spacer().frame(minHeight:45, maxHeight:45)
                     
                 }.clipped()
-                VStack {
-                    Spacer().frame(height:geometry.size.height*(1/9))
-                    HStack {
-                        Spacer()
-                        Text(views.array[page.index].webView.title != "" ? (views.array[page.index].webView.title ?? "Untitled") :  "Untitled").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instant_multitasking_change == true ? .default : .none)
-                        Spacer()
-                    }
-                    Spacer().frame(height:10)
-                    HStack {
-                        Spacer()
-                        Text(views.array[page.index].webView.url?.relativeString ?? "Untitled").foregroundColor(Color(red: 182/255, green: 188/255, blue: 192/255)).font(.custom("Helvetica Neue Bold", fixedSize: 16)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instant_multitasking_change == true ? .default : .none).opacity(views.array[page.index].webView.url?.relativeString != nil ? 1 : 0)
-                        Spacer()
-                    }.if(!instant_multitasking_change){$0.animationsDisabled()}
-                    Spacer()
-                }.opacity(selecting_tab == true ? 1 : 0)
+                SafariTabHeading(webViewStore: currentStore, height: geometry.size.height, instantMultitaskingChange: instant_multitasking_change)
+                    .opacity(selecting_tab == true ? 1 : 0)
                 VStack {
                     Spacer()
                     HStack(spacing: 10) {
@@ -244,43 +137,40 @@ struct Safari: View {
                 }
                 VStack(spacing:0) {
                     status_bar_in_app().frame(minHeight: 24, maxHeight:24).zIndex(2)
-                    safari_title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, url_search: $url_search, google_search: $google_search, editing_state_url: $editing_state_url, editing_state_google: $editing_state_google, webViewStore: views.array[page.index], current_webpage_title: views.array[page.index].webView.title ?? "", views: views, page: page).frame(minHeight: 60, maxHeight: 60).padding(.bottom, 5).offset(y: offset.height < 76 ? -offset.height : -76).zIndex(1).opacity(selecting_tab == true ? 0 : 1)
+                    safari_title_bar(forward_or_backward: $forward_or_backward, current_nav_view: $current_nav_view, url_search: $url_search, google_search: $google_search, editing_state_url: $editing_state_url, editing_state_google: $editing_state_google, webViewStore: currentStore, current_webpage_title: currentStore.webView.title ?? "").frame(minHeight: 60, maxHeight: 60).padding(.bottom, 5).offset(y: offset.height < 76 ? -offset.height : -76).zIndex(1).opacity(selecting_tab == true ? 0 : 1)
                     Spacer()
                 }.clipped()
                 if show_bookmarks {
-                    bookmarks_view(show_bookmarks: $show_bookmarks, is_editing_bookmarks: $is_editing_bookmarks, webViewStore: views.array[page.index]).transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1)
+                    bookmarks_view(show_bookmarks: $show_bookmarks, is_editing_bookmarks: $is_editing_bookmarks, webViewStore: currentStore).transition(.asymmetric(insertion: .move(edge:.bottom), removal: .move(edge:.bottom))).zIndex(1)
                 }
                 VStack(spacing:0) {
                     Spacer()
-                    tool_bar(webViewStore: views.array[page.index], selecting_tab: $selecting_tab, offset:$offset, instant_background_change: $instant_background_change, show_share: $show_share, show_bookmarks: $show_bookmarks, is_editing_bookmarks: $is_editing_bookmarks, new_tab_action: {
+                    tool_bar(webViewStore: currentStore, selecting_tab: $selecting_tab, offset:$offset, show_share: $show_share, show_bookmarks: $show_bookmarks, is_editing_bookmarks: $is_editing_bookmarks, new_tab_action: {
                         if new_page_delay == false {
                         if views.array.count < 8 {
+                            let generation = sessionGeneration
                             did_add_to_end = true
                             new_page_delay = true
                             views.array.append(WebViewStore())
+                            SafariTabPersistence.save(views.array)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.21) {
+                                guard isSafariVisible, sessionGeneration == generation else { return }
                                 withAnimation {
                                     page.update(.moveToLast)
                                 }
                             }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.61) {
+                                guard isSafariVisible, sessionGeneration == generation else { return }
                                 withAnimation(.linear(duration:0.25)) {
                                     did_add_to_end = false
                                 }
                             }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.86) {
-                                if instant_background_change == false {
-                                    instant_background_change = true
-                                } else {
-                                    DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
-                                        instant_background_change = false
-                                    }
-                                }
-                                withAnimation(.linear(duration:0.25)) {
-                                    selecting_tab.toggle()
-                                }
+                                guard isSafariVisible, sessionGeneration == generation else { return }
+                                setTabOverview(false)
                             }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.12) {
+                                guard isSafariVisible, sessionGeneration == generation else { return }
                                 new_page_delay = false
                             }
                         }
@@ -289,7 +179,7 @@ struct Safari: View {
                         withAnimation() {
                             is_editing_bookmarks.toggle()
                         }
-                    }, tab_image: "NavTab\(views.array.count != 1 ? String(views.array.count) : "")").frame(height: 45)
+                    }, tab_image: "NavTab\(views.array.count != 1 ? String(views.array.count) : "")", overview_action: { setTabOverview(!selecting_tab) }).frame(height: 45)
                 }.zIndex(2)
                 ZStack {
                 if show_share == true {
@@ -304,7 +194,7 @@ struct Safari: View {
                             withAnimation(.linear(duration:0.25)) {
                                 show_share.toggle()
                             }
-                            bookmark_name = views.array[page.index].webView.title ?? "Untitled"
+                            bookmark_name = currentStore.webView.title ?? "Untitled"
                             DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
                                 withAnimation(.linear(duration:0.25)) {
                                     show_save_bookmark.toggle()
@@ -316,14 +206,14 @@ struct Safari: View {
                 }.zIndex(3)
                 ZStack {
                     if show_save_bookmark == true {
-                        add_bookmark_view(bookmark_name: $bookmark_name, url: views.array[page.index].webView.url ?? URL(string:"google.com")!, cancel_action:{withAnimation(){show_save_bookmark.toggle()}}, save_action:{
+                        add_bookmark_view(bookmark_name: $bookmark_name, url: currentStore.webView.url ?? URL(string:"about:blank")!, cancel_action:{withAnimation(){show_save_bookmark.toggle()}}, save_action:{
                             let userDefaults = UserDefaults.standard
 
                             // Read/Get Array of Strings
                             var bookmarks: [String:String] = userDefaults.object(forKey: "bookmarks") as? [String:String] ?? [String: String]()
 
                             // Append String to Array of Strings
-                            bookmarks.updateValue(bookmark_name, forKey: views.array[page.index].webView.url?.relativeString ?? "")
+                            bookmarks.updateValue(bookmark_name, forKey: currentStore.webView.url?.relativeString ?? "")
 
                             // Write/Set Array of Strings
                             userDefaults.set(bookmarks, forKey: "bookmarks")
@@ -334,42 +224,53 @@ struct Safari: View {
                     }
                 }.zIndex(4)
             }.compositingGroup().clipped()//Having our view composed of 2 VStacks allows our webviews and titles to work independtly from each other.
-        }.background(Color(red: 93/255, green: 99/255, blue: 103/255)).onAppear() {
-            UIScrollView.appearance().bounces = true
-        }.onDisappear() {
-            UIScrollView.appearance().bounces = false
-        }.onReceive(views.array[page.index].objectWillChange) {_ in
-            if editing_state_url == "None" {
-            url_search = views.array[page.index].webView.url?.relativeString ?? ""
-            }
-            let userDefaults = UserDefaults.standard
-            var webpage_dict = [String:String]()
-            var i = 0
-            for item in views.array {
-                webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
-                i += 1
-            }
-            var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
-            if defaults_webpages != webpage_dict.sorted(by: >) {
-            userDefaults.setValue(webpage_dict, forKey: "webpages")
-            }
-        }.onChange(of: page.index) {_ in
-            print("ZK INDEX", page.index)
-            if editing_state_url == "None" {
-            url_search = views.array[page.index].webView.url?.relativeString ?? ""
-            }
-            let userDefaults = UserDefaults.standard
-            var webpage_dict = [String:String]()
-            var i = 0
-            for item in views.array {
-                webpage_dict["\(i)"] = (item.webView.url?.relativeString != nil ? item.webView.url?.relativeString : "http")
-                i += 1
-            }
-            var defaults_webpages = (userDefaults.object(forKey: "webpages") as? [String:String] ?? ["0":"https://"]).sorted(by: >)
-            if defaults_webpages != webpage_dict.sorted(by: >) {
-            userDefaults.setValue(webpage_dict, forKey: "webpages")
-            }
+        }.background(Color(red: 93/255, green: 99/255, blue: 103/255)).onAppear {
+            isSafariVisible = true
+            will_remove_object = nil
+            if editing_state_url == "None" { url_search = currentStore.persistedURLString }
+            currentStore.setActive(scenePhase == .active)
+        }.onDisappear {
+            isSafariVisible = false
+            sessionGeneration = UUID()
+            new_page_delay = false
+            did_add_to_end = false
+            SafariTabPersistence.save(views.array)
+            views.array.forEach { $0.shutdown() }
+        }.onReceive(currentStore.navigationChanges) { url in
+            if editing_state_url == "None", url_search != (url?.absoluteString ?? "") { url_search = url?.absoluteString ?? "" }
+            SafariTabPersistence.save(views.array)
+        }.onChange(of: currentStore.id) { _ in
+            if editing_state_url == "None" { url_search = currentStore.persistedURLString }
+            offset = .zero
+        }.onChange(of: selecting_tab) { _ in
+            offset = .zero
+        }.onChange(of: scenePhase) { phase in
+            for store in views.array { store.setActive(isSafariVisible && phase == .active && store == currentStore) }
         }
+
+    }
+}
+
+struct SafariTabHeading: View {
+    @ObservedObject var webViewStore: WebViewStore
+    let height: CGFloat
+    let instantMultitaskingChange: Bool
+    var body: some View {
+VStack {
+                    Spacer().frame(height:height*(1/9))
+                    HStack {
+                        Spacer()
+                        Text(webViewStore.webView.title != "" ? (webViewStore.webView.title ?? "Untitled") :  "Untitled").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instantMultitaskingChange == true ? .default : .none)
+                        Spacer()
+                    }
+                    Spacer().frame(height:10)
+                    HStack {
+                        Spacer()
+                        Text(webViewStore.webView.url?.relativeString ?? "Untitled").foregroundColor(Color(red: 182/255, green: 188/255, blue: 192/255)).font(.custom("Helvetica Neue Bold", fixedSize: 16)).shadow(color: Color.black.opacity(0.51), radius: 0, x: 0.0, y: -2/3).lineLimit(0).animation(instantMultitaskingChange == true ? .default : .none).opacity(webViewStore.webView.url?.relativeString != nil ? 1 : 0)
+                        Spacer()
+                    }.if(!instantMultitaskingChange){$0.animationsDisabled()}
+                    Spacer()
+                }
     }
 }
 
@@ -412,8 +313,8 @@ struct bookmarks_view: View {
     @Binding var show_bookmarks: Bool
     @Binding var is_editing_bookmarks: Bool
     @State var to_delete: String = ""
-    var webViewStore: WebViewStore
-    @ObservedObject var bm_observer = bookmarks_observer()
+    @ObservedObject var webViewStore: WebViewStore
+    @StateObject var bm_observer = bookmarks_observer()
     var body: some View {
         VStack(spacing:0)  {
             Spacer().frame(minHeight: 24, maxHeight:24)
@@ -423,7 +324,7 @@ struct bookmarks_view: View {
                     HStack(alignment: .center) {
                         Spacer().frame(width:1, height: 44-0.95)
                         Image("HistoryFolder").frame(width:25, height: 44-0.95)
-                        Text("History").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 40)
+                        Text("History").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(0).padding(.leading, 6).padding(.trailing, 40)
                         Spacer()
                         Image("UITableNext").padding(.trailing, 12)
                     }.padding(.leading, 15)
@@ -433,7 +334,7 @@ struct bookmarks_view: View {
                 ForEach((bm_observer.bookmarks ?? [:]).sorted(by: <), id: \.key) { key, value in
                     Button(action:{
                         if let url = URL(string: key) {
-                        webViewStore.webView.load(URLRequest(url: url))
+                        webViewStore.load(url)
                             withAnimation() {
                                 show_bookmarks.toggle()
                             }
@@ -460,7 +361,7 @@ struct bookmarks_view: View {
                                 }.transition(AnyTransition.asymmetric(insertion: .move(edge:.leading), removal: .move(edge:.leading)).combined(with: .opacity)).offset(x:-2)
                             }
                             Image("Bookmark").frame(width:25, height: 44-0.95)
-                            Text(value).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(1).padding(.leading, 6).padding(.trailing, 12)
+                            Text(value).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.black).lineLimit(0).padding(.leading, 6).padding(.trailing, 12)
                             if to_delete == key {
                                 Spacer()
                                 tool_bar_rectangle_button(action: {withAnimation() {
@@ -673,7 +574,8 @@ struct Webview : UIViewRepresentable {
     @Binding var dynamicHeight: CGFloat
     @Binding var offset: CGPoint
     @Binding var selecting_tab: Bool
-    var webview: WKWebView = WKWebView()
+    var webview: WKWebView
+    var isCurrent: Bool = true
     var oldContentOffset = CGPoint.zero
     var originalcenter = CGPoint.zero
     class Coordinator: NSObject, WKNavigationDelegate, UIScrollViewDelegate {
@@ -682,24 +584,23 @@ struct Webview : UIViewRepresentable {
         
         init(_ parent: Webview) {
             self.parent = parent
-            self.parent.originalcenter = parent.webview.scrollView.subviews[0].center
+            self.parent.originalcenter = parent.webview.scrollView.subviews.first?.center ?? .zero
         }
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            if parent.selecting_tab == false {
-                var offset = scrollView.contentOffset
-                parent.offset = offset
-                
-                if offset.y < 76 {
-                    parent.webview.scrollView.subviews[0].center.y = parent.originalcenter.y  + offset.y
-                } else if offset.y > 76 {
-                    parent.webview.scrollView.subviews[0].center.y = parent.originalcenter.y + 76
-                    parent.webview.scrollView.contentInset = UIEdgeInsets(0, 0, 76, 0)
-                }
-                
+            guard parent.isCurrent, !parent.selecting_tab else { return }
+            let raw = scrollView.contentOffset
+            let offset = CGPoint(x: raw.x, y: min(raw.y, 76))
+            if parent.offset != offset { parent.offset = offset }
+            if let content = parent.webview.scrollView.subviews.first {
+                let y = parent.originalcenter.y + min(raw.y, 76)
+                if content.center.y != y { content.center.y = y }
+            }
+            if raw.y > 76, scrollView.contentInset.bottom != 76 {
+                scrollView.contentInset = UIEdgeInsets(0, 0, 76, 0)
             }
         }
-        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            decisionHandler(WKNavigationActionPolicy(rawValue: WKNavigationActionPolicy.allow.rawValue + 2)!)
+        func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            decisionHandler(WKNavigationActionPolicy(rawValue: WKNavigationActionPolicy.allow.rawValue + 2) ?? .allow)
         }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
@@ -724,6 +625,7 @@ struct Webview : UIViewRepresentable {
         webview.navigationDelegate = context.coordinator
         webview.scrollView.delegate = context.coordinator
         webview.scrollView.backgroundColor = UIColor(red: 93/255, green: 99/255, blue: 103/255, alpha: 1.0)
+        webview.scrollView.bounces = true
         webview.configuration.suppressesIncrementalRendering = true
         context.coordinator.keyboardBridge = OldOSWebKitKeyboardBridge.install(
             on: webview,
@@ -734,97 +636,184 @@ struct Webview : UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        webview.scrollView.backgroundColor = UIColor(red: 93/255, green: 99/255, blue: 103/255, alpha: 1.0)
-        // Keep the long-lived bridge pointed at the current shared controller if
-        // SwiftUI reconstructs this representable while preserving the WKWebView.
-        context.coordinator.keyboardBridge = OldOSWebKitKeyboardBridge.install(
-            on: webview,
-            keyboard: oldOSKeyboard
-        )
+        let originalcenter = context.coordinator.parent.originalcenter
+        context.coordinator.parent = self
+        context.coordinator.parent.originalcenter = originalcenter
+    }
+
+    static func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
+        guard uiView.navigationDelegate === coordinator else { return }
+        uiView.navigationDelegate = nil
+        if uiView.scrollView.delegate === coordinator { uiView.scrollView.delegate = nil }
+        coordinator.keyboardBridge = nil
+        OldOSWebKitKeyboardBridge.uninstall(on: uiView)
     }
 }
 
-//Thanks to https://stackoverflow.com/questions/57459727/why-an-observedobject-array-is-not-updated-in-my-swiftui-application for this genius solution to a problem I've encountered on various projects. This let's us be notified of changes to published vars inside an array, which itself is a published var.
 class ObservableArray<T>: ObservableObject {
-    @Published var array: [T] = []
-    var cancellables = [AnyCancellable]()
-    
-    init(array: [T]) {
-        self.array = array
+    @Published var array: [T] { didSet { reconnectChildren() } }
+    private var cancellables = [AnyCancellable]()
+    private var childConnection: ((T) -> AnyCancellable)?
+
+    init(array: [T]) { self.array = array }
+
+    fileprivate func reconnectChildren() {
+        cancellables.removeAll()
+        if let childConnection { cancellables = array.map(childConnection) }
     }
 }
 
 extension ObservableArray where T: ObservableObject {
     func observeChildrenChanges() -> ObservableArray<T> {
-        array.forEach { child in
-            let c = child.objectWillChange.sink(receiveValue: { _ in
-                self.objectWillChange.send()
-            })
-            // Keep the subscription alive
-            self.cancellables.append(c)
+        childConnection = { [weak self] child in
+            child.objectWillChange.sink { [weak self] _ in self?.objectWillChange.send() }
         }
+        reconnectChildren()
         return self
     }
 }
 
-public class WebViewStore: ObservableObject, Identifiable, Equatable {
-    public static func == (lhs: WebViewStore, rhs: WebViewStore) -> Bool {
-        return lhs.webView == rhs.webView
-    }
-    
-    @Published public var webView: WKWebView {
-        didSet {
-            setupObservers()
+enum SafariTabPersistence {
+    static let maximumTabs = 8
+
+    static func restoredURLs(defaults: UserDefaults = .standard) -> [URL?] {
+        let saved = defaults.dictionary(forKey: "webpages") as? [String: String] ?? [:]
+        let ordered = saved.compactMap { key, value -> (Int, String)? in
+            guard let index = Int(key), index >= 0 else { return nil }
+            return (index, value)
+        }.sorted { $0.0 < $1.0 }.prefix(maximumTabs)
+        let urls = ordered.map { item -> URL? in
+            guard let url = URL(string: item.1), ["http", "https"].contains(url.scheme?.lowercased() ?? ""), url.host != nil else { return nil }
+            return url
         }
+        return urls.isEmpty ? [nil] : urls
     }
-    
-    public init(webView: WKWebView = WKWebView()) {
-        self.webView = webView
+
+    @MainActor static func restore(defaults: UserDefaults = .standard) -> ObservableArray<WebViewStore> {
+        let stores = restoredURLs(defaults: defaults).map { WebViewStore(initialURL: $0) }
+        stores.forEach { $0.loadIfNeeded() }
+        return ObservableArray(array: stores)
+    }
+
+    static func save(_ stores: [WebViewStore], defaults: UserDefaults = .standard) {
+        let saved = Dictionary(uniqueKeysWithValues: stores.enumerated().map { (String($0.offset), $0.element.persistedURLString) })
+        if defaults.dictionary(forKey: "webpages") as? [String: String] != saved { defaults.set(saved, forKey: "webpages") }
+    }
+
+    static func searchURL(_ text: String) -> URL {
+        var components = URLComponents(string: "https://www.google.com/search")!
+        components.queryItems = [URLQueryItem(name: "q", value: text)]
+        components.percentEncodedQuery = components.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
+        return components.url!
+    }
+
+    static func navigationURL(_ text: String) -> URL? {
+        let text = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return nil }
+        if let url = URL(string: text), ["http", "https"].contains(url.scheme?.lowercased() ?? ""), url.host != nil { return url }
+        if !text.contains(where: { $0.isWhitespace }), !text.contains("://"), (text.contains(".") || text.hasPrefix("localhost")), let url = URL(string: "https://" + text), url.host != nil { return url }
+        return searchURL(text)
+    }
+}
+
+public class WebViewStore: ObservableObject, Identifiable, Equatable {
+    public let objectWillChange = ObservableObjectPublisher()
+    public let id = UUID()
+    public let webView: WKWebView
+    private var observers: [NSKeyValueObservation] = []
+    private var notificationPending = false
+    let navigationChanges = PassthroughSubject<URL?, Never>()
+    private var publishedURL: URL?
+    private var initialURL: URL?
+    private var started = false
+    private(set) var isActive = false
+    var persistedURLString: String { webView.url?.absoluteString ?? initialURL?.absoluteString ?? "" }
+
+    public static func == (lhs: WebViewStore, rhs: WebViewStore) -> Bool { lhs === rhs }
+
+    @MainActor public init(initialURL: URL? = nil, webView: WKWebView? = nil) {
+        self.initialURL = initialURL
+        if let webView { self.webView = webView }
+        else {
+            let configuration = WKWebViewConfiguration()
+            OldOSWebKitKeyboardBridge.prepare(configuration: configuration)
+            self.webView = WKWebView(frame: .zero, configuration: configuration)
+        }
         setupObservers()
     }
-    
+
+    func loadIfNeeded() {
+        guard !started, let initialURL else { return }
+        load(initialURL)
+    }
+
+    func load(_ url: URL) {
+        initialURL = url
+        started = true
+        webView.load(URLRequest(url: url))
+    }
+
+    func reload() {
+        if webView.url == nil { started = false; loadIfNeeded() }
+        else { webView.reload() }
+    }
+
+    @MainActor func setActive(_ active: Bool) {
+        guard active != isActive else { return }
+        isActive = active
+        if !active { OldOSWebKitKeyboardBridge.deactivate(on: webView) }
+        if active { setupObservers(); loadIfNeeded() }
+    }
+
+    @MainActor func shutdown() {
+        isActive = false
+        if webView.isLoading { initialURL = webView.url ?? initialURL; started = false }
+        webView.stopLoading()
+        webView.setAllMediaPlaybackSuspended(true, completionHandler: nil)
+        observers.removeAll()
+        OldOSWebKitKeyboardBridge.uninstall(on: webView)
+        webView.navigationDelegate = nil
+        webView.scrollView.delegate = nil
+    }
+
     private func setupObservers() {
+        guard observers.isEmpty else { return }
         func subscriber<Value>(for keyPath: KeyPath<WKWebView, Value>) -> NSKeyValueObservation {
-            return webView.observe(keyPath, options: [.prior]) { _, change in
-                if change.isPrior {
+            webView.observe(keyPath, options: [.new]) { [weak self] _, _ in
+                guard let self, !self.notificationPending else { return }
+                self.notificationPending = true
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.notificationPending = false
+                    guard !self.observers.isEmpty else { return }
+                    let url = self.webView.url
+                    if url != self.publishedURL {
+                        self.publishedURL = url
+                        self.navigationChanges.send(url)
+                    }
                     self.objectWillChange.send()
                 }
             }
         }
-        // Setup observers for all KVO compliant properties
-        observers = [
-            subscriber(for: \.title),
-            subscriber(for: \.url),
-            subscriber(for: \.isLoading),
-            subscriber(for: \.estimatedProgress),
-            subscriber(for: \.hasOnlySecureContent),
-            subscriber(for: \.serverTrust),
-            subscriber(for: \.canGoBack),
-            subscriber(for: \.canGoForward),
-            subscriber(for: \.scrollView.contentSize)
-        ]
+        observers = [subscriber(for: \.title), subscriber(for: \.url), subscriber(for: \.isLoading),
+                     subscriber(for: \.estimatedProgress), subscriber(for: \.canGoBack), subscriber(for: \.canGoForward)]
     }
-    
-    private var observers: [NSKeyValueObservation] = []
-    
-    public subscript<T>(dynamicMember keyPath: KeyPath<WKWebView, T>) -> T {
-        webView[keyPath: keyPath]
-    }
+
+    deinit { observers.forEach { $0.invalidate() } }
 }
 
 
-
 struct tool_bar: View {
-    var webViewStore: WebViewStore
+    @ObservedObject var webViewStore: WebViewStore
     @Binding var selecting_tab: Bool
     @Binding var offset: CGPoint
-    @Binding var instant_background_change: Bool
     @Binding var show_share:Bool
     @Binding var show_bookmarks: Bool
     @Binding var is_editing_bookmarks:Bool
     public var new_tab_action: (() -> Void)?
     public var editing_bookmarks_action: (() -> Void)?
     var tab_image: String
+    var overview_action: (() -> Void)?
     var body: some View {
         ZStack {
             LinearGradient([(color: Color(red: 230/255, green: 230/255, blue: 230/255), location: 0), (color: Color(red: 180/255, green: 191/255, blue: 206/255), location: 0.04), (color: Color(red: 136/255, green: 155/255, blue: 179/255), location: 0.51), (color: Color(red: 126/255, green: 148/255, blue: 176/255), location: 0.51), (color: Color(red: 110/255, green: 132/255, blue: 162/255), location: 1)], from: .top, to: .bottom).border_bottom(width: 1, edges: [.top], color: Color(red: 45/255, green: 48/255, blue: 51/255))//I just discovered it was much easier to do this...duh
@@ -847,36 +836,13 @@ struct tool_bar: View {
                             show_bookmarks.toggle()
                         }
                     })
-                    tool_bar_button(image:tab_image) {
-                        offset = CGPoint(0,0)
-                        if instant_background_change == false {
-                            instant_background_change = true
-                        } else {
-                            DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
-                                instant_background_change = false
-                            }
-                        }
-                        withAnimation(.linear(duration:0.25)) {
-                            selecting_tab.toggle()
-                        }
-                    }
+                    tool_bar_button(image:tab_image) { overview_action?() }
                 }.transition(.opacity)
             } else {
                 HStack {
                     tool_bar_rectangle_button(action: {new_tab_action?()}, button_type: .blue_gray, content: "New Page").padding(.leading, 5)
                     Spacer()
-                    tool_bar_rectangle_button(action: {
-                                                offset = CGPoint(0,0)
-                                                if instant_background_change == false {
-                                                    instant_background_change = true
-                                                } else {
-                                                    DispatchQueue.main.asyncAfter(deadline:.now()+0.25) {
-                                                        instant_background_change = false
-                                                    }
-                                                }
-                                                withAnimation(.linear(duration:0.25)) {
-                                                    selecting_tab.toggle()
-                                                }}, button_type: .blue, content: "Done").padding(.trailing, 5)
+                    tool_bar_rectangle_button(action: { overview_action?() }, button_type: .blue, content: "Done").padding(.trailing, 5)
                 }.transition(.opacity)
             }
             } else {
@@ -902,11 +868,9 @@ struct safari_title_bar : View {
     @Binding var editing_state_url: String
     @Binding var editing_state_google: String
     @State var progress: Double = 1.0
-    var webViewStore: WebViewStore
+    @ObservedObject var webViewStore: WebViewStore
     var current_webpage_title: String
     var no_right_padding: Bool?
-    var views: ObservableArray<WebViewStore>
-    var page: Page
     private let gradient = LinearGradient([.white, .white], to: .trailing)
     private let cancel_gradient = LinearGradient([(color: Color(red: 164/255, green: 175/255, blue:191/255), location: 0), (color: Color(red: 124/255, green: 141/255, blue:164/255), location: 0.51), (color: Color(red: 113/255, green: 131/255, blue:156/255), location: 0.51), (color: Color(red: 112/255, green: 130/255, blue:155/255), location: 1)], from: .top, to: .bottom)
     var body :some View {
@@ -917,19 +881,19 @@ struct safari_title_bar : View {
                     Spacer()
                     HStack {
                         Spacer()
-                        Text(views.array[page.index].webView.title ?? "" != "" ? views.array[page.index].webView.title ?? "" : "Untitled").foregroundColor(Color(red: 62/255, green: 69/255, blue: 79/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.51), radius: 0, x: 0.0, y: 2/3).padding([.leading, .trailing], 24)
+                        Text(webViewStore.webView.title.flatMap { $0.isEmpty ? nil : $0 } ?? "Untitled").foregroundColor(Color(red: 62/255, green: 69/255, blue: 79/255)).font(.custom("Helvetica Neue Bold", fixedSize: 14)).shadow(color: Color.white.opacity(0.51), radius: 0, x: 0.0, y: 2/3).padding([.leading, .trailing], 24)
                         Spacer()
                     }
                     HStack {
                         if editing_state_google == "None" {
                             ZStack {
                                 RoundedRectangle(cornerRadius:6).fill(progress == 1.0 ? LinearGradient([(color: Color.white, location: 0)], from: .top, to: .bottom) : progress == 0.0 ? LinearGradient([(color: Color.white, location: 0)], from: .top, to: .bottom) : LinearGradient([(color: Color(red: 129/255, green: 184/255, blue:237/255), location: 0), (color: Color(red: 96/255, green: 168/255, blue:236/255), location: 0.50), (color: Color(red: 71/255, green: 148/255, blue:233/255), location: 0.50), (color: Color(red: 104/255, green: 194/255, blue:233/255), location: 1)], from: .top, to: .bottom)).brightness(0.1).frame(width:editing_state_url == "None" ? geometry.size.width*2/3-18.5 : geometry.size.width - 79.5).padding(.leading, 2.5).padding(.trailing, 1)
-                                url_search_bar(url_search: $url_search, editing_state_url: $editing_state_url, progress: $progress, currentWebViewStore: { views.array[page.index] }).frame(width:editing_state_url == "None" ? geometry.size.width*2/3-15 : geometry.size.width - 76)
+                                url_search_bar(url_search: $url_search, editing_state_url: $editing_state_url, progress: $progress, currentWebViewStore: { webViewStore }).frame(width:editing_state_url == "None" ? geometry.size.width*2/3-15 : geometry.size.width - 76)
                             }
                         }
                         if editing_state_url == "None" {
                             ZStack {
-                            google_search_bar(google_search: $google_search, url_search: $url_search, editing_state_google: $editing_state_google, currentWebViewStore: { views.array[page.index] }).frame(width:editing_state_google == "None" ? geometry.size.width*1/3: geometry.size.width - 76)
+                            google_search_bar(google_search: $google_search, url_search: $url_search, editing_state_google: $editing_state_google, currentWebViewStore: { webViewStore }).frame(width:editing_state_google == "None" ? geometry.size.width*1/3: geometry.size.width - 76)
                             }
                         }
                         if editing_state_url != "None" || editing_state_google != "None" {
@@ -988,24 +952,7 @@ struct url_search_bar: View {
                         }
                     }
                 }) {
-                    //print(url_search, "here 0")
-                    if url_search.hasPrefix("https://") || url_search.hasPrefix("http://") {
-                        guard let url = URL(string: "\(url_search)") else { return }
-                     //   print("here 1")
-                        self.currentWebViewStore().webView.load(URLRequest(url: url))
-                        url_search = self.currentWebViewStore().webView.url?.relativeString ?? ""
-                    } else if url_search.contains("www") {
-                        guard let url = URL(string: "https://\(url_search)") else { return }
-                       // print("here 2")
-                        self.currentWebViewStore().webView.load(URLRequest(url: url))
-                        url_search = self.currentWebViewStore().webView.url?.relativeString ?? ""
-                    } else {
-                        guard let url = URL(string: "https://\(url_search)") else { return }
-                      //  print("here 3")
-                        self.currentWebViewStore().webView.load(URLRequest(url: url))
-                        url_search =  self.currentWebViewStore().webView.url?.relativeString ?? ""
-                        //searchTextOnGoogle(urlString)
-                    }
+                    if let url = SafariTabPersistence.navigationURL(url_search) { currentWebViewStore().load(url) }
                     withAnimation() {
                         editing_state_url = "None"
                     }
@@ -1016,7 +963,7 @@ struct url_search_bar: View {
                     }.fixedSize()
                 }
                 if editing_state_url == "None" {
-                    Button(action:{currentWebViewStore().webView.reload()}) {
+                    Button(action:{currentWebViewStore().reload()}) {
                         Image("AddressViewReload")
                     }
                 }
@@ -1026,8 +973,8 @@ struct url_search_bar: View {
             .padding(.leading, 5)
             .cornerRadius(6)
             Spacer(minLength: 8)
-        } .ps_innerShadow(.roundedRectangle(6, LinearGradient([(color: Color.clear, location: progress != 1 ? progress : 0), (color: .white, progress != 1 ? progress : 0)], from: .leading, to: .trailing)), radius:1.8, offset: CGPoint(0, 1), intensity: 0.5).strokeRoundedRectangle(6, Color(red: 84/255, green: 108/255, blue: 138/255), lineWidth: 0.65).padding(.leading, 2.5).padding(.trailing, 1).onReceive(currentWebViewStore().objectWillChange) {_ in
-            progress = currentWebViewStore().webView.estimatedProgress
+        } .ps_innerShadow(.roundedRectangle(6, LinearGradient([(color: Color.clear, location: progress != 1 ? progress : 0), (color: .white, progress != 1 ? progress : 0)], from: .leading, to: .trailing)), radius:1.8, offset: CGPoint(0, 1), intensity: 0.5).strokeRoundedRectangle(6, Color(red: 84/255, green: 108/255, blue: 138/255), lineWidth: 0.65).padding(.leading, 2.5).padding(.trailing, 1).onReceive(currentWebViewStore().webView.publisher(for: \.estimatedProgress, options: [.initial, .new]).removeDuplicates()) { value in
+            progress = value
         }
     }
 }
@@ -1072,10 +1019,7 @@ struct google_search_bar: View {
                         }
                     }
                 }) {
-                    let link = google_search.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-                    guard let url = URL(string: "https://google.com/search?q=\(String(link ?? ""))") else { return }
-                    self.currentWebViewStore().webView.load(URLRequest(url:url))
-                    url_search =  self.currentWebViewStore().webView.url?.relativeString ?? ""
+                    currentWebViewStore().load(SafariTabPersistence.searchURL(google_search))
                     google_search = ""
                     withAnimation() {
                         editing_state_google = "None"

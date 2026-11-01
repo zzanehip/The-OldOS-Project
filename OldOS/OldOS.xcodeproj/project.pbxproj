@@ -3,10 +3,83 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08A80153C38343E2B2002DC6 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		0B302AB29A3347FFB4EB9A7F /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		0CE600000000000000000001 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000002 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000003 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000004 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000005 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE600000000000000000006 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000007 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000008 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000009 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE60000000000000000000A /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE60000000000000000000B /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE60000000000000000000C /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE60000000000000000000D /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE60000000000000000000E /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE60000000000000000000F /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE600000000000000000010 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000011 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000012 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000013 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000014 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE600000000000000000015 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000016 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000017 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000018 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000019 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE60000000000000000001A /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE60000000000000000001B /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE60000000000000000001C /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE60000000000000000001D /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE60000000000000000001E /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE60000000000000000001F /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000020 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000021 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000022 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000023 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE600000000000000000024 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000025 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000026 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000027 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000028 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE600000000000000000029 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE60000000000000000002A /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE60000000000000000002B /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE60000000000000000002C /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE60000000000000000002D /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE60000000000000000002E /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE60000000000000000002F /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000030 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000031 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000032 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE600000000000000000033 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000034 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000035 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000036 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000037 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE600000000000000000038 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000039 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE60000000000000000003A /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE60000000000000000003B /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE60000000000000000003C /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE60000000000000000003D /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE60000000000000000003E /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE60000000000000000003F /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000040 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000041 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CE600000000000000000042 /* clock_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000001 /* clock_alarm.caf */; };
+		0CE600000000000000000043 /* clock_digital.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000002 /* clock_digital.caf */; };
+		0CE600000000000000000044 /* clock_blues.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000003 /* clock_blues.caf */; };
+		0CE600000000000000000045 /* clock_crickets.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000004 /* clock_crickets.caf */; };
+		0CE600000000000000000046 /* clock_xylophone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE5000000000000000000005 /* clock_xylophone.caf */; };
+		0CFE5B2E08624B5DB652E29B /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
 		0D0B7D86273F3CDE00072419 /* HelveticaNeue-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D0B7D81273F3CDE00072419 /* HelveticaNeue-Regular.ttf */; };
 		0D0B7D87273F3CDE00072419 /* HelveticaNeue-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D0B7D81273F3CDE00072419 /* HelveticaNeue-Regular.ttf */; };
 		0D0B7D88273F3CDE00072419 /* HelveticaNeue-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D0B7D81273F3CDE00072419 /* HelveticaNeue-Regular.ttf */; };
@@ -1610,6 +1683,381 @@
 		0DEF6715261279A200341037 /* Notes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF6714261279A200341037 /* Notes.swift */; };
 		0DEF67242613CBDE00341037 /* DALinedTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF67232613CBDE00341037 /* DALinedTextView.m */; };
 		0DEF67352617668200341037 /* Note.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0DEF67332617668200341037 /* Note.xcdatamodeld */; };
+		0FFC2565705F440D8A69A2EB /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		109DA01354BC4C27A06B47DE /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		11096ADC7A7343079222B3E2 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		1253DBCC5F6045EA86380999 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		17E5E9B348144CB8BC52A593 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		1A3B4C54CC1E4F2A84C3DF9E /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		1E190669236B4349AD3CC7E2 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		1ED2E6E52C7F4576AA44BFFA /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		233211FDA6B943129B2BD408 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		238277C0B433441B89DC5B16 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		2614B432053F4A7E8C15EB19 /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		2D3F9FE27B2C49D49A5E0BAB /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		2E8FC9DA0A82498F9CB6BD3F /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		300DB9EC3D31497BB70868C3 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		309A3782AF0144788C9A9090 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		31665B0766AD4044BACFC72C /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		32ED8690653F497C8F31F592 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		35B38F2B23CA49068D9346CF /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		38B82331ED2F4D3AA35326D3 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		393B3EFBEF1845C19AA33ECD /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		3A02C8FDE307426AA654B302 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		3AFF0D7010994AFD84584B0F /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		3D884DBAB4E54ADB93F66992 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		460575A27C2F4D7FA3CF88DE /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		4BB52115612C4D58AD55E863 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		4D6E078831D6474B9160FD2C /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		52402409B00B4653A0BB2E6C /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		5938D1C49EAB4E539E52DECB /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		5C0D91554C0C4624A23820DA /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		5D99CBAB5A064DB9B42BAE75 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		5F830E1021004D40B94A4566 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		5F932DE7CB7E4F42883808AA /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		5F94669ADC3443EABDEF8BA7 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		61DFF299E2614DBBBB18ECAA /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		62AC9BAF594D43BAAAC02964 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		62C8FF40E20C4245A20E848A /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		655CCF924BAC415389B9BC72 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		688C572AA4554C918EE41820 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		6A7D2B49A99A4F61B3C49531 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		6E1431B464F341C28BDF6FD4 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		6F160C8EAAC44F58B4E2D6E2 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		73798B4D718E4EEF8A8DA256 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		73C06980BE4E4C7A82579EED /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		7403C9069A09477480E50551 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		752579C3A6684D25B44C35D9 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		78F7386DE8974CFFBF0960B4 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		79223ACEF2114DED953E5BF7 /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		799F533B7D53488CA5A889B6 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		7B11090D554B4537866EBDB0 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		7C14A6A7FE3F4589B74B9FFF /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		7FC4F0ADF364411CB389F718 /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		8043F9913C954FF893CF312F /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		82FE25C05CE24439BB7CBE97 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		836FE9A9EC1D4A4F867428D7 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		846FD3DCEB5B42E89761FFC1 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		871BC782A6874470BE3EEF90 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		871E5FAEE4894C49A5451B0C /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		889779F1D5E54BF4A8D76CF6 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		8BC82953E5A14340817CB317 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		8C4533A3A0BD44EFA7E73F01 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		91FB0022D7FA4BD4AF71D58A /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		9689E944909A48B6A41572C7 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		96A32B6DD86A415D820DCEF0 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		985399B28F3648ACB57E5779 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		9DB76E1DF8EC4872B0194D98 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		9E2DA78AA4B44F69BD73DB2D /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		A73AAF83B98445C4B3DD29C1 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		A9609C2D71BF4E1295738014 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		AAFB71C748D949369665188A /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		B02BDFEDC11245BBA791A357 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		B3F30EB18FFF470BB183882D /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		B5F42EFF0552499CB9F4F26A /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		B6F4FAAAA38843D4A566D52A /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		B88114116CB9480EBF76EA48 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		BA1978EF02CC427E8F2C39BF /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		BCA9E02E45CB473A985ECB59 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		C49E342AAD8B4098B6A4AE8C /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		C872A27861F74F19B0156830 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		CB6B71A913FA4FB398AC978B /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		CE4000000000000000000002 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE4000000000000000000003 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE4000000000000000000004 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE4000000000000000000005 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE4000000000000000000006 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE4000000000000000000007 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE4000000000000000000008 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE4000000000000000000009 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE400000000000000000000A /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE400000000000000000000B /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE400000000000000000000C /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE400000000000000000000D /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE400000000000000000000E /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CE400000000000000000000F /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4000000000000000000001 /* Clock.swift */; };
+		CF7100010000000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010001000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010002000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010003000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010004000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010005000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010006000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010007000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010008000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100010009000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF710001000A000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF710001000B000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF710001000C000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF710001000D000000000000 /* clock_original_ascending.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000001 /* clock_original_ascending.caf */; };
+		CF7100020000000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020001000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020002000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020003000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020004000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020005000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020006000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020007000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020008000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100020009000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF710002000A000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF710002000B000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF710002000C000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF710002000D000000000000 /* clock_original_bark.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000002 /* clock_original_bark.caf */; };
+		CF7100030000000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030001000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030002000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030003000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030004000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030005000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030006000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030007000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030008000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100030009000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF710003000A000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF710003000B000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF710003000C000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF710003000D000000000000 /* clock_original_bell_tower.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000003 /* clock_original_bell_tower.caf */; };
+		CF7100040000000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040001000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040002000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040003000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040004000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040005000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040006000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040007000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040008000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100040009000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF710004000A000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF710004000B000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF710004000C000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF710004000D000000000000 /* clock_original_boing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000004 /* clock_original_boing.caf */; };
+		CF7100050000000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050001000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050002000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050003000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050004000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050005000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050006000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050007000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050008000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100050009000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF710005000A000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF710005000B000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF710005000C000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF710005000D000000000000 /* clock_original_doorbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000005 /* clock_original_doorbell.caf */; };
+		CF7100060000000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060001000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060002000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060003000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060004000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060005000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060006000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060007000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060008000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100060009000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF710006000A000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF710006000B000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF710006000C000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF710006000D000000000000 /* clock_original_duck.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000006 /* clock_original_duck.caf */; };
+		CF7100070000000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070001000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070002000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070003000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070004000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070005000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070006000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070007000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070008000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100070009000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF710007000A000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF710007000B000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF710007000C000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF710007000D000000000000 /* clock_original_harp.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000007 /* clock_original_harp.caf */; };
+		CF7100080000000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080001000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080002000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080003000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080004000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080005000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080006000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080007000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080008000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100080009000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF710008000A000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF710008000B000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF710008000C000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF710008000D000000000000 /* clock_original_motorcycle.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000008 /* clock_original_motorcycle.caf */; };
+		CF7100090000000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090001000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090002000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090003000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090004000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090005000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090006000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090007000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090008000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF7100090009000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF710009000A000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF710009000B000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF710009000C000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF710009000D000000000000 /* clock_original_old_car_horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000009 /* clock_original_old_car_horn.caf */; };
+		CF71000A0000000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0001000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0002000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0003000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0004000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0005000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0006000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0007000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0008000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A0009000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A000A000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A000B000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A000C000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000A000D000000000000 /* clock_original_old_phone.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000A /* clock_original_old_phone.caf */; };
+		CF71000B0000000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0001000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0002000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0003000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0004000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0005000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0006000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0007000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0008000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B0009000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B000A000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B000B000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B000C000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000B000D000000000000 /* clock_original_piano_riff.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000B /* clock_original_piano_riff.caf */; };
+		CF71000C0000000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0001000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0002000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0003000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0004000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0005000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0006000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0007000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0008000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C0009000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C000A000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C000B000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C000C000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000C000D000000000000 /* clock_original_pinball.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000C /* clock_original_pinball.caf */; };
+		CF71000D0000000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0001000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0002000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0003000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0004000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0005000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0006000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0007000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0008000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D0009000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D000A000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D000B000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D000C000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000D000D000000000000 /* clock_original_robot.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000D /* clock_original_robot.caf */; };
+		CF71000E0000000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0001000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0002000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0003000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0004000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0005000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0006000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0007000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0008000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E0009000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E000A000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E000B000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E000C000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000E000D000000000000 /* clock_original_sci_fi.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000E /* clock_original_sci_fi.caf */; };
+		CF71000F0000000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0001000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0002000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0003000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0004000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0005000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0006000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0007000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0008000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F0009000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F000A000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F000B000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F000C000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF71000F000D000000000000 /* clock_original_sonar.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF700000000000000000000F /* clock_original_sonar.caf */; };
+		CF7100100000000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100001000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100002000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100003000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100004000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100005000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100006000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100007000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100008000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100100009000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF710010000A000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF710010000B000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF710010000C000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF710010000D000000000000 /* clock_original_strum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000010 /* clock_original_strum.caf */; };
+		CF7100110000000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110001000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110002000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110003000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110004000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110005000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110006000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110007000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110008000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100110009000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF710011000A000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF710011000B000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF710011000C000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF710011000D000000000000 /* clock_original_timba.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000011 /* clock_original_timba.caf */; };
+		CF7100120000000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120001000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120002000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120003000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120004000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120005000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120006000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120007000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120008000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100120009000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF710012000A000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF710012000B000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF710012000C000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF710012000D000000000000 /* clock_original_time_passing.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000012 /* clock_original_time_passing.caf */; };
+		CF7100130000000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130001000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130002000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130003000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130004000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130005000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130006000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130007000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130008000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF7100130009000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF710013000A000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF710013000B000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF710013000C000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		CF710013000D000000000000 /* clock_original_trill.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF7000000000000000000013 /* clock_original_trill.caf */; };
+		D2CD77DD1E8F4B59AC9052A8 /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		D5611C8D463B47D2887365D9 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		D569FB32764948EABC8F888F /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		DFB6CC2E9B6A4D218E4BE699 /* HomeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0429F403BD4597B4E155E5 /* HomeLayout.swift */; };
+		DFEEB6DF63204B7E93BC0B1B /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		E0373CAF730A4818912AD798 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		E3D32A8204514DFAA779B423 /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		E983FB0BBEAB4A3096DE5EC8 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */; };
+		E9B327BECF274B00AECC90E5 /* clock_marimba.caf in Resources */ = {isa = PBXBuildFile; fileRef = EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */; };
+		EA8FC59DA06149D7B0EAF8D3 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		ED06C1270C264A868B4E1ABF /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		EFC43899529E45C298003FD7 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03500000000000000000001 /* StatusBar.swift */; };
+		F1C36F3D1EF34C7C9BB9F549 /* Passcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */; };
+		F5E0FC2FE9B04889A14AB8C4 /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
+		F870B751D6B845FAA81B0019 /* HomeEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC40FE021DCB4309A818689E /* HomeEditing.swift */; };
+		FC36A68CD1F64FB29DAE0171 /* HomeIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1794,6 +2242,38 @@
 		0DFCA902272C7ACE0050009D /* OldOS9-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "OldOS9-Info.plist"; sourceTree = SOURCE_ROOT; };
 		0DFCA903272C7ACE0050009D /* OldOS10-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "OldOS10-Info.plist"; sourceTree = SOURCE_ROOT; };
 		0DFCA904272C7ACE0050009D /* OldOS5-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "OldOS5-Info.plist"; sourceTree = SOURCE_ROOT; };
+		1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Passcode.swift; sourceTree = "<group>"; };
+		3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeIcons.swift; sourceTree = "<group>"; };
+		5B0429F403BD4597B4E155E5 /* HomeLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeLayout.swift; sourceTree = "<group>"; };
+		C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculator.swift; sourceTree = "<group>"; };
+		CE4000000000000000000001 /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
+		CE5000000000000000000001 /* clock_alarm.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_alarm.caf; sourceTree = "<group>"; };
+		CE5000000000000000000002 /* clock_digital.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_digital.caf; sourceTree = "<group>"; };
+		CE5000000000000000000003 /* clock_blues.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_blues.caf; sourceTree = "<group>"; };
+		CE5000000000000000000004 /* clock_crickets.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_crickets.caf; sourceTree = "<group>"; };
+		CE5000000000000000000005 /* clock_xylophone.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_xylophone.caf; sourceTree = "<group>"; };
+		CF7000000000000000000001 /* clock_original_ascending.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_ascending.caf; sourceTree = "<group>"; };
+		CF7000000000000000000002 /* clock_original_bark.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_bark.caf; sourceTree = "<group>"; };
+		CF7000000000000000000003 /* clock_original_bell_tower.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_bell_tower.caf; sourceTree = "<group>"; };
+		CF7000000000000000000004 /* clock_original_boing.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_boing.caf; sourceTree = "<group>"; };
+		CF7000000000000000000005 /* clock_original_doorbell.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_doorbell.caf; sourceTree = "<group>"; };
+		CF7000000000000000000006 /* clock_original_duck.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_duck.caf; sourceTree = "<group>"; };
+		CF7000000000000000000007 /* clock_original_harp.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_harp.caf; sourceTree = "<group>"; };
+		CF7000000000000000000008 /* clock_original_motorcycle.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_motorcycle.caf; sourceTree = "<group>"; };
+		CF7000000000000000000009 /* clock_original_old_car_horn.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_old_car_horn.caf; sourceTree = "<group>"; };
+		CF700000000000000000000A /* clock_original_old_phone.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_old_phone.caf; sourceTree = "<group>"; };
+		CF700000000000000000000B /* clock_original_piano_riff.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_piano_riff.caf; sourceTree = "<group>"; };
+		CF700000000000000000000C /* clock_original_pinball.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_pinball.caf; sourceTree = "<group>"; };
+		CF700000000000000000000D /* clock_original_robot.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_robot.caf; sourceTree = "<group>"; };
+		CF700000000000000000000E /* clock_original_sci_fi.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_sci_fi.caf; sourceTree = "<group>"; };
+		CF700000000000000000000F /* clock_original_sonar.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_sonar.caf; sourceTree = "<group>"; };
+		CF7000000000000000000010 /* clock_original_strum.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_strum.caf; sourceTree = "<group>"; };
+		CF7000000000000000000011 /* clock_original_timba.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_timba.caf; sourceTree = "<group>"; };
+		CF7000000000000000000012 /* clock_original_time_passing.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_time_passing.caf; sourceTree = "<group>"; };
+		CF7000000000000000000013 /* clock_original_trill.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_original_trill.caf; sourceTree = "<group>"; };
+		D03500000000000000000001 /* StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBar.swift; sourceTree = "<group>"; };
+		EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = clock_marimba.caf; sourceTree = "<group>"; };
+		FC40FE021DCB4309A818689E /* HomeEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEditing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2215,13 +2695,12 @@
 		0D39B3EE25AA9EB600B42A84 /* OldOS */ = {
 			isa = PBXGroup;
 			children = (
+				D03400000000000000000001 /* HomeScreen */,
 				0D31980D3026549D00BF4CD5 /* OldOSKeyboard */,
 				0DEF66FA2610240F00341037 /* style.css */,
 				0D37201325AD0C0100E4D723 /* OldOS.entitlements */,
 				0D39B3EF25AA9EB600B42A84 /* AppDelegate.swift */,
 				0D39B3F125AA9EB600B42A84 /* SceneDelegate.swift */,
-				0D39B3F325AA9EB600B42A84 /* HomeScreen.swift */,
-				0D371FD525AB7B6D00E4D723 /* LockScreen.swift */,
 				0D4BBF5225B2105000FCFB2E /* Settings.swift */,
 				0D289FB625B2030900B242EF /* Common.swift */,
 				0D2D5CBE25C9C48500286707 /* iPod.swift */,
@@ -2239,6 +2718,9 @@
 				0D804455265C78C500000171 /* Messages.swift */,
 				0D90AADF2EAD25B1001366C9 /* Compass.swift */,
 				0D9F02E12EAE721100D9AAB4 /* Voice Memos.swift */,
+				C0C5F1BD4CD64575A8B3D79F /* Calculator.swift */,
+				CE4000000000000000000001 /* Clock.swift */,
+				A4351485AE0A4A29883F3065 /* Clock Sounds */,
 				0D8044822662956100000171 /* Photos.swift */,
 				0D80448A26653CE200000171 /* Stocks.swift */,
 				0DEF67332617668200341037 /* Note.xcdatamodeld */,
@@ -2367,6 +2849,53 @@
 				0DEF671E2613CBDC00341037 /* OldOS-Bridging-Header.h */,
 			);
 			path = TextView;
+			sourceTree = "<group>";
+		};
+		A4351485AE0A4A29883F3065 /* Clock Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				CE5000000000000000000001 /* clock_alarm.caf */,
+				CE5000000000000000000003 /* clock_blues.caf */,
+				CE5000000000000000000004 /* clock_crickets.caf */,
+				CE5000000000000000000002 /* clock_digital.caf */,
+				EA59B52D4B624279BDDD0D02 /* clock_marimba.caf */,
+				CF7000000000000000000001 /* clock_original_ascending.caf */,
+				CF7000000000000000000002 /* clock_original_bark.caf */,
+				CF7000000000000000000003 /* clock_original_bell_tower.caf */,
+				CF7000000000000000000004 /* clock_original_boing.caf */,
+				CF7000000000000000000005 /* clock_original_doorbell.caf */,
+				CF7000000000000000000006 /* clock_original_duck.caf */,
+				CF7000000000000000000007 /* clock_original_harp.caf */,
+				CF7000000000000000000008 /* clock_original_motorcycle.caf */,
+				CF7000000000000000000009 /* clock_original_old_car_horn.caf */,
+				CF700000000000000000000A /* clock_original_old_phone.caf */,
+				CF700000000000000000000B /* clock_original_piano_riff.caf */,
+				CF700000000000000000000C /* clock_original_pinball.caf */,
+				CF700000000000000000000D /* clock_original_robot.caf */,
+				CF700000000000000000000E /* clock_original_sci_fi.caf */,
+				CF700000000000000000000F /* clock_original_sonar.caf */,
+				CF7000000000000000000010 /* clock_original_strum.caf */,
+				CF7000000000000000000011 /* clock_original_timba.caf */,
+				CF7000000000000000000012 /* clock_original_time_passing.caf */,
+				CF7000000000000000000013 /* clock_original_trill.caf */,
+				CE5000000000000000000005 /* clock_xylophone.caf */,
+			);
+			name = "Clock Sounds";
+			path = ClockSounds;
+			sourceTree = "<group>";
+		};
+		D03400000000000000000001 /* HomeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				D03500000000000000000001 /* StatusBar.swift */,
+				0D39B3F325AA9EB600B42A84 /* HomeScreen.swift */,
+				3B41733BE8D24FC3B7C3E2D6 /* HomeIcons.swift */,
+				FC40FE021DCB4309A818689E /* HomeEditing.swift */,
+				5B0429F403BD4597B4E155E5 /* HomeLayout.swift */,
+				0D371FD525AB7B6D00E4D723 /* LockScreen.swift */,
+				1FC2D1F6CD2644F391CA33D9 /* Passcode.swift */,
+			);
+			path = HomeScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2879,6 +3408,7 @@
 			);
 			mainGroup = 0D39B3E325AA9EB600B42A84;
 			packageReferences = (
+				0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */,
 				0D371FDA25AB854F00E4D723 /* XCRemoteSwiftPackageReference "pure-swift-ui-tools" */,
 				0D53C5B025AF58D000B775ED /* XCRemoteSwiftPackageReference "LocationProvider" */,
 				0D11D85825E1F9A500AB2F2B /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
@@ -2920,6 +3450,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				889779F1D5E54BF4A8D76CF6 /* clock_marimba.caf in Resources */,
 				0D18DF77281C408500C720F9 /* FrontFragmentShader.glsl in Resources */,
 				0D18DF78281C408500C720F9 /* NextPageVertexShader.glsl in Resources */,
 				0D18DF79281C408500C720F9 /* LaunchScreen.storyboard in Resources */,
@@ -2946,6 +3477,30 @@
 				0D18DF8D281C408500C720F9 /* dtmf-2.caf in Resources */,
 				0DC45F9E3030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D18DF8E281C408500C720F9 /* dtmf-0.caf in Resources */,
+				0CE600000000000000000001 /* clock_alarm.caf in Resources */,
+				CF7100010000000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020000000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030000000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040000000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050000000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060000000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070000000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080000000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090000000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0000000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0000000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0000000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0000000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0000000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0000000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100000000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110000000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120000000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130000000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000002 /* clock_digital.caf in Resources */,
+				0CE600000000000000000003 /* clock_blues.caf in Resources */,
+				0CE600000000000000000004 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000005 /* clock_xylophone.caf in Resources */,
 				0D319A1730275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D18DF8F281C408500C720F9 /* Superclarendon Bold.ttf in Resources */,
 				0D18DF90281C408500C720F9 /* Assets.xcassets in Resources */,
@@ -2965,6 +3520,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				460575A27C2F4D7FA3CF88DE /* clock_marimba.caf in Resources */,
 				0D249DEE272270C300C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D249DEF272270C300C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D249DF0272270C300C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -2991,6 +3547,30 @@
 				0D249E04272270C300C69F8D /* dtmf-2.caf in Resources */,
 				0DC45F973030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D249E05272270C300C69F8D /* dtmf-0.caf in Resources */,
+				0CE600000000000000000006 /* clock_alarm.caf in Resources */,
+				CF7100010001000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020001000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030001000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040001000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050001000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060001000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070001000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080001000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090001000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0001000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0001000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0001000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0001000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0001000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0001000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100001000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110001000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120001000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130001000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000007 /* clock_digital.caf in Resources */,
+				0CE600000000000000000008 /* clock_blues.caf in Resources */,
+				0CE600000000000000000009 /* clock_crickets.caf in Resources */,
+				0CE60000000000000000000A /* clock_xylophone.caf in Resources */,
 				0D319A1630275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D249E06272270C300C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D249E07272270C300C69F8D /* Assets.xcassets in Resources */,
@@ -3010,6 +3590,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BC82953E5A14340817CB317 /* clock_marimba.caf in Resources */,
 				0D249E642722715B00C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D249E652722715B00C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D249E662722715B00C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3036,6 +3617,30 @@
 				0D249E7A2722715B00C69F8D /* dtmf-2.caf in Resources */,
 				0DC45FA33030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D249E7B2722715B00C69F8D /* dtmf-0.caf in Resources */,
+				0CE60000000000000000000B /* clock_alarm.caf in Resources */,
+				CF7100010002000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020002000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030002000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040002000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050002000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060002000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070002000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080002000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090002000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0002000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0002000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0002000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0002000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0002000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0002000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100002000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110002000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120002000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130002000000000000 /* clock_original_trill.caf in Resources */,
+				0CE60000000000000000000C /* clock_digital.caf in Resources */,
+				0CE60000000000000000000D /* clock_blues.caf in Resources */,
+				0CE60000000000000000000E /* clock_crickets.caf in Resources */,
+				0CE60000000000000000000F /* clock_xylophone.caf in Resources */,
 				0D319A1830275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D249E7C2722715B00C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D249E7D2722715B00C69F8D /* Assets.xcassets in Resources */,
@@ -3055,6 +3660,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8043F9913C954FF893CF312F /* clock_marimba.caf in Resources */,
 				0D249EDA2722715C00C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D249EDB2722715C00C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D249EDC2722715C00C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3081,6 +3687,30 @@
 				0D249EF02722715C00C69F8D /* dtmf-2.caf in Resources */,
 				0DC45F9B3030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D249EF12722715C00C69F8D /* dtmf-0.caf in Resources */,
+				0CE600000000000000000010 /* clock_alarm.caf in Resources */,
+				CF7100010003000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020003000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030003000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040003000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050003000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060003000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070003000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080003000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090003000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0003000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0003000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0003000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0003000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0003000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0003000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100003000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110003000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120003000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130003000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000011 /* clock_digital.caf in Resources */,
+				0CE600000000000000000012 /* clock_blues.caf in Resources */,
+				0CE600000000000000000013 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000014 /* clock_xylophone.caf in Resources */,
 				0D319A1A30275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D249EF22722715C00C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D249EF32722715C00C69F8D /* Assets.xcassets in Resources */,
@@ -3100,6 +3730,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				985399B28F3648ACB57E5779 /* clock_marimba.caf in Resources */,
 				0D249F502722715D00C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D249F512722715D00C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D249F522722715D00C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3126,6 +3757,30 @@
 				0D249F662722715D00C69F8D /* dtmf-2.caf in Resources */,
 				0DC45F983030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D249F672722715D00C69F8D /* dtmf-0.caf in Resources */,
+				0CE600000000000000000015 /* clock_alarm.caf in Resources */,
+				CF7100010004000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020004000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030004000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040004000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050004000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060004000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070004000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080004000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090004000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0004000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0004000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0004000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0004000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0004000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0004000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100004000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110004000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120004000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130004000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000016 /* clock_digital.caf in Resources */,
+				0CE600000000000000000017 /* clock_blues.caf in Resources */,
+				0CE600000000000000000018 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000019 /* clock_xylophone.caf in Resources */,
 				0D319A1C30275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D249F682722715D00C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D249F692722715D00C69F8D /* Assets.xcassets in Resources */,
@@ -3145,6 +3800,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9B327BECF274B00AECC90E5 /* clock_marimba.caf in Resources */,
 				0D249FC62722715E00C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D249FC72722715E00C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D249FC82722715E00C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3171,6 +3827,30 @@
 				0D249FDC2722715E00C69F8D /* dtmf-2.caf in Resources */,
 				0DC45F9A3030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D249FDD2722715E00C69F8D /* dtmf-0.caf in Resources */,
+				0CE60000000000000000001A /* clock_alarm.caf in Resources */,
+				CF7100010005000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020005000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030005000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040005000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050005000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060005000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070005000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080005000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090005000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0005000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0005000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0005000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0005000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0005000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0005000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100005000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110005000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120005000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130005000000000000 /* clock_original_trill.caf in Resources */,
+				0CE60000000000000000001B /* clock_digital.caf in Resources */,
+				0CE60000000000000000001C /* clock_blues.caf in Resources */,
+				0CE60000000000000000001D /* clock_crickets.caf in Resources */,
+				0CE60000000000000000001E /* clock_xylophone.caf in Resources */,
 				0D319A1B30275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D249FDE2722715E00C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D249FDF2722715E00C69F8D /* Assets.xcassets in Resources */,
@@ -3190,6 +3870,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38B82331ED2F4D3AA35326D3 /* clock_marimba.caf in Resources */,
 				0D24A03C2722716000C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D24A03D2722716000C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D24A03E2722716000C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3216,6 +3897,30 @@
 				0D24A0522722716000C69F8D /* dtmf-2.caf in Resources */,
 				0DC45FA23030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D24A0532722716000C69F8D /* dtmf-0.caf in Resources */,
+				0CE60000000000000000001F /* clock_alarm.caf in Resources */,
+				CF7100010006000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020006000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030006000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040006000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050006000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060006000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070006000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080006000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090006000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0006000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0006000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0006000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0006000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0006000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0006000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100006000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110006000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120006000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130006000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000020 /* clock_digital.caf in Resources */,
+				0CE600000000000000000021 /* clock_blues.caf in Resources */,
+				0CE600000000000000000022 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000023 /* clock_xylophone.caf in Resources */,
 				0D319A0F30275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D24A0542722716000C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D24A0552722716000C69F8D /* Assets.xcassets in Resources */,
@@ -3235,6 +3940,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31665B0766AD4044BACFC72C /* clock_marimba.caf in Resources */,
 				0D24A0B22722716500C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D24A0B32722716500C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D24A0B42722716500C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3261,6 +3967,30 @@
 				0D24A0C82722716500C69F8D /* dtmf-2.caf in Resources */,
 				0DC45F9C3030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D24A0C92722716500C69F8D /* dtmf-0.caf in Resources */,
+				0CE600000000000000000024 /* clock_alarm.caf in Resources */,
+				CF7100010007000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020007000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030007000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040007000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050007000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060007000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070007000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080007000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090007000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0007000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0007000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0007000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0007000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0007000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0007000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100007000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110007000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120007000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130007000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000025 /* clock_digital.caf in Resources */,
+				0CE600000000000000000026 /* clock_blues.caf in Resources */,
+				0CE600000000000000000027 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000028 /* clock_xylophone.caf in Resources */,
 				0D319A1430275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D24A0CA2722716500C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D24A0CB2722716500C69F8D /* Assets.xcassets in Resources */,
@@ -3280,6 +4010,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				309A3782AF0144788C9A9090 /* clock_marimba.caf in Resources */,
 				0D24A1282722716600C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D24A1292722716600C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D24A12A2722716600C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3306,6 +4037,30 @@
 				0D24A13E2722716600C69F8D /* dtmf-2.caf in Resources */,
 				0DC45FA13030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D24A13F2722716600C69F8D /* dtmf-0.caf in Resources */,
+				0CE600000000000000000029 /* clock_alarm.caf in Resources */,
+				CF7100010008000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020008000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030008000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040008000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050008000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060008000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070008000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080008000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090008000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0008000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0008000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0008000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0008000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0008000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0008000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100008000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110008000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120008000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130008000000000000 /* clock_original_trill.caf in Resources */,
+				0CE60000000000000000002A /* clock_digital.caf in Resources */,
+				0CE60000000000000000002B /* clock_blues.caf in Resources */,
+				0CE60000000000000000002C /* clock_crickets.caf in Resources */,
+				0CE60000000000000000002D /* clock_xylophone.caf in Resources */,
 				0D319A1130275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D24A1402722716600C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D24A1412722716600C69F8D /* Assets.xcassets in Resources */,
@@ -3325,6 +4080,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E1431B464F341C28BDF6FD4 /* clock_marimba.caf in Resources */,
 				0D24A19E2722719000C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D24A19F2722719000C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D24A1A02722719000C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3351,6 +4107,30 @@
 				0D24A1B42722719000C69F8D /* dtmf-2.caf in Resources */,
 				0DC45FA03030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D24A1B52722719000C69F8D /* dtmf-0.caf in Resources */,
+				0CE60000000000000000002E /* clock_alarm.caf in Resources */,
+				CF7100010009000000000000 /* clock_original_ascending.caf in Resources */,
+				CF7100020009000000000000 /* clock_original_bark.caf in Resources */,
+				CF7100030009000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF7100040009000000000000 /* clock_original_boing.caf in Resources */,
+				CF7100050009000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF7100060009000000000000 /* clock_original_duck.caf in Resources */,
+				CF7100070009000000000000 /* clock_original_harp.caf in Resources */,
+				CF7100080009000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF7100090009000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A0009000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B0009000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C0009000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D0009000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E0009000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F0009000000000000 /* clock_original_sonar.caf in Resources */,
+				CF7100100009000000000000 /* clock_original_strum.caf in Resources */,
+				CF7100110009000000000000 /* clock_original_timba.caf in Resources */,
+				CF7100120009000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF7100130009000000000000 /* clock_original_trill.caf in Resources */,
+				0CE60000000000000000002F /* clock_digital.caf in Resources */,
+				0CE600000000000000000030 /* clock_blues.caf in Resources */,
+				0CE600000000000000000031 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000032 /* clock_xylophone.caf in Resources */,
 				0D319A1030275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D24A1B62722719000C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D24A1B72722719000C69F8D /* Assets.xcassets in Resources */,
@@ -3370,6 +4150,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B11090D554B4537866EBDB0 /* clock_marimba.caf in Resources */,
 				0D24A2142722719400C69F8D /* FrontFragmentShader.glsl in Resources */,
 				0D24A2152722719400C69F8D /* NextPageVertexShader.glsl in Resources */,
 				0D24A2162722719400C69F8D /* LaunchScreen.storyboard in Resources */,
@@ -3396,6 +4177,30 @@
 				0D24A22A2722719400C69F8D /* dtmf-2.caf in Resources */,
 				0DC45F9F3030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D24A22B2722719400C69F8D /* dtmf-0.caf in Resources */,
+				0CE600000000000000000033 /* clock_alarm.caf in Resources */,
+				CF710001000A000000000000 /* clock_original_ascending.caf in Resources */,
+				CF710002000A000000000000 /* clock_original_bark.caf in Resources */,
+				CF710003000A000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF710004000A000000000000 /* clock_original_boing.caf in Resources */,
+				CF710005000A000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF710006000A000000000000 /* clock_original_duck.caf in Resources */,
+				CF710007000A000000000000 /* clock_original_harp.caf in Resources */,
+				CF710008000A000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF710009000A000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A000A000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B000A000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C000A000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D000A000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E000A000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F000A000000000000 /* clock_original_sonar.caf in Resources */,
+				CF710010000A000000000000 /* clock_original_strum.caf in Resources */,
+				CF710011000A000000000000 /* clock_original_timba.caf in Resources */,
+				CF710012000A000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF710013000A000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000034 /* clock_digital.caf in Resources */,
+				0CE600000000000000000035 /* clock_blues.caf in Resources */,
+				0CE600000000000000000036 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000037 /* clock_xylophone.caf in Resources */,
 				0D319A1930275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D24A22C2722719400C69F8D /* Superclarendon Bold.ttf in Resources */,
 				0D24A22D2722719400C69F8D /* Assets.xcassets in Resources */,
@@ -3415,6 +4220,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB52115612C4D58AD55E863 /* clock_marimba.caf in Resources */,
 				0D0FB50A262A75F4008AE4C5 /* FrontFragmentShader.glsl in Resources */,
 				0D0FB508262A75F4008AE4C5 /* NextPageVertexShader.glsl in Resources */,
 				0D39B3FC25AA9EB700B42A84 /* LaunchScreen.storyboard in Resources */,
@@ -3441,6 +4247,30 @@
 				0D818BE425EDF98300824F8E /* dtmf-2.caf in Resources */,
 				0DC45F993030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D818BCE25EDDFFB00824F8E /* dtmf-0.caf in Resources */,
+				0CE60000000000000000003D /* clock_alarm.caf in Resources */,
+				CF710001000B000000000000 /* clock_original_ascending.caf in Resources */,
+				CF710002000B000000000000 /* clock_original_bark.caf in Resources */,
+				CF710003000B000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF710004000B000000000000 /* clock_original_boing.caf in Resources */,
+				CF710005000B000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF710006000B000000000000 /* clock_original_duck.caf in Resources */,
+				CF710007000B000000000000 /* clock_original_harp.caf in Resources */,
+				CF710008000B000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF710009000B000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A000B000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B000B000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C000B000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D000B000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E000B000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F000B000000000000 /* clock_original_sonar.caf in Resources */,
+				CF710010000B000000000000 /* clock_original_strum.caf in Resources */,
+				CF710011000B000000000000 /* clock_original_timba.caf in Resources */,
+				CF710012000B000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF710013000B000000000000 /* clock_original_trill.caf in Resources */,
+				0CE60000000000000000003E /* clock_digital.caf in Resources */,
+				0CE60000000000000000003F /* clock_blues.caf in Resources */,
+				0CE600000000000000000040 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000041 /* clock_xylophone.caf in Resources */,
 				0D319A1530275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D818C2925F7307F00824F8E /* Superclarendon Bold.ttf in Resources */,
 				0D39B3F625AA9EB700B42A84 /* Assets.xcassets in Resources */,
@@ -3474,6 +4304,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFEEB6DF63204B7E93BC0B1B /* clock_marimba.caf in Resources */,
 				0D6715FE2864BCD0002CCC47 /* FrontFragmentShader.glsl in Resources */,
 				0D6715FF2864BCD0002CCC47 /* NextPageVertexShader.glsl in Resources */,
 				0D6716002864BCD0002CCC47 /* LaunchScreen.storyboard in Resources */,
@@ -3500,6 +4331,30 @@
 				0D6716142864BCD0002CCC47 /* dtmf-2.caf in Resources */,
 				0DC45F9D3030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0D6716152864BCD0002CCC47 /* dtmf-0.caf in Resources */,
+				0CE600000000000000000038 /* clock_alarm.caf in Resources */,
+				CF710001000C000000000000 /* clock_original_ascending.caf in Resources */,
+				CF710002000C000000000000 /* clock_original_bark.caf in Resources */,
+				CF710003000C000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF710004000C000000000000 /* clock_original_boing.caf in Resources */,
+				CF710005000C000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF710006000C000000000000 /* clock_original_duck.caf in Resources */,
+				CF710007000C000000000000 /* clock_original_harp.caf in Resources */,
+				CF710008000C000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF710009000C000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A000C000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B000C000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C000C000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D000C000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E000C000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F000C000000000000 /* clock_original_sonar.caf in Resources */,
+				CF710010000C000000000000 /* clock_original_strum.caf in Resources */,
+				CF710011000C000000000000 /* clock_original_timba.caf in Resources */,
+				CF710012000C000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF710013000C000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000039 /* clock_digital.caf in Resources */,
+				0CE60000000000000000003A /* clock_blues.caf in Resources */,
+				0CE60000000000000000003B /* clock_crickets.caf in Resources */,
+				0CE60000000000000000003C /* clock_xylophone.caf in Resources */,
 				0D319A1230275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0D6716162864BCD0002CCC47 /* Superclarendon Bold.ttf in Resources */,
 				0D6716172864BCD0002CCC47 /* Assets.xcassets in Resources */,
@@ -3519,6 +4374,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D6E078831D6474B9160FD2C /* clock_marimba.caf in Resources */,
 				0DBD2911274C70F8003120D9 /* FrontFragmentShader.glsl in Resources */,
 				0DBD2912274C70F8003120D9 /* NextPageVertexShader.glsl in Resources */,
 				0DBD2913274C70F8003120D9 /* LaunchScreen.storyboard in Resources */,
@@ -3545,6 +4401,30 @@
 				0DBD2927274C70F8003120D9 /* dtmf-2.caf in Resources */,
 				0DC45F963030EFA100911BD0 /* PhonepadTwo.ttf in Resources */,
 				0DBD2928274C70F8003120D9 /* dtmf-0.caf in Resources */,
+				0CE600000000000000000042 /* clock_alarm.caf in Resources */,
+				CF710001000D000000000000 /* clock_original_ascending.caf in Resources */,
+				CF710002000D000000000000 /* clock_original_bark.caf in Resources */,
+				CF710003000D000000000000 /* clock_original_bell_tower.caf in Resources */,
+				CF710004000D000000000000 /* clock_original_boing.caf in Resources */,
+				CF710005000D000000000000 /* clock_original_doorbell.caf in Resources */,
+				CF710006000D000000000000 /* clock_original_duck.caf in Resources */,
+				CF710007000D000000000000 /* clock_original_harp.caf in Resources */,
+				CF710008000D000000000000 /* clock_original_motorcycle.caf in Resources */,
+				CF710009000D000000000000 /* clock_original_old_car_horn.caf in Resources */,
+				CF71000A000D000000000000 /* clock_original_old_phone.caf in Resources */,
+				CF71000B000D000000000000 /* clock_original_piano_riff.caf in Resources */,
+				CF71000C000D000000000000 /* clock_original_pinball.caf in Resources */,
+				CF71000D000D000000000000 /* clock_original_robot.caf in Resources */,
+				CF71000E000D000000000000 /* clock_original_sci_fi.caf in Resources */,
+				CF71000F000D000000000000 /* clock_original_sonar.caf in Resources */,
+				CF710010000D000000000000 /* clock_original_strum.caf in Resources */,
+				CF710011000D000000000000 /* clock_original_timba.caf in Resources */,
+				CF710012000D000000000000 /* clock_original_time_passing.caf in Resources */,
+				CF710013000D000000000000 /* clock_original_trill.caf in Resources */,
+				0CE600000000000000000043 /* clock_digital.caf in Resources */,
+				0CE600000000000000000044 /* clock_blues.caf in Resources */,
+				0CE600000000000000000045 /* clock_crickets.caf in Resources */,
+				0CE600000000000000000046 /* clock_xylophone.caf in Resources */,
 				0D319A1330275EF600BF4CD5 /* PhoneKeyCaps.ttf in Resources */,
 				0DBD2929274C70F8003120D9 /* Superclarendon Bold.ttf in Resources */,
 				0DBD292A274C70F8003120D9 /* Assets.xcassets in Resources */,
@@ -3596,6 +4476,9 @@
 				0D18DF45281C408500C720F9 /* iCarousel.m in Sources */,
 				0DC45FE83030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02EE2EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				0FFC2565705F440D8A69A2EB /* Calculator.swift in Sources */,
+				E0373CAF730A4818912AD798 /* Passcode.swift in Sources */,
+				CE400000000000000000000E /* Clock.swift in Sources */,
 				0D18DF46281C408500C720F9 /* SearchPlistCodable.swift in Sources */,
 				0D18DF47281C408500C720F9 /* USRuleset.swift in Sources */,
 				0D18DF48281C408500C720F9 /* ReflectionView.m in Sources */,
@@ -3623,6 +4506,10 @@
 				0D18DF5D281C408500C720F9 /* Safari.swift in Sources */,
 				0D18DF5E281C408500C720F9 /* GameCenter.swift in Sources */,
 				0D18DF5F281C408500C720F9 /* HomeScreen.swift in Sources */,
+				FC36A68CD1F64FB29DAE0171 /* HomeIcons.swift in Sources */,
+				11096ADC7A7343079222B3E2 /* StatusBar.swift in Sources */,
+				2D3F9FE27B2C49D49A5E0BAB /* HomeEditing.swift in Sources */,
+				5F830E1021004D40B94A4566 /* HomeLayout.swift in Sources */,
 				0D18DF60281C408500C720F9 /* XBPageDragView.m in Sources */,
 				0D18DF61281C408500C720F9 /* Common.swift in Sources */,
 				0D18DF62281C408500C720F9 /* PhoneFormatSeparator.swift in Sources */,
@@ -3666,6 +4553,9 @@
 				0D249DBF272270C300C69F8D /* iCarousel.m in Sources */,
 				0DC45FE23030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02E32EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				3AFF0D7010994AFD84584B0F /* Calculator.swift in Sources */,
+				300DB9EC3D31497BB70868C3 /* Passcode.swift in Sources */,
+				CE4000000000000000000003 /* Clock.swift in Sources */,
 				0D249DC0272270C300C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D249DC1272270C300C69F8D /* USRuleset.swift in Sources */,
 				0D249DC2272270C300C69F8D /* ReflectionView.m in Sources */,
@@ -3693,6 +4583,10 @@
 				0D249DD7272270C300C69F8D /* Safari.swift in Sources */,
 				0D249DD8272270C300C69F8D /* GameCenter.swift in Sources */,
 				0D249DD9272270C300C69F8D /* HomeScreen.swift in Sources */,
+				B5F42EFF0552499CB9F4F26A /* HomeIcons.swift in Sources */,
+				91FB0022D7FA4BD4AF71D58A /* StatusBar.swift in Sources */,
+				82FE25C05CE24439BB7CBE97 /* HomeEditing.swift in Sources */,
+				C872A27861F74F19B0156830 /* HomeLayout.swift in Sources */,
 				0D249DDA272270C300C69F8D /* XBPageDragView.m in Sources */,
 				0D249DDB272270C300C69F8D /* Common.swift in Sources */,
 				0D249DDC272270C300C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -3736,6 +4630,9 @@
 				0D249E352722715B00C69F8D /* iCarousel.m in Sources */,
 				0DC45FEC3030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02E42EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				E983FB0BBEAB4A3096DE5EC8 /* Calculator.swift in Sources */,
+				1253DBCC5F6045EA86380999 /* Passcode.swift in Sources */,
+				CE4000000000000000000004 /* Clock.swift in Sources */,
 				0D249E362722715B00C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D249E372722715B00C69F8D /* USRuleset.swift in Sources */,
 				0D249E382722715B00C69F8D /* ReflectionView.m in Sources */,
@@ -3763,6 +4660,10 @@
 				0D249E4D2722715B00C69F8D /* Safari.swift in Sources */,
 				0D249E4E2722715B00C69F8D /* GameCenter.swift in Sources */,
 				0D249E4F2722715B00C69F8D /* HomeScreen.swift in Sources */,
+				E3D32A8204514DFAA779B423 /* HomeIcons.swift in Sources */,
+				73798B4D718E4EEF8A8DA256 /* StatusBar.swift in Sources */,
+				F870B751D6B845FAA81B0019 /* HomeEditing.swift in Sources */,
+				6F160C8EAAC44F58B4E2D6E2 /* HomeLayout.swift in Sources */,
 				0D249E502722715B00C69F8D /* XBPageDragView.m in Sources */,
 				0D249E512722715B00C69F8D /* Common.swift in Sources */,
 				0D249E522722715B00C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -3806,6 +4707,9 @@
 				0D249EAB2722715C00C69F8D /* iCarousel.m in Sources */,
 				0DC45FEE3030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02E52EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				9DB76E1DF8EC4872B0194D98 /* Calculator.swift in Sources */,
+				78F7386DE8974CFFBF0960B4 /* Passcode.swift in Sources */,
+				CE4000000000000000000005 /* Clock.swift in Sources */,
 				0D249EAC2722715C00C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D249EAD2722715C00C69F8D /* USRuleset.swift in Sources */,
 				0D249EAE2722715C00C69F8D /* ReflectionView.m in Sources */,
@@ -3833,6 +4737,10 @@
 				0D249EC32722715C00C69F8D /* Safari.swift in Sources */,
 				0D249EC42722715C00C69F8D /* GameCenter.swift in Sources */,
 				0D249EC52722715C00C69F8D /* HomeScreen.swift in Sources */,
+				5938D1C49EAB4E539E52DECB /* HomeIcons.swift in Sources */,
+				EFC43899529E45C298003FD7 /* StatusBar.swift in Sources */,
+				688C572AA4554C918EE41820 /* HomeEditing.swift in Sources */,
+				7C14A6A7FE3F4589B74B9FFF /* HomeLayout.swift in Sources */,
 				0D249EC62722715C00C69F8D /* XBPageDragView.m in Sources */,
 				0D249EC72722715C00C69F8D /* Common.swift in Sources */,
 				0D249EC82722715C00C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -3876,6 +4784,9 @@
 				0D249F212722715D00C69F8D /* iCarousel.m in Sources */,
 				0DC45FE33030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02E62EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				5F932DE7CB7E4F42883808AA /* Calculator.swift in Sources */,
+				6A7D2B49A99A4F61B3C49531 /* Passcode.swift in Sources */,
+				CE4000000000000000000006 /* Clock.swift in Sources */,
 				0D249F222722715D00C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D249F232722715D00C69F8D /* USRuleset.swift in Sources */,
 				0D249F242722715D00C69F8D /* ReflectionView.m in Sources */,
@@ -3903,6 +4814,10 @@
 				0D249F392722715D00C69F8D /* Safari.swift in Sources */,
 				0D249F3A2722715D00C69F8D /* GameCenter.swift in Sources */,
 				0D249F3B2722715D00C69F8D /* HomeScreen.swift in Sources */,
+				9E2DA78AA4B44F69BD73DB2D /* HomeIcons.swift in Sources */,
+				62C8FF40E20C4245A20E848A /* StatusBar.swift in Sources */,
+				A9609C2D71BF4E1295738014 /* HomeEditing.swift in Sources */,
+				B02BDFEDC11245BBA791A357 /* HomeLayout.swift in Sources */,
 				0D249F3C2722715D00C69F8D /* XBPageDragView.m in Sources */,
 				0D249F3D2722715D00C69F8D /* Common.swift in Sources */,
 				0D249F3E2722715D00C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -3946,6 +4861,9 @@
 				0D249F972722715E00C69F8D /* iCarousel.m in Sources */,
 				0DC45FE93030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02E72EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				5F94669ADC3443EABDEF8BA7 /* Calculator.swift in Sources */,
+				F1C36F3D1EF34C7C9BB9F549 /* Passcode.swift in Sources */,
+				CE4000000000000000000007 /* Clock.swift in Sources */,
 				0D249F982722715E00C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D249F992722715E00C69F8D /* USRuleset.swift in Sources */,
 				0D249F9A2722715E00C69F8D /* ReflectionView.m in Sources */,
@@ -3973,6 +4891,10 @@
 				0D249FAF2722715E00C69F8D /* Safari.swift in Sources */,
 				0D249FB02722715E00C69F8D /* GameCenter.swift in Sources */,
 				0D249FB12722715E00C69F8D /* HomeScreen.swift in Sources */,
+				2614B432053F4A7E8C15EB19 /* HomeIcons.swift in Sources */,
+				BCA9E02E45CB473A985ECB59 /* StatusBar.swift in Sources */,
+				7403C9069A09477480E50551 /* HomeEditing.swift in Sources */,
+				871E5FAEE4894C49A5451B0C /* HomeLayout.swift in Sources */,
 				0D249FB22722715E00C69F8D /* XBPageDragView.m in Sources */,
 				0D249FB32722715E00C69F8D /* Common.swift in Sources */,
 				0D249FB42722715E00C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -4016,6 +4938,9 @@
 				0D24A00D2722716000C69F8D /* iCarousel.m in Sources */,
 				0DC45FE73030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02E82EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				52402409B00B4653A0BB2E6C /* Calculator.swift in Sources */,
+				655CCF924BAC415389B9BC72 /* Passcode.swift in Sources */,
+				CE4000000000000000000008 /* Clock.swift in Sources */,
 				0D24A00E2722716000C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D24A00F2722716000C69F8D /* USRuleset.swift in Sources */,
 				0D24A0102722716000C69F8D /* ReflectionView.m in Sources */,
@@ -4043,6 +4968,10 @@
 				0D24A0252722716000C69F8D /* Safari.swift in Sources */,
 				0D24A0262722716000C69F8D /* GameCenter.swift in Sources */,
 				0D24A0272722716000C69F8D /* HomeScreen.swift in Sources */,
+				C49E342AAD8B4098B6A4AE8C /* HomeIcons.swift in Sources */,
+				EA8FC59DA06149D7B0EAF8D3 /* StatusBar.swift in Sources */,
+				ED06C1270C264A868B4E1ABF /* HomeEditing.swift in Sources */,
+				1ED2E6E52C7F4576AA44BFFA /* HomeLayout.swift in Sources */,
 				0D24A0282722716000C69F8D /* XBPageDragView.m in Sources */,
 				0D24A0292722716000C69F8D /* Common.swift in Sources */,
 				0D24A02A2722716000C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -4086,6 +5015,9 @@
 				0D24A0832722716500C69F8D /* iCarousel.m in Sources */,
 				0DC45FE43030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02E92EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				AAFB71C748D949369665188A /* Calculator.swift in Sources */,
+				17E5E9B348144CB8BC52A593 /* Passcode.swift in Sources */,
+				CE4000000000000000000009 /* Clock.swift in Sources */,
 				0D24A0842722716500C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D24A0852722716500C69F8D /* USRuleset.swift in Sources */,
 				0D24A0862722716500C69F8D /* ReflectionView.m in Sources */,
@@ -4113,6 +5045,10 @@
 				0D24A09B2722716500C69F8D /* Safari.swift in Sources */,
 				0D24A09C2722716500C69F8D /* GameCenter.swift in Sources */,
 				0D24A09D2722716500C69F8D /* HomeScreen.swift in Sources */,
+				D569FB32764948EABC8F888F /* HomeIcons.swift in Sources */,
+				0CFE5B2E08624B5DB652E29B /* StatusBar.swift in Sources */,
+				08A80153C38343E2B2002DC6 /* HomeEditing.swift in Sources */,
+				3A02C8FDE307426AA654B302 /* HomeLayout.swift in Sources */,
 				0D24A09E2722716500C69F8D /* XBPageDragView.m in Sources */,
 				0D24A09F2722716500C69F8D /* Common.swift in Sources */,
 				0D24A0A02722716500C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -4156,6 +5092,9 @@
 				0D24A0F92722716600C69F8D /* iCarousel.m in Sources */,
 				0DC45FED3030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02EA2EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				238277C0B433441B89DC5B16 /* Calculator.swift in Sources */,
+				5D99CBAB5A064DB9B42BAE75 /* Passcode.swift in Sources */,
+				CE400000000000000000000A /* Clock.swift in Sources */,
 				0D24A0FA2722716600C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D24A0FB2722716600C69F8D /* USRuleset.swift in Sources */,
 				0D24A0FC2722716600C69F8D /* ReflectionView.m in Sources */,
@@ -4183,6 +5122,10 @@
 				0D24A1112722716600C69F8D /* Safari.swift in Sources */,
 				0D24A1122722716600C69F8D /* GameCenter.swift in Sources */,
 				0D24A1132722716600C69F8D /* HomeScreen.swift in Sources */,
+				7FC4F0ADF364411CB389F718 /* HomeIcons.swift in Sources */,
+				393B3EFBEF1845C19AA33ECD /* StatusBar.swift in Sources */,
+				752579C3A6684D25B44C35D9 /* HomeEditing.swift in Sources */,
+				8C4533A3A0BD44EFA7E73F01 /* HomeLayout.swift in Sources */,
 				0D24A1142722716600C69F8D /* XBPageDragView.m in Sources */,
 				0D24A1152722716600C69F8D /* Common.swift in Sources */,
 				0D24A1162722716600C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -4226,6 +5169,9 @@
 				0D24A16F2722719000C69F8D /* iCarousel.m in Sources */,
 				0DC45FEA3030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02EB2EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				846FD3DCEB5B42E89761FFC1 /* Calculator.swift in Sources */,
+				1E190669236B4349AD3CC7E2 /* Passcode.swift in Sources */,
+				CE400000000000000000000B /* Clock.swift in Sources */,
 				0D24A1702722719000C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D24A1712722719000C69F8D /* USRuleset.swift in Sources */,
 				0D24A1722722719000C69F8D /* ReflectionView.m in Sources */,
@@ -4253,6 +5199,10 @@
 				0D24A1872722719000C69F8D /* Safari.swift in Sources */,
 				0D24A1882722719000C69F8D /* GameCenter.swift in Sources */,
 				0D24A1892722719000C69F8D /* HomeScreen.swift in Sources */,
+				35B38F2B23CA49068D9346CF /* HomeIcons.swift in Sources */,
+				A73AAF83B98445C4B3DD29C1 /* StatusBar.swift in Sources */,
+				73C06980BE4E4C7A82579EED /* HomeEditing.swift in Sources */,
+				799F533B7D53488CA5A889B6 /* HomeLayout.swift in Sources */,
 				0D24A18A2722719000C69F8D /* XBPageDragView.m in Sources */,
 				0D24A18B2722719000C69F8D /* Common.swift in Sources */,
 				0D24A18C2722719000C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -4296,6 +5246,9 @@
 				0D24A1E52722719400C69F8D /* iCarousel.m in Sources */,
 				0DC45FEB3030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02EC2EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				2E8FC9DA0A82498F9CB6BD3F /* Calculator.swift in Sources */,
+				5C0D91554C0C4624A23820DA /* Passcode.swift in Sources */,
+				CE400000000000000000000C /* Clock.swift in Sources */,
 				0D24A1E62722719400C69F8D /* SearchPlistCodable.swift in Sources */,
 				0D24A1E72722719400C69F8D /* USRuleset.swift in Sources */,
 				0D24A1E82722719400C69F8D /* ReflectionView.m in Sources */,
@@ -4323,6 +5276,10 @@
 				0D24A1FD2722719400C69F8D /* Safari.swift in Sources */,
 				0D24A1FE2722719400C69F8D /* GameCenter.swift in Sources */,
 				0D24A1FF2722719400C69F8D /* HomeScreen.swift in Sources */,
+				D2CD77DD1E8F4B59AC9052A8 /* HomeIcons.swift in Sources */,
+				233211FDA6B943129B2BD408 /* StatusBar.swift in Sources */,
+				9689E944909A48B6A41572C7 /* HomeEditing.swift in Sources */,
+				32ED8690653F497C8F31F592 /* HomeLayout.swift in Sources */,
 				0D24A2002722719400C69F8D /* XBPageDragView.m in Sources */,
 				0D24A2012722719400C69F8D /* Common.swift in Sources */,
 				0D24A2022722719400C69F8D /* PhoneFormatSeparator.swift in Sources */,
@@ -4366,6 +5323,9 @@
 				0DC40DED2715DA7600BE910C /* iCarousel.m in Sources */,
 				0DC45FE53030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02E22EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				BA1978EF02CC427E8F2C39BF /* Calculator.swift in Sources */,
+				836FE9A9EC1D4A4F867428D7 /* Passcode.swift in Sources */,
+				CE4000000000000000000002 /* Clock.swift in Sources */,
 				0DEF6710261101AE00341037 /* SearchPlistCodable.swift in Sources */,
 				0D11D89725EDD2BC00AB2F2B /* USRuleset.swift in Sources */,
 				0DC40DEE2715DA7600BE910C /* ReflectionView.m in Sources */,
@@ -4393,6 +5353,10 @@
 				0D11D84E25E19F9400AB2F2B /* Safari.swift in Sources */,
 				0D818C2125F67DD900824F8E /* GameCenter.swift in Sources */,
 				0D39B3F425AA9EB600B42A84 /* HomeScreen.swift in Sources */,
+				79223ACEF2114DED953E5BF7 /* HomeIcons.swift in Sources */,
+				61DFF299E2614DBBBB18ECAA /* StatusBar.swift in Sources */,
+				3D884DBAB4E54ADB93F66992 /* HomeEditing.swift in Sources */,
+				871BC782A6874470BE3EEF90 /* HomeLayout.swift in Sources */,
 				0D0FB4F5262A75EB008AE4C5 /* XBPageDragView.m in Sources */,
 				0D289FB725B2030900B242EF /* Common.swift in Sources */,
 				0D11D89A25EDD2BC00AB2F2B /* PhoneFormatSeparator.swift in Sources */,
@@ -4452,6 +5416,9 @@
 				0D6715CB2864BCD0002CCC47 /* iCarousel.m in Sources */,
 				0DC45FE13030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02EF2EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				62AC9BAF594D43BAAAC02964 /* Calculator.swift in Sources */,
+				B3F30EB18FFF470BB183882D /* Passcode.swift in Sources */,
+				CE400000000000000000000F /* Clock.swift in Sources */,
 				0D6715CC2864BCD0002CCC47 /* SearchPlistCodable.swift in Sources */,
 				0D6715CD2864BCD0002CCC47 /* USRuleset.swift in Sources */,
 				0D6715CE2864BCD0002CCC47 /* ReflectionView.m in Sources */,
@@ -4479,6 +5446,10 @@
 				0D6715E32864BCD0002CCC47 /* Safari.swift in Sources */,
 				0D6715E42864BCD0002CCC47 /* GameCenter.swift in Sources */,
 				0D6715E52864BCD0002CCC47 /* HomeScreen.swift in Sources */,
+				CB6B71A913FA4FB398AC978B /* HomeIcons.swift in Sources */,
+				0B302AB29A3347FFB4EB9A7F /* StatusBar.swift in Sources */,
+				1A3B4C54CC1E4F2A84C3DF9E /* HomeEditing.swift in Sources */,
+				D5611C8D463B47D2887365D9 /* HomeLayout.swift in Sources */,
 				0D6715E62864BCD0002CCC47 /* XBPageDragView.m in Sources */,
 				0D6715E72864BCD0002CCC47 /* Common.swift in Sources */,
 				0D6715E82864BCD0002CCC47 /* PhoneFormatSeparator.swift in Sources */,
@@ -4522,6 +5493,9 @@
 				0DBD28E2274C70F8003120D9 /* iCarousel.m in Sources */,
 				0DC45FE63030FFF300911BD0 /* OldOSKeyboardController.swift in Sources */,
 				0D9F02ED2EAE721100D9AAB4 /* Voice Memos.swift in Sources */,
+				B6F4FAAAA38843D4A566D52A /* Calculator.swift in Sources */,
+				B88114116CB9480EBF76EA48 /* Passcode.swift in Sources */,
+				CE400000000000000000000D /* Clock.swift in Sources */,
 				0DBD28E3274C70F8003120D9 /* SearchPlistCodable.swift in Sources */,
 				0DBD28E4274C70F8003120D9 /* USRuleset.swift in Sources */,
 				0DBD28E5274C70F8003120D9 /* ReflectionView.m in Sources */,
@@ -4549,6 +5523,10 @@
 				0DBD28FA274C70F8003120D9 /* Safari.swift in Sources */,
 				0DBD28FB274C70F8003120D9 /* GameCenter.swift in Sources */,
 				0DBD28FC274C70F8003120D9 /* HomeScreen.swift in Sources */,
+				F5E0FC2FE9B04889A14AB8C4 /* HomeIcons.swift in Sources */,
+				109DA01354BC4C27A06B47DE /* StatusBar.swift in Sources */,
+				96A32B6DD86A415D820DCEF0 /* HomeEditing.swift in Sources */,
+				DFB6CC2E9B6A4D218E4BE699 /* HomeLayout.swift in Sources */,
 				0DBD28FD274C70F8003120D9 /* XBPageDragView.m in Sources */,
 				0DBD28FE274C70F8003120D9 /* Common.swift in Sources */,
 				0DBD28FF274C70F8003120D9 /* PhoneFormatSeparator.swift in Sources */,
@@ -5393,7 +6371,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = OldOS/OldOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"OldOS/Preview Content\"";
 				DEVELOPMENT_TEAM = ZYLGK4GUG7;
 				ENABLE_PREVIEWS = YES;
@@ -5412,7 +6390,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.BudgetBuddyApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zrc.mbudgetbuddy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ENABLE_EXPLICIT_MODULES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "OldOS/TextView/OldOS-Bridging-Header.h";
@@ -5430,7 +6408,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = OldOS/OldOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"OldOS/Preview Content\"";
 				DEVELOPMENT_TEAM = ZYLGK4GUG7;
 				ENABLE_PREVIEWS = YES;
@@ -5445,7 +6423,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.BudgetBuddyApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zrc.mbudgetbuddy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ENABLE_EXPLICIT_MODULES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "OldOS/TextView/OldOS-Bridging-Header.h";
@@ -5821,6 +6799,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "OldOS/Camera-SwiftUI-main";
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		0D11D85825E1F9A500AB2F2B /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
@@ -6945,6 +7930,7 @@
 		};
 		0D18DF2C281C408500C720F9 /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D18DF2D281C408500C720F9 /* XCDYouTubeKit */ = {
@@ -7014,6 +8000,7 @@
 		};
 		0D249DAC272270C300C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D249DAD272270C300C69F8D /* XCDYouTubeKit */ = {
@@ -7063,6 +8050,7 @@
 		};
 		0D249E222722715B00C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D249E232722715B00C69F8D /* XCDYouTubeKit */ = {
@@ -7112,6 +8100,7 @@
 		};
 		0D249E982722715C00C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D249E992722715C00C69F8D /* XCDYouTubeKit */ = {
@@ -7161,6 +8150,7 @@
 		};
 		0D249F0E2722715D00C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D249F0F2722715D00C69F8D /* XCDYouTubeKit */ = {
@@ -7210,6 +8200,7 @@
 		};
 		0D249F842722715E00C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D249F852722715E00C69F8D /* XCDYouTubeKit */ = {
@@ -7259,6 +8250,7 @@
 		};
 		0D249FFA2722716000C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D249FFB2722716000C69F8D /* XCDYouTubeKit */ = {
@@ -7308,6 +8300,7 @@
 		};
 		0D24A0702722716500C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D24A0712722716500C69F8D /* XCDYouTubeKit */ = {
@@ -7357,6 +8350,7 @@
 		};
 		0D24A0E62722716600C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D24A0E72722716600C69F8D /* XCDYouTubeKit */ = {
@@ -7406,6 +8400,7 @@
 		};
 		0D24A15C2722719000C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D24A15D2722719000C69F8D /* XCDYouTubeKit */ = {
@@ -7455,6 +8450,7 @@
 		};
 		0D24A1D22722719400C69F8D /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D24A1D32722719400C69F8D /* XCDYouTubeKit */ = {
@@ -7633,6 +8629,7 @@
 		};
 		0D6715B22864BCD0002CCC47 /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D6715B32864BCD0002CCC47 /* XCDYouTubeKit */ = {
@@ -7662,6 +8659,7 @@
 		};
 		0D8045042669CAB900000171 /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0D818C852603FCDA00824F8E /* FeedKit */ = {
@@ -7721,6 +8719,7 @@
 		};
 		0DBD28CF274C70F8003120D9 /* Camera-SwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0DC0AFAF0000000000000101 /* XCLocalSwiftPackageReference "OldOS/Camera-SwiftUI-main" */;
 			productName = "Camera-SwiftUI";
 		};
 		0DBD28D0274C70F8003120D9 /* XCDYouTubeKit */ = {

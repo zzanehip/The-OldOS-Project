@@ -1,16 +1,1030 @@
-//
-//  Youtube.swift
-//  OldOS
-//
-//  Created by Zane Kleinberg on 5/24/21.
-//
+  
+                 
+         
+  
+                                         
+  
 import Foundation
 import SwiftUI
 import Alamofire
 import SDWebImageSwiftUI
 import Combine
+import Network
 
-//I'll re-enable youtube at somepoint when I get the google cloud billing figured out...
+
+
+private enum OldOSYouTubeConnectivity {
+    static func waitUntilOnline() async {
+        guard let url = URL(string: "https://www.youtube.com/generate_204") else { return }
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.waitsForConnectivity = true
+        configuration.timeoutIntervalForRequest = 8
+        configuration.timeoutIntervalForResource = 10
+        let session = URLSession(configuration: configuration)
+        var request = URLRequest(url: url)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1", forHTTPHeaderField: "User-Agent")
+        for attempt in 0..<3 {
+            do {
+                let (_, response) = try await session.data(for: request)
+                if let http = response as? HTTPURLResponse, (200..<400).contains(http.statusCode) { return }
+            } catch {
+                if attempt == 2 { return }
+            }
+            await oldOSRetryDelay(attempt)
+        }
+    }
+}
+
+private func oldOSRetryDelay(_ attempt: Int) async {
+    let delays: [UInt64] = [350_000_000, 900_000_000, 1_800_000_000]
+    let index = min(max(attempt, 0), delays.count - 1)
+    try? await Task.sleep(nanoseconds: delays[index])
+}
+
+@MainActor
+final class OldOSYouTubePlayback {
+    static let shared = OldOSYouTubePlayback()
+
+    private let playerAPI = OldOSYouTubePlayerAPI()
+    private var playbackGeneration: UInt64 = 0
+
+    func beginPlayer(videoID: String) async throws -> AVPlayer {
+        playbackGeneration &+= 1
+        let generation = playbackGeneration
+
+        let response = try await playerAPI.player(videoID: videoID)
+        guard generation == playbackGeneration else { throw CancellationError() }
+
+        guard let streamingData = response["streamingData"] as? [String: Any],
+              let hlsString = streamingData["hlsManifestUrl"] as? String,
+              let hlsURL = URL(string: hlsString) else {
+            throw OldOSYouTubeError("YouTube did not return an HLS stream for this video.")
+        }
+
+        print("OldOS YouTube direct player: HLS manifest received for", videoID)
+
+        let asset = AVURLAsset(url: hlsURL)
+        let item = AVPlayerItem(asset: asset)
+        item.preferredForwardBufferDuration = 6
+
+        let player = AVPlayer(playerItem: item)
+        player.automaticallyWaitsToMinimizeStalling = true
+
+        guard generation == playbackGeneration else {
+            player.pause()
+            player.replaceCurrentItem(with: nil)
+            throw CancellationError()
+        }
+        return player
+    }
+
+    func cancelPendingPlayback() {
+        playbackGeneration &+= 1
+    }
+
+    func metadata(videoID: String) async throws -> YouTubeVideoData {
+                                                                               
+                                                                                   
+                                                                                  
+                                                        
+        if let response = try? await playerAPI.webMetadata(videoID: videoID),
+           let video = YouTubeVideoData(playerResponse: response, fallbackVideoID: videoID) {
+            return video
+        }
+        let response = try await playerAPI.player(videoID: videoID)
+        guard let video = YouTubeVideoData(playerResponse: response, fallbackVideoID: videoID) else {
+            throw OldOSYouTubeError("YouTube returned incomplete video metadata.")
+        }
+        return video
+    }
+}
+
+@MainActor
+private final class OldOSYouTubePlayerAPI {
+    private struct WebConfiguration {
+        let apiKey: String
+        let visitorData: String?
+    }
+
+    private let session: URLSession
+    private var cachedConfiguration: WebConfiguration?
+
+    private struct ClientProfile {
+        let name: String
+        let version: String
+        let number: String
+        let userAgent: String
+        let deviceMake: String
+        let deviceModel: String
+        let osName: String
+        let osVersion: String
+    }
+
+    private let clients: [ClientProfile] = [
+        .init(
+            name: "VISIONOS", version: "1.02", number: "101",
+            userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15",
+            deviceMake: "Apple", deviceModel: "RealityDevice17,1", osName: "visionOS", osVersion: "26.5.23O471"
+        ),
+        .init(
+            name: "IOS", version: "21.26.4", number: "5",
+            userAgent: "com.google.ios.youtube/21.26.4 (iPhone16,2; U; CPU iOS 18_3_2 like Mac OS X;)",
+            deviceMake: "Apple", deviceModel: "iPhone16,2", osName: "iPhone", osVersion: "18.3.2.22D82"
+        )
+    ]
+
+    init() {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.waitsForConnectivity = true
+        configuration.timeoutIntervalForRequest = 20
+        configuration.timeoutIntervalForResource = 35
+        configuration.httpCookieAcceptPolicy = .always
+        configuration.httpShouldSetCookies = true
+        configuration.httpAdditionalHeaders = [
+            "Accept-Language": "en-US,en;q=0.9",
+            "Cookie": "SOCS=CAI"
+        ]
+        session = URLSession(configuration: configuration)
+    }
+
+    func player(videoID: String) async throws -> [String: Any] {
+        guard !videoID.isEmpty else { throw OldOSYouTubeError("Invalid YouTube video ID.") }
+        await OldOSYouTubeConnectivity.waitUntilOnline()
+
+        var lastError: Error?
+        for attempt in 0..<3 {
+            do {
+                let configuration = try await webConfiguration(videoID: videoID, forceRefresh: attempt > 0)
+                var firstPlayableResponse: [String: Any]?
+                var clientError: Error?
+                for client in clients {
+                    do {
+                        let response = try await requestPlayer(videoID: videoID, configuration: configuration, client: client)
+                        if ((response["streamingData"] as? [String: Any])?["hlsManifestUrl"] as? String) != nil {
+                            return response
+                        }
+                        if firstPlayableResponse == nil { firstPlayableResponse = response }
+                    } catch {
+                        clientError = error
+                    }
+                }
+                if let firstPlayableResponse { return firstPlayableResponse }
+                throw clientError ?? OldOSYouTubeError("No usable YouTube player client responded.")
+            } catch {
+                lastError = error
+                if attempt < 2 { await oldOSRetryDelay(attempt) }
+            }
+        }
+        throw lastError ?? OldOSYouTubeError("YouTube player request failed.")
+    }
+
+    func webMetadata(videoID: String) async throws -> [String: Any] {
+        guard !videoID.isEmpty,
+              let url = URL(string: "https://www.youtube.com/watch?v=\(videoID)&hl=en&gl=US") else {
+            throw OldOSYouTubeError("Invalid YouTube watch URL.")
+        }
+        var request = URLRequest(url: url)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        request.setValue("https://www.youtube.com/", forHTTPHeaderField: "Referer")
+        request.setValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
+
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode),
+              let html = String(data: data, encoding: .utf8) else {
+            let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+            throw OldOSYouTubeError("Could not load YouTube metadata page (HTTP \(code)).")
+        }
+
+        for marker in ["var ytInitialPlayerResponse", "ytInitialPlayerResponse"] {
+            if let json = jsonObject(after: marker, in: html) { return json }
+        }
+        throw OldOSYouTubeError("Could not read YouTube video metadata.")
+    }
+
+    private func jsonObject(after marker: String, in text: String) -> [String: Any]? {
+        var searchStart = text.startIndex
+        while searchStart < text.endIndex,
+              let range = text.range(of: marker, range: searchStart..<text.endIndex) {
+            let afterMarker = range.upperBound
+            let scanEnd = text.index(afterMarker, offsetBy: 512, limitedBy: text.endIndex) ?? text.endIndex
+            let nearby = text[afterMarker..<scanEnd]
+            if let equals = nearby.firstIndex(of: "=") {
+                let afterEquals = text.index(after: equals)
+                let objectSearchEnd = text.index(afterEquals, offsetBy: 256, limitedBy: text.endIndex) ?? text.endIndex
+                if let brace = text[afterEquals..<objectSearchEnd].firstIndex(of: "{") {
+                    let tail = String(text[brace...])
+                    if let jsonText = balancedJSONObject(in: tail),
+                       let object = try? JSONSerialization.jsonObject(with: Data(jsonText.utf8)) as? [String: Any] {
+                        return object
+                    }
+                }
+            }
+            searchStart = range.upperBound
+        }
+        return nil
+    }
+
+    private func balancedJSONObject(in text: String) -> String? {
+        var depth = 0
+        var inString = false
+        var escaped = false
+        var started = false
+        for (offset, character) in text.enumerated() {
+            if inString {
+                if escaped { escaped = false; continue }
+                if character == "\\" { escaped = true; continue }
+                if character == "\"" { inString = false }
+                continue
+            }
+            if character == "\"" { inString = true; continue }
+            if character == "{" { depth += 1; started = true }
+            if character == "}" {
+                depth -= 1
+                if started && depth == 0 {
+                    let end = text.index(text.startIndex, offsetBy: offset + 1)
+                    return String(text[..<end])
+                }
+            }
+        }
+        return nil
+    }
+
+    private func webConfiguration(videoID: String, forceRefresh: Bool) async throws -> WebConfiguration {
+        if !forceRefresh, let cachedConfiguration { return cachedConfiguration }
+
+        guard let url = URL(string: "https://www.youtube.com/watch?v=\(videoID)&hl=en&gl=US") else {
+            throw OldOSYouTubeError("Invalid YouTube watch URL.")
+        }
+        var request = URLRequest(url: url)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        request.setValue("https://www.youtube.com/", forHTTPHeaderField: "Referer")
+        request.setValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
+
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode),
+              let html = String(data: data, encoding: .utf8) else {
+            let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+            throw OldOSYouTubeError("Could not load YouTube player configuration (HTTP \(code)).")
+        }
+
+        guard let apiKey = configString("INNERTUBE_API_KEY", in: html), !apiKey.isEmpty else {
+            throw OldOSYouTubeError("Could not read YouTube InnerTube API key.")
+        }
+        let config = WebConfiguration(
+            apiKey: apiKey,
+            visitorData: configString("VISITOR_DATA", in: html) ?? configString("visitorData", in: html)
+        )
+        cachedConfiguration = config
+        return config
+    }
+
+    private func requestPlayer(videoID: String, configuration: WebConfiguration, client: ClientProfile) async throws -> [String: Any] {
+        var components = URLComponents(string: "https://www.youtube.com/youtubei/v1/player")!
+        components.queryItems = [
+            URLQueryItem(name: "key", value: configuration.apiKey),
+            URLQueryItem(name: "prettyPrint", value: "false")
+        ]
+
+        var request = URLRequest(url: components.url!)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(client.userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue(client.number, forHTTPHeaderField: "X-YouTube-Client-Name")
+        request.setValue(client.version, forHTTPHeaderField: "X-YouTube-Client-Version")
+        request.setValue("https://www.youtube.com", forHTTPHeaderField: "Origin")
+        request.setValue("https://www.youtube.com/watch?v=\(videoID)", forHTTPHeaderField: "Referer")
+        if let visitorData = configuration.visitorData, !visitorData.isEmpty {
+            request.setValue(visitorData, forHTTPHeaderField: "X-Goog-Visitor-Id")
+        }
+
+        let body: [String: Any] = [
+            "context": [
+                "client": [
+                    "clientName": client.name,
+                    "clientVersion": client.version,
+                    "deviceMake": client.deviceMake,
+                    "deviceModel": client.deviceModel,
+                    "userAgent": client.userAgent,
+                    "osName": client.osName,
+                    "osVersion": client.osVersion,
+                    "hl": "en",
+                    "gl": "US",
+                    "timeZone": "UTC",
+                    "utcOffsetMinutes": 0
+                ]
+            ],
+            "playbackContext": [
+                "contentPlaybackContext": [
+                    "html5Preference": "HTML5_PREF_WANTS"
+                ]
+            ],
+            "videoId": videoID,
+            "contentCheckOk": true,
+            "racyCheckOk": true
+        ]
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+            throw OldOSYouTubeError("YouTube player API failed (HTTP \(code)).")
+        }
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw OldOSYouTubeError("Could not decode YouTube player response.")
+        }
+
+        let playability = json["playabilityStatus"] as? [String: Any]
+        let status = playability?["status"] as? String
+        if status != nil && status != "OK" {
+            let reason = (playability?["reason"] as? String) ?? "Video is not playable."
+            throw OldOSYouTubeError(reason)
+        }
+        return json
+    }
+
+    private func configString(_ key: String, in html: String) -> String? {
+        let escaped = NSRegularExpression.escapedPattern(for: key)
+        let patterns = [
+            "\\\"\(escaped)\\\"\\s*:\\s*\\\"([^\\\"]+)\\\"",
+            "\(escaped)\\s*[:=]\\s*\\\"([^\\\"]+)\\\""
+        ]
+        for pattern in patterns {
+            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
+            let range = NSRange(html.startIndex..<html.endIndex, in: html)
+            if let match = regex.firstMatch(in: html, range: range), match.numberOfRanges > 1,
+               let r = Range(match.range(at: 1), in: html) {
+                return String(html[r])
+            }
+        }
+        return nil
+    }
+}
+
+struct OldOSYouTubeError: LocalizedError { let message: String; init(_ message: String) { self.message = message }; var errorDescription: String? { message } }
+
+final class OldOSYouTubeDiscovery {
+    static let shared = OldOSYouTubeDiscovery()
+    enum Period { case today, week, all }
+
+    private let session: URLSession = {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.waitsForConnectivity = true
+        configuration.timeoutIntervalForRequest = 20
+        configuration.timeoutIntervalForResource = 30
+        configuration.httpCookieAcceptPolicy = .always
+        configuration.httpShouldSetCookies = true
+        configuration.httpAdditionalHeaders = [
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Cookie": "SOCS=CAI"
+        ]
+        return URLSession(configuration: configuration)
+    }()
+
+    func featured() async throws -> [YouTubeVideoData] {
+                                                                                     
+                                                                                    
+                                                                                 
+        let sources: [() async throws -> [YouTubeVideoData]] = [
+            { try await self.videos(from: URL(string: "https://www.youtube.com/feed/trending?hl=en&gl=US")!) },
+            { try await self.videos(from: URL(string: "https://www.youtube.com/?hl=en&gl=US")!) },
+            { try await self.search("popular videos") },
+            { try await self.search("popular music") },
+            { try await self.search("sports highlights") }
+        ]
+
+        var seen = Set<String>()
+        var merged = [YouTubeVideoData]()
+        var lastError: Error?
+        for source in sources {
+            do {
+                let group = try await source()
+                for video in group {
+                    guard let id = video.id, seen.insert(id).inserted else { continue }
+                    merged.append(video)
+                    if merged.count >= 30 { return merged }
+                }
+                if merged.count >= 18 { return merged }
+            } catch {
+                lastError = error
+            }
+        }
+        if !merged.isEmpty { return merged }
+        throw lastError ?? OldOSYouTubeError("YouTube Featured returned no videos.")
+    }
+
+    func search(_ query: String) async throws -> [YouTubeVideoData] {
+        var components = URLComponents(string: "https://www.youtube.com/results")!
+        components.queryItems = [
+            URLQueryItem(name: "search_query", value: query),
+            URLQueryItem(name: "hl", value: "en"),
+            URLQueryItem(name: "gl", value: "US")
+        ]
+        return try await videos(from: components.url!)
+    }
+
+    func mostViewed(_ period: Period) async throws -> [YouTubeVideoData] {
+                                                                                    
+                                                                                     
+                                                                                     
+                                                                                        
+                                                                                        
+                                                                                  
+        let sourceURLs = [
+            URL(string: "https://www.youtube.com/feed/trending?hl=en&gl=US")!,
+            URL(string: "https://www.youtube.com/feed/explore?hl=en&gl=US")!
+        ]
+
+        var seen = Set<String>()
+        var candidates = [YouTubeVideoData]()
+        var lastError: Error?
+
+        for url in sourceURLs {
+            do {
+                let group = try await videos(from: url)
+                for video in group {
+                    guard let id = video.id, seen.insert(id).inserted else { continue }
+                    candidates.append(video)
+                }
+            } catch {
+                lastError = error
+            }
+        }
+
+        guard !candidates.isEmpty else {
+            throw lastError ?? OldOSYouTubeError("YouTube Most Viewed returned no videos.")
+        }
+
+        let maxAge: TimeInterval?
+        switch period {
+        case .today: maxAge = 24 * 60 * 60
+        case .week:  maxAge = 7 * 24 * 60 * 60
+        case .all:   maxAge = nil
+        }
+
+        let filtered = candidates.filter { video in
+            guard let maxAge else { return true }
+            guard let age = oldOSYouTubePublishedAge(video.published?.pretty ?? video.published?.text ?? video.uploaded?.text) else {
+                                                                                      
+                return true
+            }
+            return age <= maxAge
+        }
+
+        let ranked = filtered.sorted { lhs, rhs in
+            let l = oldOSYouTubeViewCount(lhs.views?.pretty ?? lhs.views?.text)
+            let r = oldOSYouTubeViewCount(rhs.views?.pretty ?? rhs.views?.text)
+            if l != r { return l > r }
+            let la = oldOSYouTubePublishedAge(lhs.published?.pretty ?? lhs.published?.text ?? lhs.uploaded?.text) ?? .greatestFiniteMagnitude
+            let ra = oldOSYouTubePublishedAge(rhs.published?.pretty ?? rhs.published?.text ?? rhs.uploaded?.text) ?? .greatestFiniteMagnitude
+            return la < ra
+        }
+
+        return Array(ranked.prefix(30))
+    }
+
+    private func videos(from url: URL) async throws -> [YouTubeVideoData] {
+        var request = URLRequest(url: url)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        request.setValue("https://www.youtube.com/", forHTTPHeaderField: "Referer")
+
+        let (data, response) = try await dataWithRetry(for: request)
+        guard let http = response as? HTTPURLResponse else {
+            throw OldOSYouTubeError("YouTube discovery returned no HTTP response.")
+        }
+        guard (200..<300).contains(http.statusCode) else {
+            throw OldOSYouTubeError("YouTube discovery returned HTTP \(http.statusCode).")
+        }
+        guard let html = String(data: data, encoding: .utf8) else {
+            throw OldOSYouTubeError("Could not decode YouTube discovery data.")
+        }
+        guard let object = initialData(in: html) else {
+            print("OldOS YouTube discovery: ytInitialData not found. URL=\(url.absoluteString) bytes=\(data.count) prefix=\(String(html.prefix(220)))")
+            throw OldOSYouTubeError("Could not read YouTube discovery data.")
+        }
+
+        var renderers = [[String: Any]]()
+        collect(object, into: &renderers)
+        var seen = Set<String>()
+        let videos = renderers.compactMap { renderer -> YouTubeVideoData? in
+            guard let video = YouTubeVideoData(videoRenderer: renderer), let id = video.id, seen.insert(id).inserted else { return nil }
+            return video
+        }
+        if videos.isEmpty {
+            print("OldOS YouTube discovery: ytInitialData parsed but contained no videoRenderer objects. URL=\(url.absoluteString)")
+        }
+        return videos
+    }
+
+
+    private func dataWithRetry(for request: URLRequest) async throws -> (Data, URLResponse) {
+        await OldOSYouTubeConnectivity.waitUntilOnline()
+        var lastError: Error?
+        for attempt in 0..<3 {
+            do {
+                return try await session.data(for: request)
+            } catch {
+                lastError = error
+                if attempt < 2 { await oldOSRetryDelay(attempt) }
+            }
+        }
+        throw lastError ?? OldOSYouTubeError("YouTube network request failed.")
+    }
+
+    private func initialData(in html: String) -> Any? {
+                                                                                         
+                                                                   
+        let markers = [
+            "var ytInitialData",
+            "window[\"ytInitialData\"]",
+            "window['ytInitialData']",
+            "window.ytInitialData",
+            "ytInitialData"
+        ]
+
+        for marker in markers {
+            var searchStart = html.startIndex
+            while searchStart < html.endIndex,
+                  let range = html.range(of: marker, range: searchStart..<html.endIndex) {
+                let afterMarker = range.upperBound
+                let scanEnd = html.index(afterMarker, offsetBy: 512, limitedBy: html.endIndex) ?? html.endIndex
+                let nearby = html[afterMarker..<scanEnd]
+
+                                                                                            
+                                                                                  
+                if let equals = nearby.firstIndex(of: "=") {
+                    let afterEquals = html.index(after: equals)
+                    let objectSearchEnd = html.index(afterEquals, offsetBy: 256, limitedBy: html.endIndex) ?? html.endIndex
+                    if let brace = html[afterEquals..<objectSearchEnd].firstIndex(of: "{") {
+                        let tail = String(html[brace...])
+                        if let json = balancedObject(in: tail),
+                           let object = try? JSONSerialization.jsonObject(with: Data(json.utf8)) {
+                            return object
+                        }
+                    }
+                }
+
+                searchStart = range.upperBound
+            }
+        }
+        return nil
+    }
+
+    private func balancedObject(in text: String) -> String? {
+        var depth = 0
+        var inString = false
+        var escaped = false
+        var started = false
+
+        for (offset, character) in text.enumerated() {
+            if inString {
+                if escaped { escaped = false; continue }
+                if character == "\\" { escaped = true; continue }
+                if character == "\"" { inString = false }
+                continue
+            }
+
+            if character == "\"" { inString = true; continue }
+            if character == "{" { depth += 1; started = true }
+            if character == "}" {
+                depth -= 1
+                if started && depth == 0 {
+                    let end = text.index(text.startIndex, offsetBy: offset + 1)
+                    return String(text[..<end])
+                }
+            }
+        }
+        return nil
+    }
+
+    private func collect(_ value: Any, into output: inout [[String: Any]]) {
+        if let dictionary = value as? [String: Any] {
+            for key in ["videoRenderer", "gridVideoRenderer", "compactVideoRenderer"] {
+                if let renderer = dictionary[key] as? [String: Any] { output.append(renderer) }
+            }
+            for value in dictionary.values { collect(value, into: &output) }
+        } else if let array = value as? [Any] {
+            for value in array { collect(value, into: &output) }
+        }
+    }
+}
+
+final class OldOSYouTubeComments {
+    static let shared = OldOSYouTubeComments()
+    private let session: URLSession
+
+    private init() {
+        let configuration = URLSessionConfiguration.default
+        configuration.waitsForConnectivity = true
+        configuration.timeoutIntervalForRequest = 20
+        configuration.timeoutIntervalForResource = 30
+        configuration.httpCookieAcceptPolicy = .always
+        configuration.httpShouldSetCookies = true
+        configuration.httpAdditionalHeaders = [
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Cookie": "SOCS=CAI"
+        ]
+        session = URLSession(configuration: configuration)
+    }
+
+    func comments(videoID: String) async throws -> YoutubeVideoComments {
+        guard !videoID.isEmpty,
+              let watchURL = URL(string: "https://www.youtube.com/watch?v=\(videoID)&hl=en&gl=US") else {
+            throw OldOSYouTubeError("Invalid YouTube video ID.")
+        }
+
+        var watchRequest = URLRequest(url: watchURL)
+        watchRequest.setValue("https://www.youtube.com/", forHTTPHeaderField: "Referer")
+        let (watchData, watchResponse) = try await dataWithRetry(for: watchRequest)
+        guard let http = watchResponse as? HTTPURLResponse, (200..<300).contains(http.statusCode),
+              let html = String(data: watchData, encoding: .utf8) else {
+            throw OldOSYouTubeError("Could not load YouTube comments page.")
+        }
+
+        guard let apiKey = configString("INNERTUBE_API_KEY", in: html),
+              let clientVersion = configString("INNERTUBE_CLIENT_VERSION", in: html) else {
+            throw OldOSYouTubeError("Could not read YouTube comments configuration.")
+        }
+
+        let initialNext = try await next(videoID: videoID, continuation: nil, apiKey: apiKey, clientVersion: clientVersion)
+
+        var continuation = commentsContinuation(in: initialNext)
+        if continuation == nil, let initial = initialData(in: html) {
+            continuation = commentsContinuation(in: initial)
+        }
+
+        guard let continuation else {
+            print("OldOS YouTube comments: no comments continuation for", videoID)
+            return YoutubeVideoComments(comments: [], continuation: nil)
+        }
+
+        let responseObject = try await next(videoID: videoID, continuation: continuation, apiKey: apiKey, clientVersion: clientVersion)
+
+        var comments = [YoutubeVideoComments.Comments]()
+        var seen = Set<String>()
+
+        var modern = [[String: Any]]()
+        collectCommentEntities(responseObject, into: &modern)
+        for entity in modern {
+            if let comment = makeModernComment(entity), seen.insert(comment.commentID).inserted {
+                comments.append(comment)
+            }
+        }
+
+        var legacy = [[String: Any]]()
+        collectCommentRenderers(responseObject, into: &legacy)
+        for renderer in legacy {
+            if let comment = makeLegacyComment(renderer), seen.insert(comment.commentID).inserted {
+                comments.append(comment)
+            }
+        }
+
+        print("OldOS YouTube comments: parsed", comments.count, "comments for", videoID)
+        return YoutubeVideoComments(comments: comments, continuation: firstContinuation(in: responseObject))
+    }
+
+    private func next(videoID: String, continuation: String?, apiKey: String, clientVersion: String) async throws -> Any {
+        var components = URLComponents(string: "https://www.youtube.com/youtubei/v1/next")!
+        components.queryItems = [
+            URLQueryItem(name: "key", value: apiKey),
+            URLQueryItem(name: "prettyPrint", value: "false")
+        ]
+
+        var request = URLRequest(url: components.url!)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("https://www.youtube.com", forHTTPHeaderField: "Origin")
+        request.setValue("https://www.youtube.com/watch?v=\(videoID)", forHTTPHeaderField: "Referer")
+        request.setValue("1", forHTTPHeaderField: "X-YouTube-Client-Name")
+        request.setValue(clientVersion, forHTTPHeaderField: "X-YouTube-Client-Version")
+
+        var body: [String: Any] = [
+            "context": [
+                "client": [
+                    "clientName": "WEB",
+                    "clientVersion": clientVersion,
+                    "hl": "en",
+                    "gl": "US"
+                ]
+            ]
+        ]
+        if let continuation {
+            body["continuation"] = continuation
+        } else {
+            body["videoId"] = videoID
+            body["contentCheckOk"] = true
+            body["racyCheckOk"] = true
+        }
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await dataWithRetry(for: request)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+            throw OldOSYouTubeError("YouTube comments request failed (HTTP \(code)).")
+        }
+        return try JSONSerialization.jsonObject(with: data)
+    }
+
+    private func dataWithRetry(for request: URLRequest) async throws -> (Data, URLResponse) {
+        await OldOSYouTubeConnectivity.waitUntilOnline()
+        var lastError: Error?
+        for attempt in 0..<3 {
+            do { return try await session.data(for: request) }
+            catch {
+                lastError = error
+                if attempt < 2 { await oldOSRetryDelay(attempt) }
+            }
+        }
+        throw lastError ?? OldOSYouTubeError("YouTube comments request failed.")
+    }
+
+    private func configString(_ key: String, in html: String) -> String? {
+        let escaped = NSRegularExpression.escapedPattern(for: key)
+        let patterns = [
+            "\\\"\(escaped)\\\"\\s*:\\s*\\\"([^\\\"]+)\\\"",
+            "\(escaped)\\s*[:=]\\s*\\\"([^\\\"]+)\\\""
+        ]
+        for pattern in patterns {
+            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
+            let range = NSRange(html.startIndex..<html.endIndex, in: html)
+            if let match = regex.firstMatch(in: html, range: range), match.numberOfRanges > 1,
+               let r = Range(match.range(at: 1), in: html) {
+                return String(html[r])
+            }
+        }
+        return nil
+    }
+
+    private func initialData(in html: String) -> Any? {
+        let markers = ["var ytInitialData", "window[\"ytInitialData\"]", "window['ytInitialData']", "window.ytInitialData", "ytInitialData"]
+        for marker in markers {
+            var searchStart = html.startIndex
+            while searchStart < html.endIndex, let range = html.range(of: marker, range: searchStart..<html.endIndex) {
+                let after = range.upperBound
+                let scanEnd = html.index(after, offsetBy: 512, limitedBy: html.endIndex) ?? html.endIndex
+                if let equals = html[after..<scanEnd].firstIndex(of: "=") {
+                    let afterEquals = html.index(after: equals)
+                    let objectEnd = html.index(afterEquals, offsetBy: 256, limitedBy: html.endIndex) ?? html.endIndex
+                    if let brace = html[afterEquals..<objectEnd].firstIndex(of: "{"),
+                       let json = balancedObject(in: String(html[brace...])),
+                       let object = try? JSONSerialization.jsonObject(with: Data(json.utf8)) { return object }
+                }
+                searchStart = range.upperBound
+            }
+        }
+        return nil
+    }
+
+    private func balancedObject(in text: String) -> String? {
+        var depth = 0, started = false, inString = false, escaped = false
+        for (offset, character) in text.enumerated() {
+            if inString {
+                if escaped { escaped = false; continue }
+                if character == "\\" { escaped = true; continue }
+                if character == "\"" { inString = false }
+                continue
+            }
+            if character == "\"" { inString = true; continue }
+            if character == "{" { depth += 1; started = true }
+            if character == "}" {
+                depth -= 1
+                if started && depth == 0 {
+                    let end = text.index(text.startIndex, offsetBy: offset + 1)
+                    return String(text[..<end])
+                }
+            }
+        }
+        return nil
+    }
+
+    private func commentsContinuation(in value: Any) -> String? {
+        if let d = value as? [String: Any] {
+            if let panel = d["engagementPanelSectionListRenderer"] as? [String: Any] {
+                let identifier = ((panel["panelIdentifier"] as? String) ?? "") + " " + ((panel["targetId"] as? String) ?? "")
+                if identifier.lowercased().contains("comment"), let token = firstContinuation(in: panel) { return token }
+            }
+            if let item = d["itemSectionRenderer"] as? [String: Any] {
+                let identifier = ((item["sectionIdentifier"] as? String) ?? "") + " " + ((item["targetId"] as? String) ?? "")
+                if identifier.lowercased().contains("comment"), let token = firstContinuation(in: item) { return token }
+            }
+            if d["commentsEntryPointHeaderRenderer"] != nil, let token = firstContinuation(in: d) { return token }
+            if let target = d["targetId"] as? String, target.lowercased().contains("comment"), let token = firstContinuation(in: d) { return token }
+            for child in d.values {
+                if let token = commentsContinuation(in: child) { return token }
+            }
+        } else if let a = value as? [Any] {
+            for child in a {
+                if let token = commentsContinuation(in: child) { return token }
+            }
+        }
+        return nil
+    }
+
+    private func firstContinuation(in value: Any) -> String? {
+        if let d = value as? [String: Any] {
+            if let command = d["continuationCommand"] as? [String: Any], let token = command["token"] as? String { return token }
+            if let command = d["reloadContinuationData"] as? [String: Any], let token = command["continuation"] as? String { return token }
+            if let command = d["nextContinuationData"] as? [String: Any], let token = command["continuation"] as? String { return token }
+            for child in d.values { if let token = firstContinuation(in: child) { return token } }
+        } else if let a = value as? [Any] {
+            for child in a { if let token = firstContinuation(in: child) { return token } }
+        }
+        return nil
+    }
+
+    private func collectCommentEntities(_ value: Any, into output: inout [[String: Any]]) {
+        if let d = value as? [String: Any] {
+            if let entity = d["commentEntityPayload"] as? [String: Any] { output.append(entity) }
+            for child in d.values { collectCommentEntities(child, into: &output) }
+        } else if let a = value as? [Any] {
+            for child in a { collectCommentEntities(child, into: &output) }
+        }
+    }
+
+    private func collectCommentRenderers(_ value: Any, into output: inout [[String: Any]]) {
+        if let d = value as? [String: Any] {
+            if let renderer = d["commentRenderer"] as? [String: Any] { output.append(renderer) }
+            for child in d.values { collectCommentRenderers(child, into: &output) }
+        } else if let a = value as? [Any] {
+            for child in a { collectCommentRenderers(child, into: &output) }
+        }
+    }
+
+    private func makeModernComment(_ p: [String: Any]) -> YoutubeVideoComments.Comments? {
+        let properties = p["properties"] as? [String: Any] ?? [:]
+        guard let id = properties["commentId"] as? String, !id.isEmpty else { return nil }
+        let author = p["author"] as? [String: Any] ?? [:]
+        let toolbar = p["toolbar"] as? [String: Any] ?? [:]
+
+        var thumbnails = [YoutubeVideoComments.Comments.AuthorThumb]()
+        if let avatar = p["avatar"] as? [String: Any],
+           let image = avatar["image"] as? [String: Any],
+           let sources = image["sources"] as? [[String: Any]] {
+            thumbnails = sources.compactMap { source in
+                guard let raw = source["url"] as? String else { return nil }
+                let normalized = raw.hasPrefix("//") ? "https:" + raw : raw
+                return YoutubeVideoComments.Comments.AuthorThumb(url: URL(string: normalized), width: source["width"] as? Int, height: source["height"] as? Int)
+            }
+        }
+        if thumbnails.isEmpty, let raw = author["avatarThumbnailUrl"] as? String {
+            thumbnails = [.init(url: URL(string: raw), width: nil, height: nil)]
+        }
+
+        let replyCount: Int? = {
+            if let value = toolbar["replyCount"] as? Int { return value }
+            if let value = toolbar["replyCount"] as? NSNumber { return value.intValue }
+            if let value = toolbar["replyCount"] as? String { return Int(value.filter(\.isNumber)) }
+            return nil
+        }()
+        let published = properties["publishedTime"] as? String
+        let edited = published?.localizedCaseInsensitiveContains("edited") ?? false
+        let likes = (toolbar["likeCountNotliked"] as? String) ?? (toolbar["likeCountLiked"] as? String) ?? (toolbar["likeCountA11y"] as? String)
+
+        return YoutubeVideoComments.Comments(
+            authorThumb: thumbnails,
+            author: author["displayName"] as? String,
+            authorID: author["channelId"] as? String,
+            commentID: id,
+            text: ((properties["content"] as? [String: Any])?["content"] as? String),
+            likes: likes,
+            numReplies: replyCount,
+            isOwner: author["isCreator"] as? Bool,
+            isHearted: nil,
+            isPinned: p["pinnedText"] != nil,
+            hasOwnerReplied: nil,
+            time: published?.replacingOccurrences(of: " (edited)", with: ""),
+            edited: edited,
+            replyToken: nil,
+            isVerified: author["isVerified"] as? Bool,
+            isOfficialArtist: author["isArtist"] as? Bool
+        )
+    }
+
+    private func makeLegacyComment(_ r: [String: Any]) -> YoutubeVideoComments.Comments? {
+        guard let id = r["commentId"] as? String else { return nil }
+        let thumbnails = ((r["authorThumbnail"] as? [String: Any])?["thumbnails"] as? [[String: Any]] ?? []).compactMap { thumb -> YoutubeVideoComments.Comments.AuthorThumb? in
+            guard let raw = thumb["url"] as? String else { return nil }
+            let normalized = raw.hasPrefix("//") ? "https:" + raw : raw
+            return YoutubeVideoComments.Comments.AuthorThumb(url: URL(string: normalized), width: thumb["width"] as? Int, height: thumb["height"] as? Int)
+        }
+        let badge = r["authorCommentBadge"] as? [String: Any]
+        return YoutubeVideoComments.Comments(
+            authorThumb: thumbnails,
+            author: oldOSText(r["authorText"]),
+            authorID: ((r["authorEndpoint"] as? [String: Any])?["browseEndpoint"] as? [String: Any])?["browseId"] as? String,
+            commentID: id,
+            text: oldOSText(r["contentText"]),
+            likes: oldOSText(r["voteCount"]),
+            numReplies: r["replyCount"] as? Int,
+            isOwner: r["authorIsChannelOwner"] as? Bool,
+            isHearted: r["creatorHeart"] != nil,
+            isPinned: r["pinnedCommentBadge"] != nil,
+            hasOwnerReplied: nil,
+            time: oldOSText(r["publishedTimeText"]),
+            edited: nil,
+            replyToken: nil,
+            isVerified: badge != nil,
+            isOfficialArtist: nil
+        )
+    }
+}
+
+private func oldOSText(_ value:Any?)->String? { guard let d=value as? [String:Any] else{return nil}; if let s=d["simpleText"] as? String{return s}; if let r=d["runs"] as? [[String:Any]] {let s=r.compactMap{$0["text"] as? String}.joined(); return s.isEmpty ? nil:s}; return nil }
+private func oldOSDurationSeconds(_ text:String?)->Int? { guard let text else{return nil}; let p=text.split(separator:":").compactMap{Int($0)}; guard !p.isEmpty else{return nil}; return p.reversed().enumerated().reduce(0){$0+$1.element*Int(pow(60.0,Double($1.offset)))} }
+private func oldOSNumericText(_ text:String?)->String { guard let text else{return ""}; return String(text.filter{$0.isNumber}) }
+
+private func oldOSYouTubeViewCount(_ text: String?) -> Double {
+    guard var raw = text?.lowercased(), !raw.isEmpty else { return 0 }
+    raw = raw.replacingOccurrences(of: "views", with: "")
+             .replacingOccurrences(of: "view", with: "")
+             .replacingOccurrences(of: ",", with: "")
+             .trimmingCharacters(in: .whitespacesAndNewlines)
+    let multiplier: Double
+    if raw.hasSuffix("b") { multiplier = 1_000_000_000; raw.removeLast() }
+    else if raw.hasSuffix("m") { multiplier = 1_000_000; raw.removeLast() }
+    else if raw.hasSuffix("k") { multiplier = 1_000; raw.removeLast() }
+    else { multiplier = 1 }
+    return (Double(raw.trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0) * multiplier
+}
+
+private func oldOSYouTubePublishedAge(_ text: String?) -> TimeInterval? {
+    guard let text = text?.lowercased() else { return nil }
+    if text.contains("just now") || text.contains("minute") { return 60 }
+    let number = Double(text.split(separator: " ").first.flatMap { Double($0) } ?? 0)
+    guard number > 0 else { return nil }
+    if text.contains("hour") { return number * 60 * 60 }
+    if text.contains("day") { return number * 24 * 60 * 60 }
+    if text.contains("week") { return number * 7 * 24 * 60 * 60 }
+    if text.contains("month") { return number * 30 * 24 * 60 * 60 }
+    if text.contains("year") { return number * 365 * 24 * 60 * 60 }
+    return nil
+}
+
+private func oldOSFormattedYouTubeDate(_ raw: String?) -> String {
+    guard let raw, !raw.isEmpty else { return "" }
+                                                               
+    if raw.lowercased().contains("ago") { return raw }
+
+    let iso = ISO8601DateFormatter()
+    iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    var date = iso.date(from: raw)
+    if date == nil {
+        iso.formatOptions = [.withInternetDateTime]
+        date = iso.date(from: raw)
+    }
+    if date == nil {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "yyyy-MM-dd"
+        date = f.date(from: String(raw.prefix(10)))
+    }
+    guard let date else { return String(raw.prefix(10)) }
+    let out = DateFormatter()
+    out.locale = Locale(identifier: "en_US")
+    out.dateStyle = .medium
+    out.timeStyle = .none
+    return out.string(from: date)
+}
+private func oldOSApprovalPercent(_ video:YouTubeVideoData)->Int { let l=Int(oldOSNumericText(video.ratings?.likes?.text)) ?? 0, d=Int(oldOSNumericText(video.ratings?.dislikes?.text)) ?? 0; guard l+d>0 else{return 100}; return Int(Double(l)/Double(l+d)*100) }
+@MainActor
+private func oldOSStartPlayback(videoID:String?, selectedPlayer:Binding<AVPlayer>, showPlayer:Binding<Bool>, instantChange:Binding<Bool>) {
+    guard let id=videoID,!id.isEmpty else{return}
+    OldOSYouTubePlayback.shared.cancelPendingPlayback()
+    selectedPlayer.wrappedValue.pause()
+    selectedPlayer.wrappedValue.replaceCurrentItem(with: nil)
+    selectedPlayer.wrappedValue=AVPlayer()
+    instantChange.wrappedValue=true
+    withAnimation(.linear(duration:0.4)){showPlayer.wrappedValue=true}
+    Task {
+        do {
+            let p=try await OldOSYouTubePlayback.shared.beginPlayer(videoID:id)
+            await MainActor.run {
+                guard showPlayer.wrappedValue else {
+                    p.pause()
+                    p.replaceCurrentItem(with: nil)
+                    return
+                }
+                selectedPlayer.wrappedValue=p
+                p.play()
+            }
+        } catch is CancellationError {
+        } catch {
+            print("OldOS YouTube playback failed:",error)
+        }
+    }
+}
+
+@MainActor
+private func oldOSStopPlayback(_ player: AVPlayer) {
+    OldOSYouTubePlayback.shared.cancelPendingPlayback()
+    player.pause()
+    player.replaceCurrentItem(with: nil)
+}
+
+                                                                                        
 
 struct Youtube: View {
     @StateObject var youtube_observer: YoutubeObserver = YoutubeObserver()
@@ -69,6 +1083,11 @@ struct Youtube: View {
             }.compositingGroup().clipped()
         }.onAppear() {
             UIScrollView.appearance().bounces = true
+            youtube_observer.loadIfNeeded()
+            if selectedTab == "Most Viewed" { most_viewed_observer.loadIfNeeded() }
+        }.onChange(of: selectedTab) { tab in
+            if tab == "Featured" { youtube_observer.loadIfNeeded() }
+            if tab == "Most Viewed" { most_viewed_observer.loadIfNeeded() }
         }.onDisappear() {
             UIScrollView.appearance().bounces = false
         }
@@ -120,7 +1139,7 @@ struct YoutubeTabView : View {
                         YoutubeFeaturedView(youtube_observer: youtube_observer, favorite_observer: favorite_observer, current_nav_view: $current_nav_view, forward_or_backward: $forward_or_backward, featured_current_nav_view: $featured_current_nav_view, featured_current_video: $featured_current_video, show_video_player: $show_video_player, instant_video_change: $instant_video_change, selected_video_player: $selected_video_player).frame(height: geometry.size.height - 57).tag("Featured").transition(.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)))
                     }
                 }.background(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0), .init(color: Color(red: 227/255, green: 231/255, blue: 236/255), location: 0.5), .init(color: Color.white, location: 0.5), .init(color: Color.white, location: 1)]), startPoint: .top, endPoint: .bottom))
-                // for bottom overflow...
+                                         
                 ZStack {
                     Rectangle().fill(LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 0, green: 0, blue: 0), location: 0), .init(color: Color(red: 84/255, green: 84/255, blue: 84/255), location: 0.02), .init(color: Color(red: 59/255, green: 59/255, blue: 59/255), location: 0.04), .init(color: Color(red: 29/255, green: 29/255, blue: 29/255), location: 0.5), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 0.51), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 1)]), startPoint: .top, endPoint: .bottom)).frame(height:57)
                     HStack(spacing: 0){
@@ -128,7 +1147,7 @@ struct YoutubeTabView : View {
                         ForEach(youtube_tabs,id: \.self){image in
                             TabButton_Youtube(image: image, selectedTab: $selectedTab, geometry: geometry)
                             
-                            // equal spacing...
+                                               
                             
                             if image != tabs.last{
                                 
@@ -179,7 +1198,7 @@ struct YoutubeVideoInfoView: View {
                                     Spacer()
                                     Text("Added").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
                                 }.frame(width: geometry.size.width/5)
-                                Text(current_video?.uploaded?.text ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)
+                                Text(oldOSFormattedYouTubeDate(current_video?.uploaded?.text)).font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)
                                 Spacer()
                             }.padding([.top, .bottom], 3)
                             Rectangle().fill(Color(red: 171/255, green: 171/255, blue: 171/255)).frame(height: 1)
@@ -188,7 +1207,7 @@ struct YoutubeVideoInfoView: View {
                                     Spacer()
                                     Text("Category").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
                                 }.frame(width: geometry.size.width/5)
-                                Text(current_video?.category ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)//fix to formated current release version
+                                Text(current_video?.category ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)                                         
                                 Spacer()
                             }.padding([.top, .bottom], 3)
                             Rectangle().fill(Color(red: 171/255, green: 171/255, blue: 171/255)).frame(height: 1)
@@ -197,7 +1216,7 @@ struct YoutubeVideoInfoView: View {
                                     Spacer()
                                     Text("Tags").multilineTextAlignment(.trailing).font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 128/255, green: 128/255, blue: 128/255))
                                 }.frame(width: geometry.size.width/5)
-                                Text((current_video?.keywords ?? []).map{String($0)}.joined(separator: ", ")).font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)//fix to formated current release version
+                                Text((current_video?.keywords ?? []).map{String($0)}.joined(separator: ", ")).font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(.black)                                         
                                 Spacer()
                             }.padding([.top], 3).padding(.bottom)
                         }.background(Color.white.cornerRadius(10)).cornerRadius(10).strokeRoundedRectangle(10, Color(red: 171/255, green: 171/255, blue: 171/255), lineWidth: 1).padding([.leading, .trailing], 12)
@@ -236,9 +1255,16 @@ struct YoutubeVideoInfoView: View {
                 }
             }
         }.onAppear() {
-            fetch_comment_data(id: current_video?.id ?? "", completion: {result in
-                comments = result
-            })
+            guard let id = current_video?.id, !id.isEmpty else { return }
+            Task {
+                do {
+                    let result = try await OldOSYouTubeComments.shared.comments(videoID: id)
+                    await MainActor.run { comments = result }
+                } catch {
+                    print("OldOS YouTube comments failed:", error)
+                    await MainActor.run { comments = YoutubeVideoComments(comments: [], continuation: nil) }
+                }
+            }
         }
     }
 }
@@ -374,20 +1400,19 @@ struct YoutubeFeaturedView: View {
                     ScrollView(showsIndicators: true) {
                         
                         VStack {
-                            if youtube_observer.featured.isEmpty || youtube_observer.featured_stats.isEmpty || youtube_observer.featured_details.isEmpty {
+                            if youtube_observer.videos.isEmpty {
                                 HStack {
                                     Spacer()
-                                    ProgressView().progressViewStyle(CircularProgressViewStyle())
-                                    Spacer().frame(width: 8)
-                                    Text("Loading...").font(.custom("Helvetica Neue Regular", fixedSize: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
+                                    if youtube_observer.errorMessage == nil { ProgressView().progressViewStyle(CircularProgressViewStyle()); Spacer().frame(width: 8) }
+                                    Text(youtube_observer.errorMessage ?? "Loading...").font(.custom("Helvetica Neue Regular", fixedSize: 16)).foregroundColor(Color(red: 129/255, green: 129/255, blue: 129/255)).shadow(color: Color.white.opacity(0.9), radius: 0, x: 0.0, y: 0.9)
                                     Spacer()
-                                    
                                 }.frame(width: geometry.size.width, height: geometry.size.height)
                             } else {
-                                YoutubeFeaturedVideoList(youtube_observer: youtube_observer, favorite_observer: favorite_observer, forward_or_backward: $forward_or_backward, featured_current_nav_view: $featured_current_nav_view, featured_current_video: $featured_current_video, show_video_player: $show_video_player, instant_video_change: $instant_video_change, selected_video_player: $selected_video_player, geometry: geometry)
+                                result_content_view(current_nav_view: $featured_current_nav_view, current_video: $featured_current_video, forward_or_backward: $forward_or_backward, show_video_player: $show_video_player, instant_video_change: $instant_video_change, selected_video_player: $selected_video_player, content: youtube_observer.videos, geometry: geometry) {
+                                    EmptyView()
+                                }
                                 Spacer()
                             }
-                          
                         }
                         
                     }
@@ -422,11 +1447,7 @@ private struct YoutubeFeaturedVideoList: View {
                 let view_count = youtube_observer.featured_stats[optional: youtube_observer.featured_stats.firstIndex(where: {$0.id == video.id}) ?? 0]?.statistics.viewCount ?? ""
                 let duration = youtube_observer.featured_details[optional: youtube_observer.featured_details.firstIndex(where: {$0.id == video.id}) ?? 0]?.contentDetails.duration ?? ""
                 Button(action:{
-                    fetch_searched_video(id: video.id, completion: {result in
-                        let url = result.streams?.formats?.first?.url
-                        selected_video_player = AVPlayer(url: result.streams?.formats?.first?.url ?? URL(string: "google.com")!)
-                        instant_video_change = true; withAnimation(.linear(duration: 0.4)) {show_video_player = true}
-                    })
+                    oldOSStartPlayback(videoID: video.id, selectedPlayer: $selected_video_player, showPlayer: $show_video_player, instantChange: $instant_video_change)
 
 
                 }) {
@@ -458,12 +1479,17 @@ private struct YoutubeFeaturedVideoList: View {
                             }
                             Spacer()
                             Button(action: {
-                                fetch_searched_video(id: video.id, completion: {result in
-                                    featured_current_video = result
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                                        forward_or_backward = false; withAnimation(.linear(duration: 0.28)){featured_current_nav_view = "Video_Destination"}
+                                Task {
+                                    let id = video.id
+                                    guard !id.isEmpty else { return }
+                                    if let result = try? await OldOSYouTubePlayback.shared.metadata(videoID: id) {
+                                        await MainActor.run {
+                                            featured_current_video = result
+                                            forward_or_backward = false
+                                            withAnimation(.linear(duration: 0.28)){ featured_current_nav_view = "Video_Destination" }
+                                        }
                                     }
-                                })
+                                }
                             }) {
                                 Image("ABTableNextButton").padding(.trailing, 12)
                             }
@@ -610,12 +1636,10 @@ struct result_content_view<PlaceholderContent: View>: View {
                         let view_count = (videoData?.views?.text ?? "").filter("0123456789.".contains)
                         let durationRaw = videoData?.duration?.lengthSec ?? ""
                         let duration = Double(durationRaw.filter("0123456789.".contains) ?? "") ?? 0
-                        let percentage = Int(like_count/(like_count + dislike_count)*100)
+                        let percentage = oldOSApprovalPercent(video)
 
                         Button(action:{
-                            let url = video.streams?.formats?.first?.url
-                            selected_video_player = AVPlayer(url: video.streams?.formats?.first?.url ?? URL(string: "google.com")!)
-                            instant_video_change = true; withAnimation(.linear(duration: 0.4)) {show_video_player = true}
+                            oldOSStartPlayback(videoID: video.id, selectedPlayer: $selected_video_player, showPlayer: $show_video_player, instantChange: $instant_video_change)
                             
                         }) {
                             VStack(spacing: 0) {
@@ -648,6 +1672,13 @@ struct result_content_view<PlaceholderContent: View>: View {
                                     Spacer()
                                     Button(action: {
                                         current_video = video
+                                        if let id = video.id {
+                                            Task {
+                                                if let enriched = try? await OldOSYouTubePlayback.shared.metadata(videoID: id) {
+                                                    await MainActor.run { current_video = enriched }
+                                                }
+                                            }
+                                        }
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                                             forward_or_backward = false; withAnimation(.linear(duration: 0.28)){current_nav_view = "Video_Destination"}
                                         }
@@ -712,9 +1743,7 @@ struct result_content_view_favorites<PlaceholderContent: View>: View {
                         let duration = Double((content[optional: content.firstIndex(where: {$0.id == video.id}) ?? 0]?.duration?.lengthSec ?? "").filter("0123456789.".contains) ?? "") ?? 0
                         Button(action:{
                             if !is_editing_favorites {
-                            let url = video.streams?.formats?.first?.url
-                            selected_video_player = AVPlayer(url: video.streams?.formats?.first?.url ?? URL(string: "google.com")!)
-                            instant_video_change = true; withAnimation(.linear(duration: 0.4)) {show_video_player = true}
+                            oldOSStartPlayback(videoID: video.id, selectedPlayer: $selected_video_player, showPlayer: $show_video_player, instantChange: $instant_video_change)
                             }
                             
                         }) {
@@ -743,7 +1772,7 @@ struct result_content_view_favorites<PlaceholderContent: View>: View {
                                         Text(video.title ?? "---").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(.black).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                                         HStack(alignment: .top, spacing: 2.5) {
                                             Image("thumbsUp").offset(y: -4.5)
-                                            Text("\(Int(like_count/(like_count + dislike_count)*100))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
+                                            Text("\(oldOSApprovalPercent(video))%").font(.custom("Helvetica Neue Bold", fixedSize: 13)).foregroundColor(Color(red: 73/255, green: 128/255, blue: 35/255))
                                             Text(view_count + " views").font(.custom("Helvetica Neue Regular", fixedSize: 13)).foregroundColor(Color(red: 103/255, green: 109/255, blue: 115/255)).lineLimit(0)
                                             
                                             
@@ -765,6 +1794,13 @@ struct result_content_view_favorites<PlaceholderContent: View>: View {
                                     Button(action: {
                                         if !is_editing_favorites {
                                         current_video = video
+                                        if let id = video.id {
+                                            Task {
+                                                if let enriched = try? await OldOSYouTubePlayback.shared.metadata(videoID: id) {
+                                                    await MainActor.run { current_video = enriched }
+                                                }
+                                            }
+                                        }
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                                             forward_or_backward = false; withAnimation(.linear(duration: 0.28)){current_nav_view = "Video_Destination"}
                                         }
@@ -843,32 +1879,44 @@ struct YoutubeFavoriteView: View {
 class favorite_videos_observer: ObservableObject {
     @Published var favorites: [String] {
         didSet {
-            let count = (UserDefaults.standard.object(forKey: "yt_favorites") as? [String] ?? []).count
+            let oldCount = (UserDefaults.standard.object(forKey: "yt_favorites") as? [String] ?? []).count
             UserDefaults.standard.set(favorites, forKey: "yt_favorites")
-            if count < favorites.count {
-            refresh()
-            }
+            if oldCount < favorites.count { refresh() }
         }
     }
     @Published var videos = [YouTubeVideoData]()
-    
+
     init() {
         self.favorites = UserDefaults.standard.object(forKey: "yt_favorites") as? [String] ?? []
-        for favorite in self.favorites {
-            fetch_searched_video(id: favorite, completion: {result in
-                self.videos.append(result)
-            })
-        }
-        
+        reloadAll()
     }
+
+    private func reloadAll() {
+        let ids = favorites
+        Task {
+            var loaded = [YouTubeVideoData]()
+            for id in ids {
+                if let video = try? await OldOSYouTubePlayback.shared.metadata(videoID: id) {
+                    loaded.append(video)
+                }
+            }
+            await MainActor.run { self.videos = loaded }
+        }
+    }
+
     func refresh() {
-        var favorite = favorites.last
-            fetch_searched_video(id: favorite ?? "", completion: {result in
-                self.videos.append(result)
-            })
-        
+        guard let id = favorites.last else { return }
+        Task {
+            guard let video = try? await OldOSYouTubePlayback.shared.metadata(videoID: id) else { return }
+            await MainActor.run {
+                if self.videos.contains(where: { $0.id == video.id }) == false {
+                    self.videos.append(video)
+                }
+            }
+        }
     }
 }
+
 
 struct youtube_more_item: Identifiable {
     let id = UUID()
@@ -904,8 +1952,21 @@ struct containerYoutube: View {
     @Binding var show_video_player: Bool
     @Binding var instant_video_change: Bool
     @Binding var player: AVPlayer
+    @StateObject private var playerObserver = PlayerItemObserver()
+
     var body: some View {
-        YoutubeVideoPlayer(player: $player, show_video_player: $show_video_player, instant_video_change: $instant_video_change, playerObserver: PlayerItemObserver(player: player))
+        YoutubeVideoPlayer(
+            player: $player,
+            show_video_player: $show_video_player,
+            instant_video_change: $instant_video_change,
+            playerObserver: playerObserver
+        )
+        .onAppear {
+            playerObserver.attach(to: player)
+        }
+        .onReceive(Just(ObjectIdentifier(player))) { _ in
+            playerObserver.attach(to: player)
+        }
     }
 }
 
@@ -918,13 +1979,17 @@ struct YoutubeVideoPlayer: View {
     @State var gravity: PlayerGravity = .fit
     @State var show_controls: Bool = true
     @State var pervent_delta: Bool = false
+    @State private var controlsHideGeneration: UInt64 = 0
     @ObservedObject private var volObserver = VolumeObserver()
     var body: some View {
         GeometryReader {geometry in
             
             ZStack {
-                if playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false {
-                    PlayerContainerView(player: player, gravity: gravity).frame(width: geometry.size.height, height: geometry.size.width)        .onTapGesture() {
+                if player.currentItem != nil {
+                    PlayerContainerView(player: player, gravity: gravity)
+                        .frame(width: geometry.size.height, height: geometry.size.width)
+                        .background(Color.black)
+                        .onTapGesture() {
                         if pervent_delta == false {
                             pervent_delta = true
                             withAnimation(.linear(duration: show_controls == true ? 0.25 : 0.1)) {
@@ -933,15 +1998,7 @@ struct YoutubeVideoPlayer: View {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                 pervent_delta = false
                             }
-                        }
-                    }.onAppear() {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            if show_video_player {
-                                player.play()
-                                withAnimation(.linear(duration: show_controls == false ? 0.25 : 0.1)) {
-                                    show_controls.toggle()
-                                }
-                            }
+                            if show_controls { scheduleControlsHide() } else { cancelControlsHide() }
                         }
                     }
                 } else {
@@ -951,8 +2008,8 @@ struct YoutubeVideoPlayer: View {
                 if show_controls {
                     VStack(spacing: 0) {
                         status_bar().frame(width: geometry.size.height, height: 24)
-                        video_player_title_bar(player: $player, gravity: $gravity, playerObserver: playerObserver, title: "", is_loading: (playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false) ? false : true, back_action: {
-                            player.pause(); withAnimation(.linear(duration: 0.075)){show_controls = false}; DispatchQueue.main.asyncAfter(deadline: .now() + 0.075) { withAnimation(.linear(duration: 0.4)) {show_video_player = false}; DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        video_player_title_bar(player: $player, gravity: $gravity, playerObserver: playerObserver, title: "", is_loading: playerObserver.itemStatus != .readyToPlay, back_action: {
+                            oldOSStopPlayback(player); withAnimation(.linear(duration: 0.075)){show_controls = false}; DispatchQueue.main.asyncAfter(deadline: .now() + 0.075) { withAnimation(.linear(duration: 0.4)) {show_video_player = false}; DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 instant_video_change = false
                             }}
                         }, gravity_action: {
@@ -967,28 +2024,53 @@ struct YoutubeVideoPlayer: View {
                     VStack {
                         Spacer()
                         video_player_footer(player: $player, playerObserver: playerObserver, back_action: {
-                            player.pause(); withAnimation(.linear(duration: 0.075)){show_controls = false}; DispatchQueue.main.asyncAfter(deadline: .now() + 0.075) { withAnimation(.linear(duration: 0.4)) {show_video_player = false}; DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            oldOSStopPlayback(player); withAnimation(.linear(duration: 0.075)){show_controls = false}; DispatchQueue.main.asyncAfter(deadline: .now() + 0.075) { withAnimation(.linear(duration: 0.4)) {show_video_player = false}; DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 instant_video_change = false
                             }}
                         }).frame(width: geometry.size.height - 250, height: geometry.size.width/4).padding(.bottom, 40)
                     }.frame(width: geometry.size.height, height: geometry.size.width).zIndex(1)
                 }
             }.frame(width: geometry.size.width, height: geometry.size.height)
-        }.rotationEffect(.degrees(90)).onChange(of: player.status) {_ in
-        }.onAppear {
-        }.onReceive(playerObserver.$currentStatus) { newStatus in
-            switch newStatus {
-            case nil:
-                print("nothing is here")
-            case .waitingToPlayAtSpecifiedRate:
-                print("waiting")
-            case .paused:
-                print("paused")
-            case .playing:
-                print("playing")
+        }.rotationEffect(.degrees(90))
+        .onReceive(playerObserver.$currentStatus) { newStatus in
+            if newStatus == .playing {
+                scheduleControlsHide()
+            } else {
+                cancelControlsHide()
             }
-        }.onDisappear() {
-            player.pause();
+        }
+        .onChange(of: playerObserver.shouldUpdateFromTimer) { isTimerDriven in
+            if isTimerDriven == false {
+                                                                                     
+                                                                                    
+                cancelControlsHide()
+                if !show_controls { withAnimation(.linear(duration: 0.1)) { show_controls = true } }
+            } else if playerObserver.currentStatus == .playing {
+                                                                                   
+                                                                                        
+                scheduleControlsHide()
+            }
+        }
+        .onDisappear() {
+            cancelControlsHide()
+            oldOSStopPlayback(player)
+            playerObserver.invalidate()
+        }
+    }
+
+    private func cancelControlsHide() {
+        controlsHideGeneration &+= 1
+    }
+
+    private func scheduleControlsHide(after delay: Double = 3.0) {
+        controlsHideGeneration &+= 1
+        let generation = controlsHideGeneration
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            guard generation == controlsHideGeneration,
+                  playerObserver.shouldUpdateFromTimer != false,
+                  playerObserver.currentStatus == .playing,
+                  show_controls else { return }
+            withAnimation(.linear(duration: 0.25)) { show_controls = false }
         }
     }
 }
@@ -1028,15 +2110,15 @@ struct video_player_footer: View {
                         Image("mp_addbookmark").padding(.leading, 12)
                         Spacer()
                         Button(action: {
-                            if playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false {
+                            if playerObserver.itemStatus == .readyToPlay && playerObserver.duration > 0 {
                                 back_action?()
                             }
                         }) {
                             Image("mp_prevtrack")
-                        }.opacity(playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false ? 1 : 0.6)
+                        }.opacity(playerObserver.itemStatus == .readyToPlay && playerObserver.duration > 0 ? 1 : 0.6)
                         Spacer()
                         Button(action: {
-                            if playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false {
+                            if playerObserver.itemStatus == .readyToPlay && playerObserver.duration > 0 {
                                 if playerObserver.currentStatus != .playing {
                                     player.play()
                                 } else {
@@ -1045,15 +2127,15 @@ struct video_player_footer: View {
                             }
                         }) {
                             Image(playerObserver.currentStatus != .playing ? "mp_play" : "mp_pause")
-                        }.frame(width: 40).opacity(playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false ? 1 : 0.6)
+                        }.frame(width: 40).opacity(playerObserver.itemStatus == .readyToPlay && playerObserver.duration > 0 ? 1 : 0.6)
                         Spacer()
                         Button(action: {
-                            if playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false {
+                            if playerObserver.itemStatus == .readyToPlay && playerObserver.duration > 0 {
                                 back_action?()
                             }
                         }) {
                             Image("mp_nexttrack")
-                        }.opacity(playerObserver.playerStatus == .readyToPlay && player.status == .readyToPlay && player.currentItem?.duration.seconds.isNaN == false ? 1 : 0.6)
+                        }.opacity(playerObserver.itemStatus == .readyToPlay && playerObserver.duration > 0 ? 1 : 0.6)
                         Spacer()
                         Image("mp_email").padding(.trailing, 12)
                     }.frame(width: geometry.size.width).padding(.top, 10)
@@ -1086,7 +2168,7 @@ struct video_player_title_bar : View {
     var shows_back: Bool?
     var body :some View {
         ZStack {
-            LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 0, green: 0, blue: 0), location: 0), .init(color: Color(red: 84/255, green: 84/255, blue: 84/255), location: 0.005), .init(color: Color(red: 59/255, green: 59/255, blue: 59/255), location: 0.04), .init(color: Color(red: 29/255, green: 29/255, blue: 29/255), location: 0.5), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 0.51), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 1)]), startPoint: .top, endPoint: .bottom).border_bottom(width: 0.95, edges: [.bottom], color: Color(red: 45/255, green: 48/255, blue: 51/255)).innerShadowBottom(color: Color(red: 230/255, green: 230/255, blue: 230/255), radius: 0.025).opacity(0.65).shadow(color: Color.black.opacity(0.25), radius: 0.25, x: 0, y: -0.5) //Correct border width for added shadow
+            LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 0, green: 0, blue: 0), location: 0), .init(color: Color(red: 84/255, green: 84/255, blue: 84/255), location: 0.005), .init(color: Color(red: 59/255, green: 59/255, blue: 59/255), location: 0.04), .init(color: Color(red: 29/255, green: 29/255, blue: 29/255), location: 0.5), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 0.51), .init(color: Color(red: 7.5/255, green: 7.5/255, blue: 7.5/255), location: 1)]), startPoint: .top, endPoint: .bottom).border_bottom(width: 0.95, edges: [.bottom], color: Color(red: 45/255, green: 48/255, blue: 51/255)).innerShadowBottom(color: Color(red: 230/255, green: 230/255, blue: 230/255), radius: 0.025).opacity(0.65).shadow(color: Color.black.opacity(0.25), radius: 0.25, x: 0, y: -0.5)                                        
             VStack {
                 Spacer()
                 if is_loading {
@@ -1105,21 +2187,21 @@ struct video_player_title_bar : View {
                     HStack(spacing: 0) {
                         tool_bar_rectangle_button(action: {back_action?()}, button_type: .blue, content: "Done").padding(.leading, 5)
                         Spacer()
-                        Text("\(VPUtility.formatSecondsToHMS(playerObserver.seekPos * (player.currentItem?.duration.seconds ?? 0)))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).padding([.leading], 15)
-                        CustomSliderVideo(player: $player, type: "Video", value: $playerObserver.seekPos,  range: (0, 1)) { modifiers in
+                        Text("\(VPUtility.formatSecondsToHMS(playerObserver.seekPos * playerObserver.duration))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).padding([.leading], 15)
+                        CustomSliderVideo(player: $player, type: "Video", should_update_from_timer: $playerObserver.shouldUpdateFromTimer, value: $playerObserver.seekPos, range: (0, 1)) { modifiers in
                             ZStack {
                                 ZStack {
                                     LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 205/255, green: 220/255, blue: 241/255), location: 0), .init(color: Color(red: 125/255, green: 174/255, blue: 245/255), location: 0.5), .init(color: Color(red: 45/255, green: 111/255, blue: 198/255), location: 0.5), .init(color: Color(red: 50/255, green: 151/255, blue: 236/255), location: 1)]), startPoint: .top, endPoint: .bottom).frame(height: 9).cornerRadius(4.25).padding(.leading, 4).modifier(modifiers.barLeft)
                                     
                                     LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 218/255, green: 218/255, blue: 218/255), location: 0), .init(color: Color(red: 166/255, green: 166/255, blue: 166/255), location: 0.19), .init(color: Color(red: 204/255, green: 204/255, blue: 204/255), location: 0.5), .init(color: Color(red: 255/255, green: 255/255, blue: 255/255), location: 0.5), .init(color: Color(red: 255/255, green: 255/255, blue: 255/255), location: 1)]), startPoint: .top, endPoint: .bottom).frame(height: 9).cornerRadius(4.25).padding(.trailing, 4).modifier(modifiers.barRight)
-                                }.overlay(LinearGradient([Color(red: 48/255, green: 50/255, blue: 53/255), Color(red: 87/255, green: 93/255, blue: 97/255)], from: .top, to: .bottom).mask(LinearGradient([(Color.black, location: 0), (Color.black, location: playerObserver.buffer/(player.currentItem?.duration.seconds ?? 1)), (Color.white, location: playerObserver.buffer/(player.currentItem?.duration.seconds ?? 1))], from: .leading, to: .trailing).frame(height: 4.5).cornerRadius(4.25/8.5*4.5).luminanceToAlpha()).frame(height: 4.5).cornerRadius(4.25/8.5*4.5).padding([.leading, .trailing], 7).offset(y: 0.25))
+                                }.overlay(LinearGradient([Color(red: 48/255, green: 50/255, blue: 53/255), Color(red: 87/255, green: 93/255, blue: 97/255)], from: .top, to: .bottom).mask(LinearGradient([(Color.black, location: 0), (Color.black, location: playerObserver.duration > 0 ? playerObserver.buffer/playerObserver.duration : 0), (Color.white, location: playerObserver.duration > 0 ? playerObserver.buffer/playerObserver.duration : 0)], from: .leading, to: .trailing).frame(height: 4.5).cornerRadius(4.25/8.5*4.5).luminanceToAlpha()).frame(height: 4.5).cornerRadius(4.25/8.5*4.5).padding([.leading, .trailing], 7).offset(y: 0.25))
                                 ZStack {
                                     Image("volume-slider-fat-knob").resizable().scaledToFill()
                                     
                                 }.modifier(modifiers.knob)
                             }
                         }.frame(height: 25)
-                        Text("-\(VPUtility.formatSecondsToHMS((player.currentItem?.duration.seconds ?? 0) - playerObserver.seekPos * (player.currentItem?.duration.seconds ?? 0)))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).padding([.trailing], 15)
+                        Text("-\(VPUtility.formatSecondsToHMS(max(0, playerObserver.duration - playerObserver.seekPos * playerObserver.duration)))").font(.custom("Helvetica Neue Bold", fixedSize: 14)).foregroundColor(.white).padding([.trailing], 15)
                         Spacer()
                         tool_bar_rectangle_button_image_done_size(action: {gravity_action?()}, button_type: .black, content: gravity == .fit ? "mp_zoomout" : "mp_zoomin", use_image: true).padding(.trailing, 5)
                     }
@@ -1133,59 +2215,119 @@ struct video_player_title_bar : View {
 
 
 class PlayerItemObserver: ObservableObject {
-    
     @Published var currentStatus: AVPlayer.TimeControlStatus?
     @Published var playerStatus: AVPlayer.Status?
+    @Published var itemStatus: AVPlayerItem.Status = .unknown
     @Published var seekPos: Double = 0.0
     @Published var buffer: Double = 0.0
+    @Published var duration: Double = 0.0
+    @Published var shouldUpdateFromTimer: Bool? = true
+
+    private weak var player: AVPlayer?
+    private var observedPlayerID: ObjectIdentifier?
     private var timeObserverToken: Any?
-    private var itemObservation: AnyCancellable?
-    private var itemObservation1: AnyCancellable?
-    private var itemObservation2: AnyCancellable?
-    
-    init(player: AVPlayer) {
-        
-        itemObservation = player.publisher(for: \.timeControlStatus).sink { newStatus in
-            self.currentStatus = newStatus
+    private var cancellables = Set<AnyCancellable>()
+
+    init(player: AVPlayer? = nil) {
+        if let player {
+            attach(to: player)
         }
-        itemObservation1 = player.publisher(for: \.status).sink {status in
-            self.playerStatus = status
-        }
-        itemObservation2 = player.publisher(for: \AVPlayer.currentItem?.loadedTimeRanges).sink {times in
-            guard let initial_range = times?.first?.timeRangeValue else {
-                return
+    }
+
+    func attach(to newPlayer: AVPlayer) {
+        let newID = ObjectIdentifier(newPlayer)
+        guard observedPlayerID != newID else { return }
+
+        detach()
+        player = newPlayer
+        observedPlayerID = newID
+
+        currentStatus = newPlayer.timeControlStatus
+        playerStatus = newPlayer.status
+        itemStatus = newPlayer.currentItem?.status ?? .unknown
+        seekPos = 0
+        buffer = 0
+        duration = 0
+
+        newPlayer.publisher(for: \.timeControlStatus)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                self?.currentStatus = status
+                if status == .waitingToPlayAtSpecifiedRate {
+                    print("OldOS YouTube AVPlayer waiting:", newPlayer.reasonForWaitingToPlay?.rawValue ?? "unknown")
+                }
             }
-            var time = CMTimeGetSeconds(initial_range.duration)
-            var start = CMTimeGetSeconds(initial_range.start)
-            self.buffer = time + start
-        }
-        player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: 600), queue: nil) { time in
-            guard let item = player.currentItem else {
-                return
+            .store(in: &cancellables)
+
+        newPlayer.publisher(for: \.status)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                self?.playerStatus = status
+                if status == .failed {
+                    print("OldOS YouTube AVPlayer failed:", newPlayer.error?.localizedDescription ?? "unknown")
+                }
             }
-            if item.duration.seconds != 0, item.duration.seconds.isNaN == false {
-                self.seekPos = time.seconds / item.duration.seconds
+            .store(in: &cancellables)
+
+        if let item = newPlayer.currentItem {
+            item.publisher(for: \.status)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] status in
+                    self?.itemStatus = status
+                    switch status {
+                    case .readyToPlay:
+                        print("OldOS YouTube AVPlayerItem readyToPlay")
+                    case .failed:
+                        print("OldOS YouTube AVPlayerItem failed:", item.error?.localizedDescription ?? "unknown")
+                    case .unknown:
+                        break
+                    @unknown default:
+                        break
+                    }
+                }
+                .store(in: &cancellables)
+
+            item.publisher(for: \.loadedTimeRanges)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] ranges in
+                    guard let range = ranges.first?.timeRangeValue else { return }
+                    self?.buffer = max(0, CMTimeGetSeconds(range.start) + CMTimeGetSeconds(range.duration))
+                }
+                .store(in: &cancellables)
+        }
+
+        timeObserverToken = newPlayer.addPeriodicTimeObserver(
+            forInterval: CMTime(seconds: 0.2, preferredTimescale: 600),
+            queue: .main
+        ) { [weak self, weak newPlayer] time in
+            guard let self, let item = newPlayer?.currentItem else { return }
+            let d = item.duration.seconds
+            if d.isFinite, d > 0 {
+                self.duration = d
+                if self.shouldUpdateFromTimer != false {
+                    self.seekPos = min(max(time.seconds / d, 0), 1)
+                }
             }
         }
     }
-    
+
+    private func detach() {
+        cancellables.removeAll()
+        if let token = timeObserverToken, let player {
+            player.removeTimeObserver(token)
+        }
+        timeObserverToken = nil
+        player = nil
+        observedPlayerID = nil
+    }
+
     func invalidate() {
-        itemObservation?.cancel()
-        itemObservation = nil
-        itemObservation1?.cancel()
-        itemObservation1 = nil
-        itemObservation2?.cancel()
-        itemObservation2 = nil
+        detach()
     }
+
     deinit {
-        itemObservation?.cancel()
-        itemObservation = nil
-        itemObservation1?.cancel()
-        itemObservation1 = nil
-        itemObservation2?.cancel()
-        itemObservation2 = nil
+        detach()
     }
-    
 }
 
 
@@ -1265,37 +2407,18 @@ struct youtube_title_bar : View {
                                                 if search != "" {
                                                     search_results.removeAll()
                                                     is_searching = true
-                                                    guard let search_string = search.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
-                                                    guard let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/search-yext?query=\(search_string)") else {return}
-                                                    let request = URLRequest(url: url)
-                                                    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-                                                        
-                                                        if let error = error {
-                                                            print(error)
-                                                            return
-                                                        }
-                                                        
-                                                        // Parse JSON data
-                                                        if let data = data {
-                                                            guard let compiled_object = parseJsonSearchData(data: data) else {
-                                                                return
+                                                    Task {
+                                                        do {
+                                                            let results = try await OldOSYouTubeDiscovery.shared.search(search)
+                                                            await MainActor.run {
+                                                                search_results = results
+                                                                is_searching = false
                                                             }
-                                                            if compiled_object.isEmpty == false {
-                                                                var temp_array = [YouTubeVideoData]()
-                                                                for video in compiled_object {
-                                                                    fetch_searched_video(id: video.id ?? "", completion: {result in
-                                                                        temp_array.append(result)
-                                                                        if temp_array.count == compiled_object.count {
-                                                                            search_results = temp_array
-                                                                            is_searching = false
-                                                                        }
-                                                                    })
-                                                                }
-                                                            }
+                                                        } catch {
+                                                            print("OldOS YouTube search failed:", error)
+                                                            await MainActor.run { is_searching = false }
                                                         }
-                                                    })
-                                                    
-                                                    task.resume()
+                                                    }
                                                 }
                                                 
                                             }.onChange(of: search) { _ in
@@ -1329,7 +2452,7 @@ struct youtube_title_bar : View {
                         tool_bar_rectangle_button(action: {done_action?()}, button_type: .blue, content: "Done").padding(.trailing, 5)
                     }
                 }
-                if selectedTab == "Featured", featured_current_nav_view != "Main" { //, featured_show_application == true
+                if selectedTab == "Featured", featured_current_nav_view != "Main" {                                      
                     VStack {
                         Spacer()
                         HStack {
@@ -1349,7 +2472,7 @@ struct youtube_title_bar : View {
                     }.offset(y:-0.5)
                     
                 }
-                if selectedTab == "Most Viewed", mv_current_nav_view != "Main" { //, featured_show_application == true
+                if selectedTab == "Most Viewed", mv_current_nav_view != "Main" {                                      
                     VStack {
                         Spacer()
                         HStack {
@@ -1369,7 +2492,7 @@ struct youtube_title_bar : View {
                     }.offset(y:-0.5)
                     
                 }
-                if selectedTab == "Search", search_current_nav_view != "Main" { //, featured_show_application == true
+                if selectedTab == "Search", search_current_nav_view != "Main" {                                      
                     VStack {
                         Spacer()
                         HStack {
@@ -1389,7 +2512,7 @@ struct youtube_title_bar : View {
                     }.offset(y:-0.5)
                     
                 }
-                if selectedTab == "Favorites", fv_current_nav_view != "Main" { //, featured_show_application == true
+                if selectedTab == "Favorites", fv_current_nav_view != "Main" {                                      
                     VStack {
                         Spacer()
                         HStack {
@@ -1409,7 +2532,7 @@ struct youtube_title_bar : View {
                     }.offset(y: -0.5)
                     
                 }
-                if selectedTab == "Favorites", fv_current_nav_view == "Main" { //, featured_show_application == true
+                if selectedTab == "Favorites", fv_current_nav_view == "Main" {                                      
                     VStack {
                         Spacer()
                         HStack {
@@ -1421,7 +2544,7 @@ struct youtube_title_bar : View {
                     }.offset(y:-0.5)
                     
                 }
-                if selectedTab == "More" { //, featured_show_application == true
+                if selectedTab == "More" {                                      
                     VStack {
                         Spacer()
                         HStack {
@@ -1471,246 +2594,78 @@ class YoutubeObserver: ObservableObject {
     @Published var featured = [YoutubeFeatured.Item]()
     @Published var featured_stats = [YoutubeVideoStats.Item]()
     @Published var featured_details = [YoutubeVideoDetails.Item]()
-    init() {
+    @Published var videos = [YouTubeVideoData]()
+    @Published var errorMessage: String?
+    private var hasStarted = false
+
+    init() {}
+
+    func loadIfNeeded() {
+        guard !hasStarted else { return }
+        hasStarted = true
         parse_data()
     }
-    func parse_data() {
-        print("parsing data")
-        fetch_featured_data(completion: {data in
-            self.featured = data
-        })
-        fetch_featured_stats(completion: {data in
-            self.featured_stats = data
-        })
-        fetch_featured_details(completion: {data in
-            self.featured_details = data
-        })
-    }
-    
-}
 
+    func parse_data() {
+        Task {
+            do {
+                let result = try await OldOSYouTubeDiscovery.shared.featured()
+                await MainActor.run { self.videos = result; self.errorMessage = nil }
+            } catch {
+                await MainActor.run { self.errorMessage = error.localizedDescription; self.hasStarted = false }
+            }
+        }
+    }
+}
 
 class MostViewedObserver: ObservableObject {
     @Published var today = [YouTubeVideoData]()
     @Published var this_week = [YouTubeVideoData]()
     @Published var all_time = [YouTubeVideoData]()
-    init() {
+    @Published var errorMessage: String?
+    private var hasStarted = false
+
+    init() {}
+
+    func loadIfNeeded() {
+        guard !hasStarted else { return }
+        hasStarted = true
         parse_data()
     }
+
     func parse_data() {
-        print("parsing data")
-        fetch_most_viewed(type: "Today", completion: {results in
-            for result in results {
-                fetch_most_viewed_video(id: result.id.videoID, completion: {video in
-                    self.today.append(video)
-                })
+        Task {
+                                                                                       
+                                                                            
+            var anyLoaded = false
+            var lastError: Error?
+
+            do {
+                let t = try await OldOSYouTubeDiscovery.shared.mostViewed(.today)
+                await MainActor.run { self.today = t; self.errorMessage = nil }
+                anyLoaded = anyLoaded || !t.isEmpty
+            } catch { lastError = error }
+
+            do {
+                let w = try await OldOSYouTubeDiscovery.shared.mostViewed(.week)
+                await MainActor.run { self.this_week = w; self.errorMessage = nil }
+                anyLoaded = anyLoaded || !w.isEmpty
+            } catch { lastError = error }
+
+            do {
+                let a = try await OldOSYouTubeDiscovery.shared.mostViewed(.all)
+                await MainActor.run { self.all_time = a; self.errorMessage = nil }
+                anyLoaded = anyLoaded || !a.isEmpty
+            } catch { lastError = error }
+
+            if !anyLoaded {
+                await MainActor.run {
+                    self.errorMessage = lastError?.localizedDescription ?? "YouTube Most Viewed returned no videos."
+                    self.hasStarted = false
+                }
             }
-        })
-        fetch_most_viewed(type: "ThisWeek", completion: {results in
-            for result in results {
-                fetch_most_viewed_video(id: result.id.videoID, completion: {video in
-                    self.this_week.append(video)
-                })
-            }
-        })
-        fetch_most_viewed(type: "", completion: {results in
-            for result in results {
-                fetch_most_viewed_video(id: result.id.videoID, completion: {video in
-                    self.all_time.append(video)
-                })
-            }
-        })
+        }
     }
-}
-
-
-func fetch_featured_data(completion: @escaping ([YoutubeFeatured.Item]) -> Void) {
-    let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/mostPopular")!
-    var request = URLRequest(url: url)
-    request.setValue("sent-from-app", forHTTPHeaderField: "x-oldos-app")
-    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-        
-        if let error = error {
-            print(error)
-            return
-        }
-        
-        // Parse JSON data
-        if let data = data {
-            guard let compiled_object = parseJsonYoutubeFeaturedData(data: data) else {
-                return
-            }
-            if compiled_object.isEmpty == false {
-                completion(compiled_object)
-            }
-        }
-    })
-    
-    task.resume()
-}
-
-func fetch_featured_stats(completion: @escaping ([YoutubeVideoStats.Item]) -> Void) {
-    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
-    let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/mostPopular/stats")!
-    var request = URLRequest(url: url)
-    request.setValue("sent-from-app", forHTTPHeaderField: "x-oldos-app")
-    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-        
-        if let error = error {
-            print(error)
-            return
-        }
-        
-        // Parse JSON data
-        if let data = data {
-            guard let compiled_object = parseJsonYoutubeFeaturedDataS(data: data) else {
-                return
-            }
-            if compiled_object.isEmpty == false {
-                completion(compiled_object)
-            }
-        }
-    })
-    
-    task.resume()
-}
-
-func fetch_featured_details(completion: @escaping ([YoutubeVideoDetails.Item]) -> Void) {
-    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
-    let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/mostPopular/details")!
-    var request = URLRequest(url: url)
-    request.setValue("sent-from-app", forHTTPHeaderField: "x-oldos-app")
-    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-        
-        if let error = error {
-            print(error)
-            return
-        }
-        
-        // Parse JSON data
-        if let data = data {
-            guard let compiled_object = parseJsonYoutubeFeaturedDataD(data: data) else {
-                return
-            }
-            if compiled_object.isEmpty == false {
-                completion(compiled_object)
-            }
-        }
-    })
-    
-    task.resume()
-}
-
-func fetch_most_viewed(type: String?, completion: @escaping ([MostViewed.Item]) -> Void) {
-    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
-    let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/mostViewed\(type ?? "")")!
-    var request = URLRequest(url: url)
-    request.setValue("sent-from-app", forHTTPHeaderField: "x-oldos-app")
-    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-        
-        if let error = error {
-            print(error)
-            return
-        }
-        
-        // Parse JSON data
-        if let data = data {
-            guard let compiled_object = parseJsonYoutubeMostViewedData(data: data) else {
-                return
-            }
-            if compiled_object.isEmpty == false {
-                completion(compiled_object)
-            }
-        }
-    })
-    
-    task.resume()
-}
-
-func fetch_most_viewed_video(id: String?, completion: @escaping (YouTubeVideoData) -> Void) {
-    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
-    let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/video-info?query=\(id ?? "")")!
-    var request = URLRequest(url: url)
-    request.setValue("sent-from-app", forHTTPHeaderField: "x-oldos-app")
-    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-        
-        if let error = error {
-            print(error)
-            return
-        }
-        
-        // Parse JSON data
-        if let data = data {
-            do {
-                let decoder = JSONDecoder()
-                let compiled_object = try decoder.decode(YouTubeVideoData.self, from: data)
-                completion(compiled_object)
-            } catch {
-                print(error)
-            }
-            //    if compiled_object.isEmpty == false {ject)
-            //   }
-        }
-    })
-    
-    task.resume()
-}
-
-func fetch_searched_video(id: String?, completion: @escaping (YouTubeVideoData) -> Void) {
-    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
-    let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/video-info?query=\(id ?? "")")!
-    print(url, "ZKURL")
-    var request = URLRequest(url: url)
-    request.setValue("sent-from-app", forHTTPHeaderField: "x-oldos-app")
-    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-        
-        if let error = error {
-            print(error)
-            return
-        }
-        
-        // Parse JSON data
-        if let data = data {
-            do {
-                let decoder = JSONDecoder()
-                let compiled_object = try decoder.decode(YouTubeVideoData.self, from: data)
-                completion(compiled_object)
-            } catch {
-                print(error)
-            }
-        }
-    })
-    
-    task.resume()
-}
-
-func fetch_comment_data(id: String?, completion: @escaping (YoutubeVideoComments) -> Void) {
-    //Our first step is to fetch the ID of the application, a trick we can do is to grab it from the URL...
-    let url = URL(string: "https://us-central1-oldos-310521.cloudfunctions.net/api/comments?query=\(id ?? "")")!
-    var request = URLRequest(url: url)
-    request.setValue("sent-from-app", forHTTPHeaderField: "x-oldos-app")
-    let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-        
-        if let error = error {
-            print(error)
-            return
-        }
-        
-        // Parse JSON data
-        if let data = data {
-            do {
-                let decoder = JSONDecoder()
-                let compiled_object = try decoder.decode(YoutubeVideoComments.self, from: data)
-                completion(compiled_object)
-            } catch {
-                print(error)
-            }
-            //    if compiled_object.isEmpty == false {ject)
-            //   }
-        }
-    })
-    
-    task.resume()
 }
 
 
@@ -2272,6 +3227,105 @@ struct YouTubeVideoData: Codable {
     let category: String?
     let embed: Embed?
     let streams: Stream?
+}
+
+
+extension YouTubeVideoData {
+    init?(playerResponse response: [String: Any], fallbackVideoID: String) {
+        guard let details = response["videoDetails"] as? [String: Any] else { return nil }
+        let id = (details["videoId"] as? String) ?? fallbackVideoID
+        guard !id.isEmpty else { return nil }
+
+        let title = details["title"] as? String
+        let description = details["shortDescription"] as? String
+        let author = details["author"] as? String
+        let channelID = details["channelId"] as? String
+        let length = details["lengthSeconds"] as? String
+        let viewCount = details["viewCount"] as? String
+        let keywords = details["keywords"] as? [String]
+        let isLive = details["isLiveContent"] as? Bool
+
+        let thumbObjects = ((details["thumbnail"] as? [String: Any])?["thumbnails"] as? [[String: Any]] ?? [])
+        let thumbnails: [Thumbnail] = thumbObjects.compactMap { raw in
+            guard let urlString = raw["url"] as? String else { return nil }
+            return .init(url: URL(string: urlString), width: raw["width"] as? Int, height: raw["height"] as? Int)
+        }
+
+        let microformat = (response["microformat"] as? [String: Any])?["playerMicroformatRenderer"] as? [String: Any]
+        let uploadDate = (microformat?["uploadDate"] as? String) ?? (microformat?["publishDate"] as? String)
+        let category = microformat?["category"] as? String
+        let familySafe = microformat?["isFamilySafe"] as? Bool
+        let unlisted = microformat?["isUnlisted"] as? Bool
+
+        let prettyDate: String? = {
+            guard let uploadDate else { return nil }
+            let parser = DateFormatter()
+            parser.locale = Locale(identifier: "en_US_POSIX")
+            parser.dateFormat = "yyyy-MM-dd"
+            guard let date = parser.date(from: uploadDate) else { return uploadDate }
+            let output = DateFormatter()
+            output.dateStyle = .medium
+            output.timeStyle = .none
+            return output.string(from: date)
+        }()
+
+        self.init(
+            title: title,
+            id: id,
+            url: URL(string: "https://www.youtube.com/watch?v=\(id)"),
+            shortDescription: description,
+            description: description,
+            channel: .init(name: author, id: channelID, url: channelID.flatMap { URL(string: "https://www.youtube.com/channel/\($0)") }, subscribers: nil, icons: nil),
+            duration: .init(lengthSec: length),
+            thumbnails: thumbnails.isEmpty ? nil : thumbnails,
+            ratings: nil,
+            views: .init(text: viewCount, pretty: viewCount),
+            published: .init(pretty: prettyDate, text: prettyDate),
+            uploaded: .init(text: prettyDate),
+            keywords: keywords,
+            isLive: isLive,
+            isUnlisted: unlisted,
+            isFamilySafe: familySafe,
+            category: category,
+            embed: nil,
+            streams: nil
+        )
+    }
+
+    init?(videoRenderer r: [String: Any]) {
+        guard let id = r["videoId"] as? String else { return nil }
+        let title = oldOSText(r["title"])
+        let channel = oldOSText(r["ownerText"]) ?? oldOSText(r["longBylineText"])
+        let viewsPretty = oldOSText(r["viewCountText"]) ?? oldOSText(r["shortViewCountText"])
+        let published = oldOSText(r["publishedTimeText"])
+        let durationText = oldOSText(r["lengthText"])
+        let seconds = oldOSDurationSeconds(durationText)
+        var thumb: URL?
+        if let t = r["thumbnail"] as? [String: Any], let arr = t["thumbnails"] as? [[String: Any]] {
+            thumb = arr.last.flatMap { ($0["url"] as? String).flatMap(URL.init(string:)) }
+        }
+        self.init(
+            title: title,
+            id: id,
+            url: URL(string: "https://www.youtube.com/watch?v=\(id)"),
+            shortDescription: nil,
+            description: nil,
+            channel: .init(name: channel, id: nil, url: nil, subscribers: nil, icons: nil),
+            duration: .init(lengthSec: seconds.map(String.init)),
+            thumbnails: thumb.map { [.init(url: $0, width: nil, height: nil)] },
+            ratings: nil,
+            views: .init(text: oldOSNumericText(viewsPretty), pretty: viewsPretty),
+            published: .init(pretty: published, text: published),
+            uploaded: .init(text: published),
+            keywords: nil,
+            isLive: nil,
+            isUnlisted: nil,
+            isFamilySafe: nil,
+            category: nil,
+            embed: nil,
+            streams: nil
+        )
+    }
 }
 
 struct YoutubeVideoSearchData: Codable {

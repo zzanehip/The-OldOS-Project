@@ -39,23 +39,25 @@ enum OldOSKeyboardPalette {
 
 struct OldOSKeyboardBackground: View {
     let scale: CGFloat
+    var appearance: OldOSKeyboardAppearance = .standard
 
     var body: some View {
         ZStack(alignment: .top) {
-            LinearGradient(
-                colors: [
-                    OldOSKeyboardPalette.keyboardTop,
-                    OldOSKeyboardPalette.keyboardBottom
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
+            if appearance == .lockScreen {
+                Color.black.opacity(0.55)
+            } else {
+                LinearGradient(colors:[OldOSKeyboardPalette.keyboardTop,OldOSKeyboardPalette.keyboardBottom],startPoint:.top,endPoint:.bottom)
+            }
 
             VStack(spacing: 0) {
-                OldOSKeyboardPalette.keyboardTopDarkLip
-                    .frame(height: max(0.5, 1 * scale))
-                OldOSKeyboardPalette.keyboardTopBrightLip
-                    .frame(height: max(0.5, 1 * scale))
+                if appearance == .lockScreen {
+                    Color.black.opacity(0.8).frame(height:max(0.5,1*scale))
+                } else {
+                    OldOSKeyboardPalette.keyboardTopDarkLip
+                        .frame(height: max(0.5, 1 * scale))
+                    OldOSKeyboardPalette.keyboardTopBrightLip
+                        .frame(height: max(0.5, 1 * scale))
+                }
                 Spacer(minLength: 0)
             }
         }
@@ -73,6 +75,7 @@ struct OldOSKeyCapBackground: View {
     let treatment: OldOSKeyCapTreatment
     let row: Int
     let scale: CGFloat
+    var appearance: OldOSKeyboardAppearance = .standard
 
     private var palette: (top: Color, bottom: Color, highlight: Color) {
         let safeRow = min(max(row, 0), 3)
@@ -80,6 +83,9 @@ struct OldOSKeyCapBackground: View {
         case .light:
             return OldOSKeyboardPalette.lightRows[safeRow]
         case .dark:
+            if appearance == .lockScreen {
+                return (OldOSKeyboardPalette.rgb(145,148,151),OldOSKeyboardPalette.rgb(79,82,85),OldOSKeyboardPalette.rgb(194,196,198))
+            }
             return OldOSKeyboardPalette.darkRows[safeRow]
         case .blue:
             return OldOSKeyboardPalette.blue

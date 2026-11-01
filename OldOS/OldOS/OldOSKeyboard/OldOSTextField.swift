@@ -6,7 +6,41 @@ import WebKit
 
 private final class OldOSIntrinsicUITextField: UITextField {
     var oldOSPreferredHeight: CGFloat = 22 {
-        didSet { invalidateIntrinsicContentSize() }
+        didSet { if oldValue != oldOSPreferredHeight { invalidateIntrinsicContentSize() } }
+    }
+
+    private var initialFocusRequested = false
+    private var focusAttemptScheduled = false
+    private var focusAttempts = 0
+
+    func requestInitialFocus() {
+        initialFocusRequested = true; focusAttempts = 0
+        scheduleInitialFocus()
+    }
+    func cancelInitialFocus() { initialFocusRequested = false }
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        scheduleInitialFocus()
+    }
+    private func scheduleInitialFocus() {
+        guard initialFocusRequested, window != nil, !focusAttemptScheduled else { return }
+        focusAttemptScheduled = true
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.focusAttemptScheduled = false
+            guard self.initialFocusRequested, self.window != nil else { return }
+            if self.isFirstResponder || self.becomeFirstResponder() {
+                self.initialFocusRequested = false
+            } else {
+                self.focusAttempts += 1
+                guard self.focusAttempts < 8 else { self.initialFocusRequested = false; return }
+                self.focusAttemptScheduled = true
+                DispatchQueue.main.asyncAfter(deadline:.now()+0.05) { [weak self] in
+                    self?.focusAttemptScheduled = false
+                    self?.scheduleInitialFocus()
+                }
+            }
+        }
     }
 
     override var intrinsicContentSize: CGSize {
@@ -37,9 +71,9 @@ enum OldOSKeyboardInputSuppression {
             nullInput.isOpaque = false
             field.inputView = nullInput
         }
-        field.inputAccessoryView = nil
-        field.inputAssistantItem.leadingBarButtonGroups = []
-        field.inputAssistantItem.trailingBarButtonGroups = []
+        if field.inputAccessoryView != nil { field.inputAccessoryView = nil }
+        if !field.inputAssistantItem.leadingBarButtonGroups.isEmpty { field.inputAssistantItem.leadingBarButtonGroups = [] }
+        if !field.inputAssistantItem.trailingBarButtonGroups.isEmpty { field.inputAssistantItem.trailingBarButtonGroups = [] }
         if changedInputView && field.isFirstResponder { field.reloadInputViews() }
     }
 
@@ -163,20 +197,25 @@ private final class OldOSKeyboardFieldAttachment: NSObject {
     weak var field: UITextField?
     weak var keyboard: OldOSKeyboardController?
     var explicitConfiguration: OldOSKeyboardConfiguration?
+    let delegateManaged: Bool
 
     init(
         field: UITextField,
         keyboard: OldOSKeyboardController,
-        configuration: OldOSKeyboardConfiguration?
+        configuration: OldOSKeyboardConfiguration?,
+        delegateManaged: Bool
     ) {
+        self.delegateManaged = delegateManaged
         self.field = field
         self.keyboard = keyboard
         self.explicitConfiguration = configuration
         super.init()
 
-        field.addTarget(self, action: #selector(editingDidBegin(_:)), for: .editingDidBegin)
-        field.addTarget(self, action: #selector(editingChanged(_:)), for: .editingChanged)
-        field.addTarget(self, action: #selector(editingDidEnd(_:)), for: .editingDidEnd)
+        if !delegateManaged {
+            field.addTarget(self, action: #selector(editingDidBegin(_:)), for: .editingDidBegin)
+            field.addTarget(self, action: #selector(editingChanged(_:)), for: .editingChanged)
+            field.addTarget(self, action: #selector(editingDidEnd(_:)), for: .editingDidEnd)
+        }
     }
 
     func update(
@@ -215,7 +254,8 @@ private var oldOSKeyboardAttachmentKey: UInt8 = 0
 private func installOldOSKeyboardAttachment(
     on field: UITextField,
     keyboard: OldOSKeyboardController,
-    configuration: OldOSKeyboardConfiguration?
+    configuration: OldOSKeyboardConfiguration?,
+    delegateManaged: Bool = false
 ) {
     OldOSKeyboardInputSuppression.install(on: field)
 
@@ -226,7 +266,8 @@ private func installOldOSKeyboardAttachment(
         let attachment = OldOSKeyboardFieldAttachment(
             field: field,
             keyboard: keyboard,
-            configuration: configuration
+            configuration: configuration,
+            delegateManaged: delegateManaged
         )
         objc_setAssociatedObject(
             field,
@@ -235,7 +276,7 @@ private func installOldOSKeyboardAttachment(
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
 
-        if field.isFirstResponder {
+        if field.isFirstResponder && !delegateManaged {
             field.sendActions(for: .editingDidBegin)
         }
     }
@@ -273,9 +314,14 @@ final class OldOSKeyboardGlobalInputInterceptor: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
 
+    private func owns(_ field:UITextField) -> Bool {
+        objc_getAssociatedObject(field,&oldOSKeyboardAttachmentKey) == nil
+    }
+
     @objc private func textFieldDidBegin(_ note: Notification) {
         guard let field = note.object as? UITextField, let keyboard = keyboard else { return }
 
+        guard owns(field) else { return }
         OldOSKeyboardInputSuppression.install(on: field)
 
         let explicit = (objc_getAssociatedObject(field, &oldOSKeyboardAttachmentKey)
@@ -293,12 +339,12 @@ final class OldOSKeyboardGlobalInputInterceptor: NSObject {
     }
 
     @objc private func textFieldDidChange(_ note: Notification) {
-        guard let field = note.object as? UITextField else { return }
+        guard let field = note.object as? UITextField, owns(field) else { return }
         keyboard?.textDidChange(field)
     }
 
     @objc private func textFieldDidEnd(_ note: Notification) {
-        guard let field = note.object as? UITextField else { return }
+        guard let field = note.object as? UITextField, owns(field) else { return }
         keyboard?.deactivate(textField: field)
     }
 
@@ -373,6 +419,8 @@ public struct OldOSTextField: UIViewRepresentable {
     private let textColor: UIColor
     private let tintColor: UIColor
     private let height: CGFloat
+    private let focusOnAppear: Bool
+    private let secureEntry: Bool
 
     public init(
         _ placeholder: String,
@@ -382,6 +430,8 @@ public struct OldOSTextField: UIViewRepresentable {
         textColor: UIColor = .black,
         tintColor: UIColor = UIColor(red: 0.20, green: 0.42, blue: 0.96, alpha: 1),
         height: CGFloat = 22,
+        focusOnAppear: Bool = false,
+        secureEntry: Bool = false,
         onSubmit: (() -> Void)? = nil
     ) {
         self.placeholder = placeholder
@@ -391,14 +441,18 @@ public struct OldOSTextField: UIViewRepresentable {
         self.textColor = textColor
         self.tintColor = tintColor
         self.height = height
+        self.focusOnAppear = focusOnAppear
+        self.secureEntry = secureEntry
         self.onSubmit = onSubmit
     }
 
     private func applyInputTraits(to field: UITextField) {
-        field.keyboardType = configuration.keyboardType.uiKeyboardType
-        field.returnKeyType = configuration.returnType.uiReturnKeyType
-        field.enablesReturnKeyAutomatically = configuration.enablesReturnKeyAutomatically
-        field.autocapitalizationType = (configuration.autocapitalization && configuration.keyboardType.allowsAutomaticCapitalization) ? .sentences : .none
+        if field.isSecureTextEntry != secureEntry { field.isSecureTextEntry = secureEntry }
+        if field.keyboardType != configuration.keyboardType.uiKeyboardType { field.keyboardType = configuration.keyboardType.uiKeyboardType }
+        if field.returnKeyType != configuration.returnType.uiReturnKeyType { field.returnKeyType = configuration.returnType.uiReturnKeyType }
+        if field.enablesReturnKeyAutomatically != configuration.enablesReturnKeyAutomatically { field.enablesReturnKeyAutomatically = configuration.enablesReturnKeyAutomatically }
+        let capitalization: UITextAutocapitalizationType = (configuration.autocapitalization && configuration.keyboardType.allowsAutomaticCapitalization) ? .sentences : .none
+        if field.autocapitalizationType != capitalization { field.autocapitalizationType = capitalization }
     }
 
     public func makeCoordinator() -> Coordinator {
@@ -427,27 +481,34 @@ public struct OldOSTextField: UIViewRepresentable {
         field.setContentHuggingPriority(.required, for: .vertical)
         field.setContentCompressionResistancePriority(.required, for: .vertical)
 
-        OldOSKeyboardInputSuppression.install(on: field)
+        installOldOSKeyboardAttachment(on:field,keyboard:keyboard,configuration:configuration,delegateManaged:true)
 
         field.addTarget(
             context.coordinator,
             action: #selector(Coordinator.editingChanged(_:)),
             for: .editingChanged
         )
+        if focusOnAppear { field.requestInitialFocus() }
         return field
     }
 
     public func updateUIView(_ uiView: UITextField, context: Context) {
         context.coordinator.parent = self
         if uiView.text != text { uiView.text = text }
-        uiView.placeholder = placeholder
-        uiView.font = font
-        uiView.textColor = textColor
-        uiView.tintColor = tintColor
+        if uiView.placeholder != placeholder { uiView.placeholder = placeholder }
+        if uiView.font != font { uiView.font = font }
+        if uiView.textColor != textColor { uiView.textColor = textColor }
+        if uiView.tintColor != tintColor { uiView.tintColor = tintColor }
         applyInputTraits(to: uiView)
+        installOldOSKeyboardAttachment(on:uiView,keyboard:keyboard,configuration:configuration,delegateManaged:true)
         if let field = uiView as? OldOSIntrinsicUITextField {
             field.oldOSPreferredHeight = height
         }
+    }
+
+    public static func dismantleUIView(_ uiView:UITextField,coordinator:Coordinator) {
+        (uiView as? OldOSIntrinsicUITextField)?.cancelInitialFocus()
+        if uiView.isFirstResponder { uiView.resignFirstResponder() }
     }
 
     public final class Coordinator: NSObject, UITextFieldDelegate {
@@ -640,7 +701,6 @@ final class OldOSWebKitKeyboardBridge: NSObject, WKScriptMessageHandler {
             as? OldOSWebKitKeyboardBridge {
             existing.keyboard = keyboard
             existing.webView = webView
-            existing.reinjectCurrentDocument()
             return existing
         }
 
@@ -659,6 +719,20 @@ final class OldOSWebKitKeyboardBridge: NSObject, WKScriptMessageHandler {
 
         bridge.reinjectCurrentDocument()
         return bridge
+    }
+
+    static func deactivate(on webView: WKWebView) {
+        let bridge = objc_getAssociatedObject(webView, &associatedBridgeKey) as? OldOSWebKitKeyboardBridge
+        bridge?.deactivateCurrentEditor()
+        webView.endEditing(true)
+    }
+
+    static func uninstall(on webView: WKWebView) {
+        guard let bridge = objc_getAssociatedObject(webView, &associatedBridgeKey) as? OldOSWebKitKeyboardBridge else { return }
+        bridge.deactivateCurrentEditor()
+        webView.endEditing(true)
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: handlerName)
+        objc_setAssociatedObject(webView, &associatedBridgeKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
     func reinjectCurrentDocument() {
@@ -819,12 +893,7 @@ final class OldOSWebKitKeyboardBridge: NSObject, WKScriptMessageHandler {
     private static let bootstrapJavaScript = #"""
 void "OLDOS_WEBKIT_KEYBOARD";
 (function () {
-    if (window.__oldOSKeyboardBridgeInstalled) {
-        if (window.__oldOSKeyboardBridge && typeof window.__oldOSKeyboardBridge.prepareTree === "function") {
-            window.__oldOSKeyboardBridge.prepareTree(document);
-        }
-        return;
-    }
+    if (window.__oldOSKeyboardBridgeInstalled) return;
     window.__oldOSKeyboardBridgeInstalled = true;
 
     const HANDLER = "oldOSKeyboardWebKit";

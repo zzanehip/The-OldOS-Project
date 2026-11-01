@@ -259,6 +259,7 @@ struct toggle: View {
     @State var offset = CGPoint(x: -53.6666666667, y: 0)
     @State var show_overlay: Bool = false
     @State var on: Bool = true
+    var onChanged: ((Bool) -> Void)? = nil
     var body: some View {
         ZStack {
             Rectangle().fill(LinearGradient(gradient: Gradient(stops: [.init(color:Color(red: 52/255, green: 123/255, blue: 245/255), location: 0.0), .init(color:Color(red: 53/255, green: 126/255, blue: 247/255), location: 0.50), .init(color:Color(red: 91/255, green: 154/255, blue: 247/255), location: 0.47), .init(color:Color(red: 101/255, green: 161/255, blue: 249/255), location: 1.0)]), startPoint: .top, endPoint: .bottom)).innerShadowToggle(color: Color(red: 1/255, green: 19/255, blue: 50/255).opacity(0.32), radius: 0.3).overlay(LinearGradient(gradient: Gradient(stops: [.init(color:Color(red: 232/255, green: 232/255, blue: 232/255), location: 0.0), .init(color:Color(red: 235/255, green: 235/255, blue: 235/255), location: 0.50), .init(color:Color(red: 247/255, green: 247/255, blue: 247/255), location: 0.50), .init(color:Color(red: 251/255, green: 251/255, blue: 251/255), location: 1.0)]), startPoint: .top, endPoint: .bottom).innerShadowToggleSecondary(color: Color.black.opacity(0.43), radius: 0.3).cornerRadius(0).offset(x:100 + offset.x)).cornerRadius(4).overlay(
@@ -278,9 +279,9 @@ struct toggle: View {
                 }
             }.draggable_toggle(offset: $offset, on: $on, show_overlay: $show_overlay).clipped()
         }.frame(width: 104, height: 30).onAppear() {
-            if on {
-                offset.x = 0
-            }
+            offset.x = on ? 0 : -53.6666666667
+        }.onChange(of: on) { newValue in
+            onChanged?(newValue)
         }
     }
 }
@@ -377,6 +378,7 @@ struct list_section_content_only: View {
     @Binding var current_nav_view: String
     @Binding var forward_or_backward: Bool
     var content: [list_row]
+    var rowHeight: CGFloat = 50
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10).fill(Color.white).overlay(RoundedRectangle(cornerRadius: 10)
@@ -387,9 +389,9 @@ struct list_section_content_only: View {
                     Button(action: {if row.destination != nil {forward_or_backward = false; DispatchQueue.main.asyncAfter(deadline:.now()+0.3){ withAnimation(.linear(duration: 0.28)) {current_nav_view = row.destination ?? ""}}}}) {
                         ZStack {
                             if row == content.last {
-                                Rectangle().fill(Color.clear).frame(height:50)
+                                Rectangle().fill(Color.clear).frame(height: rowHeight)
                             } else {
-                                Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
+                                Rectangle().fill(Color.clear).frame(height: rowHeight).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                             }
                             HStack {
                                 if row.image != nil {
@@ -402,13 +404,13 @@ struct list_section_content_only: View {
                                 row.content
                             }
                         }
-                    }.frame(height: 50)
+                    }.frame(height: rowHeight)
                     } else {
                         ZStack {
                             if row == content.last {
-                                Rectangle().fill(Color.clear).frame(height:50)
+                                Rectangle().fill(Color.clear).frame(height: rowHeight)
                             } else {
-                                Rectangle().fill(Color.clear).frame(height:50).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
+                                Rectangle().fill(Color.clear).frame(height: rowHeight).border_bottom(width: 1.25, edges: [.bottom], color: Color(red: 171/255, green: 171/255, blue: 171/255))
                             }
                             HStack {
                                 if row.image != nil {
@@ -420,11 +422,11 @@ struct list_section_content_only: View {
                                 }
                                 row.content
                             }
-                        }.frame(height: 50)
+                        }.frame(height: rowHeight)
                     }
                 }
             }
-        }.frame(height: CGFloat(content.count)*50).padding([.leading, .trailing], 12)
+        }.frame(height: CGFloat(content.count) * rowHeight).padding([.leading, .trailing], 12)
     }
 }
 
@@ -589,17 +591,24 @@ struct title_bar : View {
     @Binding var forward_or_backward: Bool
     @Binding var current_nav_view: String
     var title:String
+    var general_back_title = "General"
+    var general_back_destination = "General"
     var body :some View {
         ZStack {
             LinearGradient(gradient: Gradient(stops: [.init(color:Color(red: 180/255, green: 191/255, blue: 205/255), location: 0.0), .init(color:Color(red: 136/255, green: 155/255, blue: 179/255), location: 0.49), .init(color:Color(red: 128/255, green: 149/255, blue: 175/255), location: 0.49), .init(color:Color(red: 110/255, green: 133/255, blue: 162/255), location: 1.0)]), startPoint: .top, endPoint: .bottom).border_bottom(width: 1, edges: [.bottom], color: Color(red: 45/255, green: 48/255, blue: 51/255)).innerShadowBottom(color: Color(red: 230/255, green: 230/255, blue: 230/255), radius: 0.025)
+            GeometryReader { geometry in
+                let naturalWidth = (title as NSString).size(withAttributes:[.font:UIFont(name:"HelveticaNeue-Bold",size:22) ?? .boldSystemFont(ofSize:22)]).width
+                let titleWidth = min(naturalWidth,max(1,geometry.size.width-129))
+                let titleShift: CGFloat = general_back_title == "General" ? 0 : max(0,117+titleWidth/2-geometry.size.width/2)
             VStack {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title)
+                    Text(title).ps_innerShadow(Color.white, radius: 0, offset: 1, angle: 180.degrees, intensity: 0.07).font(.custom("Helvetica Neue Bold", fixedSize: 22)).shadow(color: Color.black.opacity(0.21), radius: 0, x: 0.0, y: -1).lineLimit(1).minimumScaleFactor(0.75).frame(width:general_back_title == "General" ? nil : titleWidth).offset(x:titleShift).transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: .opacity)).id(title)
                     Spacer()
                 }
                 Spacer()
+            }
             }
             if current_nav_view != "Settings", current_nav_view != "Wallpaper_Select", current_nav_view.contains("General_") == false {
             VStack {
@@ -639,11 +648,16 @@ struct title_bar : View {
             VStack {
                 Spacer()
                 HStack {
-                    Button(action:{forward_or_backward = true; withAnimation(.linear(duration: 0.28)){current_nav_view = "General" }}) {
+                    Button(action:{forward_or_backward = true; withAnimation(.linear(duration: 0.28)){current_nav_view = general_back_destination }}) {
                     ZStack {
-                        Image("Button2").resizable().aspectRatio(contentMode: .fit).frame(width:77)
+                        if general_back_title == "General" {
+                            Image("Button2").resizable().aspectRatio(contentMode:.fit).frame(width:77)
+                        } else {
+                            Image("Button2").resizable(capInsets:EdgeInsets(top:0,leading:30,bottom:0,trailing:20))
+                                .frame(width:210,height:66).scaleEffect(0.5).frame(width:105,height:33)
+                        }
                         HStack(alignment: .center) {
-                            Text("General").foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
+                            Text(general_back_title).foregroundColor(Color.white).font(.custom("Helvetica Neue Bold", fixedSize: 13)).shadow(color: Color.black.opacity(0.45), radius: 0, x: 0, y: -0.6).padding(.leading,5).offset(y:-1.1)
                         }
                     }.padding(.leading, 6)
                     }.transition(AnyTransition.asymmetric(insertion: .move(edge:forward_or_backward == false ? .trailing : .leading), removal: .move(edge:forward_or_backward == false ? .leading : .trailing)).combined(with: AnyTransition.opacity))
@@ -675,89 +689,7 @@ struct title_bar : View {
 
 //In App Status Bar
 
-struct status_bar_in_app: View {
-    @State var date = Date()
-    var locked = false
-    var timeFormat: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        return formatter
-    }
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State var battery_level = UIDevice.current.batteryLevel * 100
-    @State var carrier_id: String = CTTelephonyNetworkInfo().serviceSubscriberCellularProviders?.first?.value.carrierName ?? ""
-    @State var charging: Bool = false
-    var selected_page = 1
-    @State var wifi_connected : Bool = true
-    var body: some View {
-        ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color.init(red: 237/255, green: 244/255, blue: 247/255), Color.init(red: 191/255, green: 199/255, blue: 203/255)]), startPoint: UnitPoint(x: 0.5, y: 0.07), endPoint: .bottom).innerShadowBottomView(color: Color.init(red: 142/255, green: 149/255, blue: 154/255), radius: 0.05).border_bottom(width: 0.45, edges:[.bottom], color: Color.init(red: 93/255, green: 100/255, blue: 105/255)).cornerRadiusSpecific(radius: 1.75, corners: [.topLeft, .topRight])
-            HStack {
-                Text(carrier_id == "" ? "No SIM" : carrier_id == "--" ? "eSIM" : carrier_id).foregroundColor(carrier_id == "" ? .black : Color.init(red: 66/255, green: 66/255, blue: 66/255)).font(.custom("Helvetica Neue Bold", fixedSize: 15)).shadowStyle().onAppear() {
-                    let networkInfo = CTTelephonyNetworkInfo()
-                    let carrier = networkInfo.serviceSubscriberCellularProviders?.first?.value
-                    
-                    // Get carrier name
-                    let carrierName = carrier?.carrierName
-                    carrier_id = carrierName ?? ""
-                }
-                ZStack {
-                    Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadowStyle().mask( Image(systemName: "wifi").gradientForegroundNonDynamic(colors: [Color.init(red: 32/255, green: 157/255, blue: 237/255), Color.init(red: 72/255, green: 118/255, blue: 196/255)]) .opacity(wifi_connected ? 1 : 0).shadowStyle().innerShadow2(color: Color.black.opacity(0.8), radius: 1))//Is it messy, yes, does it work, yes
-                }
-                Spacer()
-                Text("\(Int(battery_level))%").foregroundColor(Color.init(red: 74/255, green: 74/255, blue: 74/255)).font(.custom("Helvetica Neue Bold", fixedSize: 15)).shadowStyle().offset(x: 10).isHidden(charging)
-                battery_in_app(battery: Float(battery_level/100), charging: charging)
-                    .onReceive(timer) { input in
-                        if (UIDevice.current.batteryState != .unplugged) {
-                            battery_level = 100
-                            charging = true
-                        } else {
-                            battery_level = UIDevice.current.batteryLevel * 100
-                            charging = false
-                        }
-                        date = Date()
-                        if carrier_id == "" {
-                            let networkInfo = CTTelephonyNetworkInfo()
-                            let carrier = networkInfo.serviceSubscriberCellularProviders?.first?.value
-                            
-                            // Get carrier name
-                            let carrierName = carrier?.carrierName
-                            carrier_id = carrierName ?? ""
-                        }
-                        configureNetworkMonitor(completion: {result in
-                            wifi_connected = result
-                        })
-                    }.offset(x: 5)
-                //Spacer()
-            }.padding([.leading, .trailing], 4)
-            HStack {
-                Spacer()
-                Text(timeString(date: date).uppercased()).foregroundColor(Color.black).font(.custom("Helvetica Neue Bold", fixedSize: 15)).shadowStyle()
-                Spacer()
-            }
-        }.onAppear() {
-            if carrier_id == "" {
-            let networkInfo = CTTelephonyNetworkInfo()
-            let carrier = networkInfo.serviceSubscriberCellularProviders?.first?.value
-            let carrierName = carrier?.carrierName
-            carrier_id = carrierName ?? ""
-            }
-            configureNetworkMonitor(completion: {result in
-                wifi_connected = result
-            })
-            UIDevice.current.isBatteryMonitoringEnabled = true
-            if (UIDevice.current.batteryState != .unplugged) {
-                battery_level = 100
-                charging = true
-            } else {
-                battery_level = UIDevice.current.batteryLevel * 100
-            }
-        }
-    }
-    func timeString(date: Date) -> String {
-        timeFormat.string(from: date)
-    }
-}
+
 
 extension View {
     func shadowStyle() -> some View {
@@ -1887,12 +1819,29 @@ struct CustomSliderVideo<Component: View>: View {
         var frame = geometry.localFrame
            frame = geometry.frame(in: .local)
             let drag = DragGesture(minimumDistance: 0).onChanged({ drag in
-        self.onSliderDragChange(drag, frame) }
-      ).onEnded({ _ in
-//        if type == "Song" {
-//           should_update_from_timer = true
-//       } //Maybe unnecesary now
-      })
+                if type == "Video" { should_update_from_timer = false }
+                self.onSliderDragChange(drag, frame)
+            }).onEnded({ _ in
+                if type == "Video" {
+                    guard let item = self.player.currentItem else {
+                        should_update_from_timer = true
+                        return
+                    }
+                    let duration = item.duration.seconds
+                    if duration.isFinite, duration > 0 {
+                        let targetTime = self.value * duration
+                        self.player.seek(
+                            to: CMTime(seconds: targetTime, preferredTimescale: 600),
+                            toleranceBefore: CMTime(seconds: 0.10, preferredTimescale: 600),
+                            toleranceAfter: CMTime(seconds: 0.10, preferredTimescale: 600)
+                        ) { _ in
+                            DispatchQueue.main.async { should_update_from_timer = true }
+                        }
+                    } else {
+                        should_update_from_timer = true
+                    }
+                }
+            })
       let offsetX = self.getOffsetX(frame: frame)
     
       let knobSize = CGSize(width: knobWidth ?? frame.height, height: frame.height)
@@ -1918,12 +1867,8 @@ struct CustomSliderVideo<Component: View>: View {
         MPVolumeView.setVolume(Float(value/100))
         }
         if type == "Video" {
-            guard let item = self.player.currentItem else {
-              return
-            }
-     
-            let targetTime = self.value * item.duration.seconds
-            player.seek(to: CMTime(seconds: targetTime, preferredTimescale: 600))
+            // During a drag we only update the knob. Seeking occurs once on
+            // gesture end so AVPlayer does not receive dozens of competing seeks.
         }
 //        if type == "Song" {
 //            should_update_from_timer = false
@@ -1951,6 +1896,8 @@ struct skeumorphic_alert: View {
     var subtitle: String?
     var notification: String?
     public var dismiss_action: (() -> Void)?
+    var secondary_title: String? = nil
+    var secondary_action: (() -> Void)? = nil
     var body: some View {
         GeometryReader {geometry in
             ZStack {
@@ -1967,11 +1914,13 @@ struct skeumorphic_alert: View {
                             Spacer()
                             Text(subtitle ?? "").font(.custom("Helvetica Neue Regular", fixedSize: 14.5)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).multilineTextAlignment(.center).padding([.leading, .trailing], 10).padding(.bottom, 5)
                             Spacer()
-                            Button(action:{dismiss_action?()}) {
-                            ZStack {
-                            RoundedRectangle(cornerRadius: 6).fill(LinearGradient([(color:Color(red: 214/255, green: 214/255, blue: 214/255), location: 0), (color:Color(red: 113/255, green: 115/255, blue: 119/255), location: 0.49), (color:Color(red: 74/255, green: 75/255, blue: 78/255), location: 0.50), (color:Color(red: 102/255, green: 103/255, blue: 106/255), location: 1)], from: .top, to: .bottom)).shadow(color: Color.white.opacity(0.2), radius: 0, x: 0, y: 0.5).opacity(0.80).blendMode(.screen).strokeRoundedRectangle(6, Color(red: 19/255, green: 30/255, blue: 58/255), lineWidth: 1).frame(height:40).padding(.bottom, 8).padding([.leading, .trailing], 8)
-                                Text("OK").font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).padding(.bottom, 8)
-                            }
+                            if let title = secondary_title, let action = secondary_action {
+                                HStack(spacing: 0) {
+                                    alertButton(title, action: action)
+                                    alertButton("OK", action: { dismiss_action?() })
+                                }
+                            } else {
+                                alertButton("OK", action: { dismiss_action?() })
                             }
                              
                         }
@@ -1981,6 +1930,15 @@ struct skeumorphic_alert: View {
             }
         }.clipped()
     }
+    private func alertButton(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+                            ZStack {
+                            RoundedRectangle(cornerRadius: 6).fill(LinearGradient([(color:Color(red: 214/255, green: 214/255, blue: 214/255), location: 0), (color:Color(red: 113/255, green: 115/255, blue: 119/255), location: 0.49), (color:Color(red: 74/255, green: 75/255, blue: 78/255), location: 0.50), (color:Color(red: 102/255, green: 103/255, blue: 106/255), location: 1)], from: .top, to: .bottom)).shadow(color: Color.white.opacity(0.2), radius: 0, x: 0, y: 0.5).opacity(0.80).blendMode(.screen).strokeRoundedRectangle(6, Color(red: 19/255, green: 30/255, blue: 58/255), lineWidth: 1).frame(height:40).padding(.bottom, 8).padding([.leading, .trailing], 8)
+                                Text(title).font(.custom("Helvetica Neue Bold", fixedSize: 18)).foregroundColor(.white).shadow(color: Color.black.opacity(0.80), radius: 0, x: 0.0, y: -1.2).padding(.bottom, 8)
+                            }
+                            }
+    }
+
 }
 
 struct top_gloss: Shape {

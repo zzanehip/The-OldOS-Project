@@ -181,7 +181,10 @@ public enum OldOSKeyboardKeyStyle: Hashable {
     case numberPadLight
 }
 
+public enum OldOSKeyboardAppearance: Equatable { case standard, lockScreen }
+
 public struct OldOSKeyboardConfiguration: Equatable {
+    public var appearance: OldOSKeyboardAppearance
     public var keyboardType: OldOSKeyboardType
     public var returnType: OldOSKeyboardReturnType
     public var autocapitalization: Bool
@@ -194,6 +197,7 @@ public struct OldOSKeyboardConfiguration: Equatable {
     public var dismissesOnReturn: Bool
 
     public var enablesReturnKeyAutomatically: Bool
+    public var numberPadShowsDelete: Bool
 
     public init(
         keyboardType: OldOSKeyboardType = .default,
@@ -205,7 +209,9 @@ public struct OldOSKeyboardConfiguration: Equatable {
         doubleSpacePeriod: Bool = true,
         showsGlobeKey: Bool = false,
         dismissesOnReturn: Bool = false,
-        enablesReturnKeyAutomatically: Bool = false
+        enablesReturnKeyAutomatically: Bool = false,
+        numberPadShowsDelete: Bool = false,
+        appearance: OldOSKeyboardAppearance = .standard
     ) {
         self.keyboardType = keyboardType
         self.returnType = returnType
@@ -217,6 +223,8 @@ public struct OldOSKeyboardConfiguration: Equatable {
         self.showsGlobeKey = showsGlobeKey
         self.dismissesOnReturn = dismissesOnReturn
         self.enablesReturnKeyAutomatically = enablesReturnKeyAutomatically
+        self.numberPadShowsDelete = numberPadShowsDelete
+        self.appearance = appearance
     }
 
     public static let standard = OldOSKeyboardConfiguration()

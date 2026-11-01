@@ -1,9 +1,9 @@
-//
-//  Voice Memos.swift
-//  OldOS
-//
-//  Created by Zane on 6/30/25.
-//
+  
+                     
+         
+  
+                               
+  
 
 import SwiftUI
 import Foundation
@@ -53,6 +53,14 @@ struct recordings_view: View {
                         ZStack {
                             NoSepratorList {
                                 ForEach(lib.items.filter({$0.duration != 0})) { item in
+                                    let currentURL: URL? = player.player?.url
+                                    let isCurrent = (currentURL != nil) && (item.url == currentURL!)
+                                    let titleColor: Color = isCurrent ? .white : .black
+                                    let subtitleColor: Color = isCurrent ? .white : Color(red: 128/255, green: 128/255, blue: 128/255)
+                                    let dateText: String = item.date.formatted(.dateTime.year(.twoDigits).month(.twoDigits).day(.twoDigits))
+                                    let durationColor: Color = isCurrent ? .white : Color(red: 58/255, green: 111/255, blue: 209/255)
+                                    let rowBackgroundOpacity: Double = isCurrent ? 1.0 : 0.0
+                                    
                                     Button(action:{
                                         if !playerIsFor(item) {
                                             player.load(item.url)
@@ -67,15 +75,15 @@ struct recordings_view: View {
                                                     }
                                                 }) {
                                                     Image(player.player?.isPlaying ?? false ? "button-pause" : "button-play").resizable().scaledToFill().frame(width: 26, height: 27)
-                                                }.frame(width: 19, height: 20).padding(.trailing, 4).opacity(item.url == player.player?.url ?? URL(string: "") ? 1 : 0)
+                                                }.frame(width: 19, height: 20).padding(.trailing, 4).opacity(isCurrent ? 1 : 0)
                                                 VStack(alignment: .leading, spacing: 1.5) {
-                                                    Text(item.title).font(.custom("Helvetica Neue Bold", fixedSize: 15.5)).foregroundColor(item.url == player.player?.url ?? URL(string: "") ? Color.white : Color.black).lineLimit(1)
+                                                    Text(item.title).font(.custom("Helvetica Neue Bold", fixedSize: 15.5)).foregroundColor(titleColor).lineLimit(1)
                                                     HStack {
-                                                        Text(item.date.formatted(.dateTime.year(.twoDigits).month(.twoDigits).day(.twoDigits))).font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(item.url == player.player?.url ?? URL(string: "") ? Color.white : Color(red: 128/255, green: 128/255, blue: 128/255)).lineLimit(1)
+                                                        Text(dateText).font(.custom("Helvetica Neue Regular", fixedSize: 14)).foregroundColor(subtitleColor).lineLimit(1)
                                                     }
                                                 }.padding(.trailing, 12)
                                                 Spacer()
-                                                Text(item.duration.mmss).font(.custom("Helvetica Neue Regular", fixedSize: 14.5)).foregroundColor(item.url == player.player?.url ?? URL(string: "") ? Color.white : Color(red: 58/255, green: 111/255, blue: 209/255))
+                                                Text(item.duration.mmss).font(.custom("Helvetica Neue Regular", fixedSize: 14.5)).foregroundColor(durationColor)
                                                 Button(action: {
                                                     current_recording = item
                                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -87,7 +95,13 @@ struct recordings_view: View {
                                             }.padding(.leading, 11)
                                             Rectangle().fill(Color(red: 224/255, green: 224/255, blue: 224/255)).frame(height:0.95).edgesIgnoringSafeArea(.all)
                                             
-                                        }.background(LinearGradient([Color(red: 77/255, green: 151/255, blue: 245/255), Color(red: 33/255, green: 106/255, blue: 228/255)], from: .top, to: .bottom).opacity(item.url == player.player?.url ?? URL(string: "") ? 1 : 0))
+                                        }
+                                        .background(
+                                            LinearGradient([Color(red: 77/255, green: 151/255, blue: 245/255),
+                                                            Color(red: 33/255, green: 106/255, blue: 228/255)],
+                                                           from: .top, to: .bottom)
+                                            .opacity(rowBackgroundOpacity)
+                                        )
                                     }
                                 }.hideRowSeparator().listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).frame(height: 60).drawingGroup()
                                 Spacer().padding(.bottom, 120)
@@ -803,7 +817,7 @@ final class AudioRecorderWithLiveVU: ObservableObject {
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(.playAndRecord, mode: .default,
-                                    options: [.defaultToSpeaker, .allowBluetoothHFP, .mixWithOthers]) //Using videoRecording seems give us the best results
+                                    options: [.defaultToSpeaker, .allowBluetoothHFP, .mixWithOthers])                                                      
             try session.setActive(true)
             try? session.setPreferredInputNumberOfChannels(session.maximumInputNumberOfChannels)
         } catch { lastError = "Session: \(error.localizedDescription)" }
@@ -899,3 +913,4 @@ final class AudioRecorderWithLiveVU: ObservableObject {
         }
     }
 }
+

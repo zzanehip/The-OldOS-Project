@@ -42,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ]
         )
         UIDevice.current.isBatteryMonitoringEnabled = true
+        RetroClockNotificationRouter.shared.configure()
         
         oauth2.authParameters = [
             "access_type": "offline",
